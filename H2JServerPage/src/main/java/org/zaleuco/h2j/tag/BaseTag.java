@@ -1,0 +1,84 @@
+package org.zaleuco.h2j.tag;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.mw.Enviroments;
+
+public abstract class BaseTag implements TagMap {
+
+	protected Enviroments enviroments;
+
+	public void init(Enviroments enviroments) {
+		this.enviroments = enviroments;
+	}
+
+	protected String trasforlELname(String htmlValue) {
+		String value = null;
+		if ((htmlValue.startsWith("#{")) && (htmlValue.endsWith("}"))) {
+			value = htmlValue.substring(2, htmlValue.length() - 1);
+		}
+		return value;
+	}
+
+	protected void writeAttributes(Enviroments enviroments, Element element, NamedNodeMap attributes, String... ignore)
+			throws H2JFilterException {
+		String qualifiedName;
+		String value;
+		String name;
+		String namespaceURI;
+
+		for (int i = 0; i < attributes.getLength(); ++i) {
+			qualifiedName = attributes.item(i).getNodeName();
+			if (!this.ignore(qualifiedName, ignore)) {
+				value = attributes.item(i).getNodeValue();
+				namespaceURI = "";
+				name = this.trasforlELname(value);
+				if (name != null) {
+					value = enviroments.getValue(name);
+				}
+				element.setAttributeNS(namespaceURI, qualifiedName, value);
+			}
+		}
+	}
+
+	private boolean ignore(String q, String... values) {
+		boolean ignore = false;
+		if (values != null) {
+			for (String v : values) {
+				if (q.equals(v)) {
+					ignore = true;
+					break;
+				}
+			}
+		}
+		return ignore;
+	}
+
+	public Enviroments getEnviroments() {
+		return enviroments;
+	}
+
+	protected void assertNotNull(Object o, String msg) throws H2JFilterException {
+		if (o == null) {
+			throw new H2JFilterException(msg);
+		}
+	}
+
+	protected void assertNotEmpty(String v, String msg) throws H2JFilterException {
+		if ((v == null) || (v.length() == 0)) {
+			throw new H2JFilterException(msg);
+		}
+	}
+	
+	protected String evaluation(String exp) throws H2JFilterException {
+		String value = exp;
+		String newExp;
+		newExp = this.trasforlELname(exp);
+		if (newExp!=null) {
+			value = this.enviroments.getValue(newExp);
+		}
+		return value;
+	}
+
+}
