@@ -1,0 +1,143 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>it.zaleuco.h2j</groupId>
+	<artifactId>H2J</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.source.version>1.8</java.source.version>
+		<java.target.version>1.8</java.target.version>
+		<javaee.version>8.0</javaee.version>
+		<ejb.version>3.1</ejb.version>
+		<mvn.source.plugin.version>3.2.1</mvn.source.plugin.version>
+		<mvn.compiler.plugin.version>3.8.1</mvn.compiler.plugin.version>
+		<mvn.jar.plugin.version>3.2.0</mvn.jar.plugin.version>
+		<mvn.ejb.plugin.version>3.1.0</mvn.ejb.plugin.version>
+		<mvn.war.plugin.version>3.1.0</mvn.war.plugin.version>
+		<mvn.ear.plugin.version>3.1.0</mvn.ear.plugin.version>
+		<mvn.surefire.plugin>3.0.0-M5</mvn.surefire.plugin>
+		<min.openliberty.runtime>20.0.0.9</min.openliberty.runtime>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>jakarta.platform</groupId>
+				<artifactId>jakarta.jakartaee-api</artifactId>
+				<version>8.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>io.openliberty</groupId>
+				<artifactId>openliberty-runtime</artifactId>
+				<version>[${min.openliberty.runtime},)</version>
+				<scope>provided</scope>
+				<type>zip</type>
+			</dependency>
+
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>${skipTests}</skipTests>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${mvn.source.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${mvn.compiler.plugin.version}</version>
+					<configuration>
+						<source>${java.source.version}</source>
+						<target>${java.target.version}</target>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${mvn.jar.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ejb-plugin</artifactId>
+					<version>${mvn.ejb.plugin.version}</version>
+					<configuration>
+						<ejbVersion>${ejb.version}</ejbVersion>
+						<archive>
+							<manifest>
+								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>${mvn.war.plugin.version}</version>
+					<configuration>
+						<defaultLibBundleDir>lib/</defaultLibBundleDir>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+								<classpathPrefix>lib/</classpathPrefix>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-ear-plugin</artifactId>
+					<version>${mvn.ear.plugin.version}</version>
+					<configuration>
+						<defaultLibBundleDir>lib/</defaultLibBundleDir>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${mvn.surefire.plugin}</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+	</build>
+
+
+
+	<modules>
+		<module>Web</module>
+		<module>H2JEar</module>
+		<module>H2JServerPage</module>
+	</modules>
+</project>

@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>it.zaleuco.h2j</groupId>
+		<artifactId>H2J</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>H2JEar</artifactId>
+	<packaging>ear</packaging>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Web</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Rimuove l'application.xml errato generato da Eclipse -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/application/META-INF</directory>
+							<includes>
+								<include>application.xml</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<applicationName>${cd.name}</applicationName>
+					<displayName>${cd.name} ${project.version}</displayName>
+					<description>${project.description} v. ${project.version} build
+						time: ${maven.build.timestamp}</description>
+					<applicationName>${project.artifactId}</applicationName>
+					<version>6</version>
+					<defaultLibBundleDir>lib/</defaultLibBundleDir>
+					<generateApplicationXml>true</generateApplicationXml>
+					<skinnyWars>true</skinnyWars>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+
+					<modules>
+
+						<webModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>Web</artifactId>
+							<bundleFileName>web.war</bundleFileName>
+							<contextRoot>${contextRoot}</contextRoot>
+						</webModule>
+
+					</modules>
+
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

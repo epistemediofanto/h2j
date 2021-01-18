@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
+	<servers>
+		<server>
+			<username>ci-bitp</username>
+			<password>bitp_iniziale</password>
+			<id>bitp-release</id>
+		</server>
+		<server>
+			<username>ci-bitp</username>
+			<password>bitp_iniziale</password>
+			<id>bitp-snapshots</id>
+		</server>
+
+	</servers>
+	
+	<mirrors>
+		<mirror>
+			<mirrorOf>*</mirrorOf>
+			<name>mvn</name>
+			<url>http://artifactory.aciinfo.local/artifactory/mvn</url>
+			<id>mvn</id>
+		</mirror>
+	</mirrors>
+	 
+	<profiles>
+
+		<profile>
+			<id>iText</id>
+			<repositories>
+				<repository>
+					<id>iText</id>
+					<name>iText</name>
+					<url>https://repo.itextsupport.com/list/releases</url>
+				</repository>
+			</repositories>
+		</profile>
+
+		<profile>
+			<repositories>
+				<repository>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>bitp-release</id>
+					<name>mvn-bitp-release</name>
+					<url>http://artifactory.aciinfo.local/artifactory/mvn-bitp-release</url>
+				</repository>
+				<repository>
+					<snapshots />
+					<id>bitp-snapshots</id>
+					<name>mvn-bitp-snapshot</name>
+					<url>http://artifactory.aciinfo.local/artifactory/mvn-bitp-snapshot</url>
+				</repository>
+				<repository>
+					<id>central</id>
+					<url>https://repo1.maven.org/maven2</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>central</id>
+					<name>mvn</name>
+					<url>http://artifactory.aciinfo.local/artifactory/mvn</url>
+				</pluginRepository>
+				<pluginRepository>
+					<snapshots />
+					<id>snapshots</id>
+					<name>mvn</name>
+					<url>http://artifactory.aciinfo.local/artifactory/mvn</url>
+				</pluginRepository>
+			</pluginRepositories>
+			<id>artifactory</id>
+		</profile>
+		<profile>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<repositories>
+				<repository>
+					<releases>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+					<id>ibm-maven-repo</id>
+					<name>ibm-maven-repo</name>
+					<url>http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/</url>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<releases>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+					<id>ibm-maven-repo</id>
+					<name>ibm-maven-repo</name>
+					<url>http://public.dhe.ibm.com/ibmdl/export/pub/software/websphere/wasdev/maven/repository/</url>
+				</pluginRepository>
+			</pluginRepositories>
+			<id>standard-extra-repos</id>
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>iText</activeProfile>
+		<activeProfile>artifactory</activeProfile>
+		<activeProfile>standard-extra-repos</activeProfile>		
+	</activeProfiles>
+	<localRepository>c:/developers/mvn-repo/</localRepository>
+</settings>
