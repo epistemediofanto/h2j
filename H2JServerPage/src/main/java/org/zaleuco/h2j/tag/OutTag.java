@@ -22,7 +22,7 @@ public class OutTag extends BaseTag {
 		value = attributeValue.getNodeValue();
 		elName = this.trasforlELname(value);
 		if (elName != null) {
-			value = this.getEnviroments().getValue(elName);
+			value = processor.getEnviroments().getValue(elName);
 		}
 		parent.replaceChild(node.getOwnerDocument().createTextNode(value), node);		
 	}

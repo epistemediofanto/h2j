@@ -29,7 +29,7 @@ public class OptionsTag extends BaseTag {
 			if (name != null) {
 				List<Options> items;
 
-				items = (List<Options>) this.getEnviroments().getObject(name);
+				items = (List<Options>) processor.getEnviroments().getObject(name);
 				if (items != null) {
 					Element element;
 					String uri;
@@ -37,7 +37,7 @@ public class OptionsTag extends BaseTag {
 						uri = node.getBaseURI();
 						element = node.getOwnerDocument().createElementNS(uri, "option");
 						element.setAttributeNS(uri, "value", o.getValue());
-						this.writeAttributes(this.getEnviroments(), element, attributes, "values");
+						this.writeAttributes(processor.getEnviroments(), element, attributes, "values");
 						element.appendChild(node.getOwnerDocument().createTextNode(o.getLabel()));
 						parent.appendChild(element);
 					}

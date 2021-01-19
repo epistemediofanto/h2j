@@ -10,6 +10,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.mw.Enviroments;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class IncludeTag extends BaseTag {
@@ -29,10 +30,10 @@ public class IncludeTag extends BaseTag {
 			Document doc;
 			Node includeNode;
 
-			file = processor.getPath() + this.evaluation(attributeValue.getNodeValue());
+			file = processor.getPath() + this.evaluation(processor.getEnviroments(), attributeValue.getNodeValue());
 
 			try {
-				is = this.enviroments.getServletContext().getResourceAsStream(file);
+				is = Enviroments.getServletContext().getResourceAsStream(file);
 				doc = processor.load(is);
 				is.close();
 				is = null;

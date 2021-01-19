@@ -39,7 +39,6 @@ public class DefaultH2JTag extends BaseTag {
 				s = n.getNodeType();
 				prefix = n.getPrefix();
 				value = n.getNodeValue();
-System.out.println("CORREGGERE: " + prefix);
 				if (s == Node.ATTRIBUTE_NODE) {
 					if ("xmlns".equals(prefix) && XmlProcessor.NAMESPACE.equals(value)) {
 						attributes.removeNamedItem(n.getNodeName());
@@ -58,7 +57,7 @@ System.out.println("CORREGGERE: " + prefix);
 		nodeValue = node.getNodeValue();
 		nodeName = this.trasforlELname(nodeValue);
 		if (nodeName != null) {
-			nodeValue = this.getEnviroments().getValue(nodeName);
+			nodeValue = processor.getEnviroments().getValue(nodeName);
 			node.setNodeValue(nodeValue);
 		}
 	}

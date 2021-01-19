@@ -7,12 +7,6 @@ import org.zaleuco.h2j.mw.Enviroments;
 
 public abstract class BaseTag implements TagMap {
 
-	protected Enviroments enviroments;
-
-	public void init(Enviroments enviroments) {
-		this.enviroments = enviroments;
-	}
-
 	protected String trasforlELname(String htmlValue) {
 		String value = null;
 		if ((htmlValue.startsWith("#{")) && (htmlValue.endsWith("}"))) {
@@ -55,10 +49,6 @@ public abstract class BaseTag implements TagMap {
 		return ignore;
 	}
 
-	public Enviroments getEnviroments() {
-		return enviroments;
-	}
-
 	protected void assertNotNull(Object o, String msg) throws H2JFilterException {
 		if (o == null) {
 			throw new H2JFilterException(msg);
@@ -70,13 +60,13 @@ public abstract class BaseTag implements TagMap {
 			throw new H2JFilterException(msg);
 		}
 	}
-	
-	protected String evaluation(String exp) throws H2JFilterException {
+
+	protected String evaluation(Enviroments enviroments, String exp) throws H2JFilterException {
 		String value = exp;
 		String newExp;
 		newExp = this.trasforlELname(exp);
-		if (newExp!=null) {
-			value = this.enviroments.getValue(newExp);
+		if (newExp != null) {
+			value = enviroments.getValue(newExp);
 		}
 		return value;
 	}

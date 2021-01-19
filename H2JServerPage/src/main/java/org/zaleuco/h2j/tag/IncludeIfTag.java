@@ -10,6 +10,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.mw.Enviroments;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class IncludeIfTag extends BaseTag {
@@ -39,7 +40,7 @@ public class IncludeIfTag extends BaseTag {
 
 		elName = this.trasforlELname(expValue);
 		if (elName != null) {
-			value = this.getEnviroments().getValue(elName);
+			value = processor.getEnviroments().getValue(elName);
 		} else {
 			value = elName;
 		}
@@ -63,7 +64,7 @@ public class IncludeIfTag extends BaseTag {
 			file = processor.getPath() + file;
 
 			try {
-				is = this.enviroments.getServletContext().getResourceAsStream(file);
+				is = Enviroments.getServletContext().getResourceAsStream(file);
 				doc = processor.load(is);
 				is.close();
 				is = null;

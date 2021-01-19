@@ -6,6 +6,7 @@ import java.util.List;
 
 public class LocalEnviroment extends Assertion {
 	
+	private static final long serialVersionUID = 1L;
 	private HashMap<String, List<Object>> localEnviroments;
 
 	protected LocalEnviroment() {

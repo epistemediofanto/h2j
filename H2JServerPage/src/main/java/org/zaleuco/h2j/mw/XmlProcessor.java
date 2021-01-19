@@ -23,14 +23,16 @@ import org.zaleuco.h2j.tag.TagMap;
 public class XmlProcessor {
 
 	public static final String NAMESPACE = "http://java.h2j.org";
-	private Trasnslator trasnslator;
 	private String page;
 	private String path;
+	private Enviroments enviroments;
+	private Trasnslator trasnslator;
 
 	public XmlProcessor(Enviroments enviroments, String page) {
-		this.trasnslator = enviroments.getTrasnslator();
 		this.page = page;
 		this.path = this.getPath(page);
+		this.enviroments = enviroments;
+		this.trasnslator = Trasnslator.getInstance();
 	}
 
 	public Document load(InputStream is) throws ParserConfigurationException, SAXException, IOException {
@@ -110,6 +112,10 @@ public class XmlProcessor {
 
 	public String getPath() {
 		return path;
+	}
+
+	public Enviroments getEnviroments() {
+		return enviroments;
 	}
 
 }

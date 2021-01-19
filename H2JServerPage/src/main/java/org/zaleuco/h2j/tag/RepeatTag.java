@@ -6,6 +6,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.mw.Enviroments;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class RepeatTag extends BaseTag {
@@ -21,6 +22,9 @@ public class RepeatTag extends BaseTag {
 		String nameIndex;
 		String nameSize;
 		Node parent;
+		Enviroments enviroments;
+
+		enviroments = processor.getEnviroments();
 
 		parent = node.getParentNode();
 		parent.removeChild(node);
@@ -46,7 +50,7 @@ public class RepeatTag extends BaseTag {
 		if (nameValues != null) {
 			List<?> items;
 
-			items = (List<?>) this.getEnviroments().getObject(nameValues);
+			items = (List<?>) enviroments.getObject(nameValues);
 			if (items != null) {
 				NodeList childs;
 				Node child;
@@ -55,36 +59,36 @@ public class RepeatTag extends BaseTag {
 				try {
 					int j = 0;
 					if (nameIndex != null) {
-						this.enviroments.push(nameSize, items.size());
+						enviroments.push(nameSize, items.size());
 					}
 					for (Object item : items) {
-						this.enviroments.push(nameVar, item);
+						enviroments.push(nameVar, item);
 						if (nameIndex != null) {
-							this.enviroments.push(nameIndex, ++j);
+							enviroments.push(nameIndex, ++j);
 						}
 						try {
 
 							for (int i = 0; i < childs.getLength(); ++i) {
-								child = childs.item(i).cloneNode(true);								
+								child = childs.item(i).cloneNode(true);
 								processor.processNode(child);
 								child.setUserData("h2j", "skip", null);
 								parent.appendChild(child);
 							}
 
 						} finally {
-							this.enviroments.pop(nameVar);
+							enviroments.pop(nameVar);
 						}
 						if (nameIndex != null) {
-							this.enviroments.pop(nameIndex);
+							enviroments.pop(nameIndex);
 						}
 					}
 				} finally {
-					this.enviroments.remove(nameVar);
+					enviroments.remove(nameVar);
 					if (nameIndex != null) {
-						this.enviroments.remove(nameIndex);
+						enviroments.remove(nameIndex);
 					}
 					if (nameSize != null) {
-						this.enviroments.remove(nameSize);
+						enviroments.remove(nameSize);
 					}
 				}
 			}

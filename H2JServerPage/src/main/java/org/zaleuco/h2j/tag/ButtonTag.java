@@ -18,7 +18,7 @@ public class ButtonTag extends DefaultH2JTag {
 		assertNotNull(nodeAction, "missing formaction attribute on button");
 		valueAction = nodeAction.getNodeValue();
 		assertNotNull(valueAction, "missing formaction attribute on button");
-		valueAction = this.enviroments.evalForHTMLCall(valueAction);
+		valueAction = processor.getEnviroments().evalForHTMLCall(valueAction);
 		nodeAction.setNodeValue(valueAction + H2JProcessorFilter.CALL_STRING_EXT);
 
 		super.processNode(processor, node);

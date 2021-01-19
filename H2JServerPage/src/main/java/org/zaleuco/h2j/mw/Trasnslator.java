@@ -3,62 +3,65 @@ package org.zaleuco.h2j.mw;
 import java.util.HashMap;
 
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.tag.AnchorTag;
+import org.zaleuco.h2j.tag.ButtonTag;
 import org.zaleuco.h2j.tag.DefaultH2JTag;
 import org.zaleuco.h2j.tag.DefaultHtmlTag;
 import org.zaleuco.h2j.tag.FormTag;
-import org.zaleuco.h2j.tag.AnchorTag;
-import org.zaleuco.h2j.tag.ButtonTag;
 import org.zaleuco.h2j.tag.IncludeTag;
 import org.zaleuco.h2j.tag.OptionsTag;
 import org.zaleuco.h2j.tag.OutTag;
 import org.zaleuco.h2j.tag.RepeatTag;
+import org.zaleuco.h2j.tag.SelectTag;
 import org.zaleuco.h2j.tag.TagMap;
 
 public class Trasnslator {
 
+	private static Trasnslator instance;
 	private HashMap<String, TagMap> tags;
 	private TagMap defaultH2JTag;
 	private TagMap defaultHtmlTag;
+	
+	public static void init() throws H2JFilterException {
+		instance = new Trasnslator();
+	}
+	
+	public static Trasnslator getInstance() {
+		return instance;
+	}
 
-	public Trasnslator(Enviroments enviroments) throws H2JFilterException {
+	private Trasnslator( ) throws H2JFilterException {
 		TagMap tagMap;
 
 		this.defaultH2JTag = new DefaultH2JTag();
-		this.defaultH2JTag.init(enviroments);
 		this.tags = new HashMap<String, TagMap>();
 
 		this.defaultHtmlTag = new DefaultHtmlTag();
-		this.defaultHtmlTag.init(enviroments);
 		this.tags = new HashMap<String, TagMap>();
 
 		tagMap = new AnchorTag();
-		tagMap.init(enviroments);
 		this.registerTag("a", tagMap);
 
 		tagMap = new ButtonTag();
-		tagMap.init(enviroments);
 		this.registerTag("button", tagMap);
 		
 		tagMap = new FormTag();
-		tagMap.init(enviroments);
 		this.registerTag("form", tagMap);
 
 		tagMap = new IncludeTag();
-		tagMap.init(enviroments);
 		this.registerTag("include", tagMap);
 
 		tagMap = new OptionsTag();
-		tagMap.init(enviroments);
 		this.registerTag("options", tagMap);
 
 		tagMap = new OutTag();
-		tagMap.init(enviroments);
 		this.registerTag("out", tagMap);
 
 		tagMap = new RepeatTag();
-		tagMap.init(enviroments);
 		this.registerTag("repeat", tagMap);
 
+		tagMap = new SelectTag();
+		this.registerTag("select", tagMap);
 	}
 
 	public TagMap getTag(String fullName) {

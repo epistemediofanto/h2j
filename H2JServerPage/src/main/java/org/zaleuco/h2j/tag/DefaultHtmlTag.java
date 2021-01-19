@@ -61,7 +61,7 @@ public class DefaultHtmlTag extends BaseTag {
 			if (nodeName != null) {
 				String nodeValue;
 
-				nodeValue = this.getEnviroments().getValue(nodeName);
+				nodeValue = processor.getEnviroments().getValue(nodeName);
 				node.setNodeValue(nodeValue);
 			}
 		}

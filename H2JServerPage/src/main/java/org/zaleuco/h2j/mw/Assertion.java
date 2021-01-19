@@ -1,8 +1,12 @@
 package org.zaleuco.h2j.mw;
 
+import java.io.Serializable;
+
 import org.zaleuco.h2j.filter.H2JFilterException;
 
-public class Assertion {
+public class Assertion implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public void assertNotNull(Object o, String msg) throws H2JFilterException {
 		if (o == null) {
