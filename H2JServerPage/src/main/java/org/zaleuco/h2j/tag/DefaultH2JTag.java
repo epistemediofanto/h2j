@@ -55,11 +55,12 @@ public class DefaultH2JTag extends BaseTag {
 		String nodeValue;
 
 		nodeValue = node.getNodeValue();
-		nodeName = this.trasforlELname(nodeValue);
-		if (nodeName != null) {
-			nodeValue = processor.getEnviroments().getValue(nodeName);
-			node.setNodeValue(nodeValue);
-		}
+		node.setNodeValue(processor.getEnviroments().eval(nodeValue));
+//		nodeName = this.trasforlELname(nodeValue);
+//		if (nodeName != null) {
+//			nodeValue = processor.getEnviroments().getValue(nodeName);
+//			node.setNodeValue(nodeValue);
+//		}
 	}
 
 }

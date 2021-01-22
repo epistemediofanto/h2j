@@ -42,7 +42,7 @@ public class IncludeTag extends BaseTag {
 				processor.processNode(includeNode);
 				node = null;
 			} catch (IOException | ParserConfigurationException | SAXException e) {
-				throw new H2JFilterException(e);
+				throw new H2JFilterException(file, e);
 			} finally {
 				try {
 					if (is != null) {

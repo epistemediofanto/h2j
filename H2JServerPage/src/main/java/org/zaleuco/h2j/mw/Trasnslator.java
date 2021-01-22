@@ -8,6 +8,7 @@ import org.zaleuco.h2j.tag.ButtonTag;
 import org.zaleuco.h2j.tag.DefaultH2JTag;
 import org.zaleuco.h2j.tag.DefaultHtmlTag;
 import org.zaleuco.h2j.tag.FormTag;
+import org.zaleuco.h2j.tag.IncludeIfTag;
 import org.zaleuco.h2j.tag.IncludeTag;
 import org.zaleuco.h2j.tag.OptionsTag;
 import org.zaleuco.h2j.tag.OutTag;
@@ -21,16 +22,16 @@ public class Trasnslator {
 	private HashMap<String, TagMap> tags;
 	private TagMap defaultH2JTag;
 	private TagMap defaultHtmlTag;
-	
+
 	public static void init() throws H2JFilterException {
 		instance = new Trasnslator();
 	}
-	
+
 	public static Trasnslator getInstance() {
 		return instance;
 	}
 
-	private Trasnslator( ) throws H2JFilterException {
+	private Trasnslator() throws H2JFilterException {
 		TagMap tagMap;
 
 		this.defaultH2JTag = new DefaultH2JTag();
@@ -44,12 +45,15 @@ public class Trasnslator {
 
 		tagMap = new ButtonTag();
 		this.registerTag("button", tagMap);
-		
+
 		tagMap = new FormTag();
 		this.registerTag("form", tagMap);
 
 		tagMap = new IncludeTag();
 		this.registerTag("include", tagMap);
+
+		tagMap = new IncludeIfTag();
+		this.registerTag("includeif", tagMap);
 
 		tagMap = new OptionsTag();
 		this.registerTag("options", tagMap);

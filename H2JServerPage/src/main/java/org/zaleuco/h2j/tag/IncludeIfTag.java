@@ -65,6 +65,7 @@ public class IncludeIfTag extends BaseTag {
 
 			try {
 				is = Enviroments.getServletContext().getResourceAsStream(file);
+				assertNotNull(is, "file not found: " + file);
 				doc = processor.load(is);
 				is.close();
 				is = null;

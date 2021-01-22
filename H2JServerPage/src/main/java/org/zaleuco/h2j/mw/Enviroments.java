@@ -2,7 +2,6 @@ package org.zaleuco.h2j.mw;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -75,15 +74,11 @@ public class Enviroments extends LocalEnviroment {
 			if (object == null) {
 				object = getCDIObject(node.getObjectName());
 			}
-			if (object != null) {
-
+			if (object != null) {		
+				object = this.getArrayElement(node, object);
 				if (node.getProperty() != null) {
 					object = this.invoke(object, node.getProperty(), setter, value);
-				} else {
-					assertTrue(node.getParameterList().size() == 0, "internal error, invalid function call " + node); // condizione
-																														// già
-																														// verificata
-				}
+				} 			
 			} else {
 				assertTrue(node.getParameterList().size() == 0, "invalid function " + node);
 				object = node.getObjectName();
@@ -93,6 +88,15 @@ public class Enviroments extends LocalEnviroment {
 			throw new H2JFilterException(e);
 		}
 		return object;
+	}
+	
+	private Object getArrayElement(ExpNode node, Object o) throws H2JFilterException {
+		int ix;
+		for (int i=0; i<node.getArrayIndex().size(); ++i) {
+			ix= (int) this.invoke(node.getArrayIndex().get(i), false, null);
+			o = ((Object[]) o)[ix];
+		}
+		return o;
 	}
 
 	public Object invoke(Object object, ExpNode node, boolean setter, String value)
@@ -120,7 +124,6 @@ public class Enviroments extends LocalEnviroment {
 		found = false;
 		for (int i = 0; i < classMethods.length; ++i) {
 			method = classMethods[i];
-
 			if (method.getName().equals(node.getObjectName()) && (method.getParameterCount() == numPar)) {
 				Object[] paramsVal = null;
 				int n;
@@ -135,9 +138,6 @@ public class Enviroments extends LocalEnviroment {
 				for (int k = 0; k < paramsVal.length; ++k) {
 					parType = method.getParameters()[k].getParameterizedType().getTypeName();
 					parNode = node.getParameterList().get(k);
-//					if (parNode.getType() == Type.ObjectRef) {
-//						paramsVal[k] = node.getObject();
-//					} else {
 					parVal = parNode.getObjectName();
 					if (parNode.getProperty() == null) {
 						ocm = componentCast.get(parType);
@@ -153,13 +153,12 @@ public class Enviroments extends LocalEnviroment {
 				}
 
 				object = method.invoke(object, paramsVal);
+				object = this.getArrayElement(node, object);
 				found = true;
 				break;
 			}
 		}
-		if (!found)
-
-		{
+		if (!found) {
 			throw new H2JFilterException("Missing " + node.getObjectName());
 		}
 
@@ -196,6 +195,33 @@ public class Enviroments extends LocalEnviroment {
 		return object;
 	}
 
+	public String eval(String text) throws H2JFilterException {
+		int posStart;
+		int posEnd;
+
+		while (true) {
+			posStart = text.indexOf("#{");
+			if (posStart != -1) {
+				posEnd = text.indexOf("}", posStart);
+				if (posEnd != -1) {
+					String exp;
+					String value;
+					String fullExp;
+
+					fullExp = text.substring(posStart, posEnd + 1);
+					exp = text.substring(posStart + 2, posEnd);
+					value = this.getValue(exp);
+
+					text = text.replace(fullExp, value);
+					continue;
+				}
+			}
+			break;
+		}
+
+		return text;
+	}
+	
 	/**
 	 * 
 	 * prepara l'espressione da chiamara alla submit da html valuta solo gli
@@ -232,14 +258,6 @@ public class Enviroments extends LocalEnviroment {
 			break;
 		}
 
-//		Node node;
-//
-//		if (fullName != null) {
-//			node = ParseFunctionCall.process(fullName);
-//			this.evalForHTMLCall(node, false);
-//			fullName = node.toString();
-//		}
-
 		return fullName;
 	}
 
@@ -259,7 +277,7 @@ public class Enviroments extends LocalEnviroment {
 				if (o instanceof String) {
 					node.setObjectName("'" + node.getObjectName() + "'");
 				}
-				node.setParameterList(new ArrayList<ExpNode>());
+//				node.setParameterList(new ArrayList<ExpNode>());
 				node.setProperty(null);
 			} else {
 				for (ExpNode n : node.getParameterList()) {

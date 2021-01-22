@@ -16,10 +16,11 @@ public class ExpNode implements Serializable {
 	private List<ExpNode> parameterList;
 	private ExpNode property;
 	private Type type;
-//	private Object object;
+	private List<ExpNode> arrayIndex;
 
 	public ExpNode() {
 		this.parameterList = new ArrayList<ExpNode>();
+		this.arrayIndex = new ArrayList<ExpNode>();
 	}
 
 	public ExpNode(String objectName, Type type) {
@@ -37,6 +38,9 @@ public class ExpNode implements Serializable {
 				out += (i == 0 ? "" : ", ") + this.parameterList.get(i);
 			}
 			out += ")";
+		}
+		for (int i = 0; i < this.arrayIndex.size(); ++i) {
+			out += "[" + this.arrayIndex.get(i) + "]";
 		}
 		if (this.property != null) {
 			out += "." + this.property;
@@ -68,19 +72,19 @@ public class ExpNode implements Serializable {
 		this.type = type;
 	}
 
-	public void setParameterList(List<ExpNode> parameterList) {
-		this.parameterList = parameterList;
+	public void addParameter(ExpNode node) {
+		this.parameterList.add(node);
 	}
 
 	public List<ExpNode> getParameterList() {
 		return parameterList;
 	}
 
-//	public Object getObject() {
-//		return object;
-//	}
-//
-//	public void setObject(Object object) {
-//		this.object = object;
-//	}
+	public void addArrayIndex(ExpNode node) {
+		this.arrayIndex.add(node);
+	}
+
+	public List<ExpNode> getArrayIndex() {
+		return arrayIndex;
+	}
 }

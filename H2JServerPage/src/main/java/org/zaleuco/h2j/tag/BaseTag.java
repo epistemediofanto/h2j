@@ -7,6 +7,7 @@ import org.zaleuco.h2j.mw.Enviroments;
 
 public abstract class BaseTag implements TagMap {
 
+	@Deprecated
 	protected String trasforlELname(String htmlValue) {
 		String value = null;
 		if ((htmlValue.startsWith("#{")) && (htmlValue.endsWith("}"))) {

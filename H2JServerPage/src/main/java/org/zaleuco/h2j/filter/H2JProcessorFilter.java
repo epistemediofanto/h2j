@@ -102,7 +102,8 @@ public class H2JProcessorFilter implements Filter {
 			envName = envName.substring(0, envName.length() - CALL_STRING_EXT.length());
 
 			envName = URLDecoder.decode(envName, StandardCharsets.UTF_8.toString());
-			objName = Enviroments.getCDIObject(envName).toString();
+//			objName = Enviroments.getCDIObject(envName).toString();
+			objName = enviroments.getValue(envName);
 			newPage = prefixPage + objName;
 
 			this.processResponse(enviroments, newPage, request, response, chain);

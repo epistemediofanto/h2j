@@ -49,8 +49,14 @@ public class RepeatTag extends BaseTag {
 		nameValues = this.trasforlELname(nameValues);
 		if (nameValues != null) {
 			List<?> items;
+			Object oList;
 
-			items = (List<?>) enviroments.getObject(nameValues);
+			oList = enviroments.getObject(nameValues);
+			if (!(oList instanceof List<?>)) {
+				String type = oList != null ? "Found " + oList + " (" + oList.getClass().getName() + "), " : "";
+				throw new H2JFilterException(type + "expected List<?> value from " + nameValues);
+			}
+			items = (List<?>) oList;
 			if (items != null) {
 				NodeList childs;
 				Node child;
@@ -68,11 +74,12 @@ public class RepeatTag extends BaseTag {
 						}
 						try {
 
+							// Ciclo REPEAT
 							for (int i = 0; i < childs.getLength(); ++i) {
 								child = childs.item(i).cloneNode(true);
-								processor.processNode(child);
-								child.setUserData("h2j", "skip", null);
 								parent.appendChild(child);
+								processor.processNode(child);
+								child.setUserData("h2j", "skip", null);								
 							}
 
 						} finally {
