@@ -13,7 +13,9 @@ import javax.enterprise.inject.spi.CDI;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 
+import org.zaleuco.h2j.filter.H2JBean;
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.fs.VirtualFileSystem;
 import org.zaleuco.h2j.mw.ExpNode.Type;
 
 @Named("env")
@@ -24,17 +26,23 @@ public class Enviroments extends LocalEnviroment {
 	private static ServletContext servletContext;
 	private static ComponentCast componentCast;
 	private static String contextRoot;
+	private static VirtualFileSystem fileSystem;
 
 	public static void init(ServletContext context) throws H2JFilterException {
 		Enviroments.servletContext = context;
 		Enviroments.componentCast = new ComponentCast();
 		Enviroments.contextRoot = Enviroments.servletContext.getContextPath();
+		Enviroments.fileSystem = new VirtualFileSystem(context);
 	}
 
-	public String getValue(String element) throws H2JFilterException {
+	public String getStringValue(String element) throws H2JFilterException {
 		Object o;
 		o = this.getObject(element);
-		return o != null ? o.toString() : "";
+		if (o instanceof H2JBean) {
+			return ObjectWrapper.write(o);
+		} else {
+			return o != null ? o.toString() : "";
+		}
 	}
 
 	public Object getObject(String fullName) throws H2JFilterException {
@@ -74,11 +82,11 @@ public class Enviroments extends LocalEnviroment {
 			if (object == null) {
 				object = getCDIObject(node.getObjectName());
 			}
-			if (object != null) {		
+			if (object != null) {
 				object = this.getArrayElement(node, object);
 				if (node.getProperty() != null) {
 					object = this.invoke(object, node.getProperty(), setter, value);
-				} 			
+				}
 			} else {
 				assertTrue(node.getParameterList().size() == 0, "invalid function " + node);
 				object = node.getObjectName();
@@ -89,11 +97,11 @@ public class Enviroments extends LocalEnviroment {
 		}
 		return object;
 	}
-	
+
 	private Object getArrayElement(ExpNode node, Object o) throws H2JFilterException {
 		int ix;
-		for (int i=0; i<node.getArrayIndex().size(); ++i) {
-			ix= (int) this.invoke(node.getArrayIndex().get(i), false, null);
+		for (int i = 0; i < node.getArrayIndex().size(); ++i) {
+			ix = (int) this.invoke(node.getArrayIndex().get(i), false, null);
 			o = ((Object[]) o)[ix];
 		}
 		return o;
@@ -145,7 +153,11 @@ public class Enviroments extends LocalEnviroment {
 							parObject = ocm.cast(parVal);
 							paramsVal[k] = this.removeApice(parObject);
 						} else {
-							throw new H2JFilterException("Illegal argument " + parNode);
+							if (parVal.startsWith(ObjectWrapper.MARKER)) {
+								paramsVal[k] = ObjectWrapper.read(parVal);
+							} else {
+								paramsVal[k] = parVal;
+							}
 						}
 					} else {
 						paramsVal[k] = this.invoke(parNode, false, null);
@@ -164,6 +176,7 @@ public class Enviroments extends LocalEnviroment {
 
 		// Elaboro la sotto proprietà
 		if (node.getProperty() != null) {
+			assertNotNull(object, "object " + node.getObjectName() + " is null");
 			object = this.invoke(object, node.getProperty(), setter, value);
 		}
 
@@ -182,7 +195,7 @@ public class Enviroments extends LocalEnviroment {
 		bm = CDI.current().getBeanManager();
 		set = bm.getBeans(objectName);
 		if (set == null) {
-			throw new H2JFilterException("object " + objectName + " not found");
+			throw new H2JFilterException("cannot invoke " + objectName + " to object null");
 		}
 		iter = set.iterator();
 		if (iter.hasNext()) {
@@ -210,7 +223,7 @@ public class Enviroments extends LocalEnviroment {
 
 					fullExp = text.substring(posStart, posEnd + 1);
 					exp = text.substring(posStart + 2, posEnd);
-					value = this.getValue(exp);
+					value = this.getStringValue(exp);
 
 					text = text.replace(fullExp, value);
 					continue;
@@ -221,7 +234,7 @@ public class Enviroments extends LocalEnviroment {
 
 		return text;
 	}
-	
+
 	/**
 	 * 
 	 * prepara l'espressione da chiamara alla submit da html valuta solo gli
@@ -319,4 +332,7 @@ public class Enviroments extends LocalEnviroment {
 		return contextRoot;
 	}
 
+	public static VirtualFileSystem getFileSystem() {
+		return fileSystem;
+	}
 }

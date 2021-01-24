@@ -12,13 +12,14 @@ import javax.enterprise.inject.spi.CDI;
 import javax.servlet.ServletContext;
 
 import org.zaleuco.h2j.mw.ObjectCastModel;
+import org.zaleuco.h2j.filter.H2JFilterException;
 
 public class H2JEnviromentMatch {
 
 	private HashMap<String, ObjectCastModel> castComponents;
 	private ServletContext context;
 
-	public H2JEnviromentMatch(ServletContext servletContext) {
+	public H2JEnviromentMatch(ServletContext servletContext) throws H2JFilterException {
 
 		this.context = servletContext;
 		this.castComponents = new HashMap<String, ObjectCastModel>();
@@ -66,7 +67,7 @@ public class H2JEnviromentMatch {
 		return object;
 	}
 
-	public void setBean(String element, String fieldStringValue) {
+	public void setBean(String element, String fieldStringValue) throws H2JFilterException {
 		Object object;
 		ObjectCastModel cast;
 		Method method;

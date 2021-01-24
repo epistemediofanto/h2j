@@ -1,8 +1,8 @@
 package org.zaleuco.h2j.mw;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
@@ -49,7 +49,7 @@ public class ComponentCast {
 		this.castAdapter.put("java.lang.String", (String value) -> {
 			return value;
 		});
-
+	
 		this.castAdapter.put("java.util.Calendar", (String value) -> {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			GregorianCalendar gc;

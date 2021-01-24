@@ -30,7 +30,7 @@ public abstract class BaseTag implements TagMap {
 				namespaceURI = "";
 				name = this.trasforlELname(value);
 				if (name != null) {
-					value = enviroments.getValue(name);
+					value = enviroments.getStringValue(name);
 				}
 				element.setAttributeNS(namespaceURI, qualifiedName, value);
 			}
@@ -67,7 +67,7 @@ public abstract class BaseTag implements TagMap {
 		String newExp;
 		newExp = this.trasforlELname(exp);
 		if (newExp != null) {
-			value = enviroments.getValue(newExp);
+			value = enviroments.getStringValue(newExp);
 		}
 		return value;
 	}

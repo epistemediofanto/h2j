@@ -18,7 +18,7 @@ public class EvalString {
 					int len;
 					len = posEnd - posStart - 3;
 					exp = string.substring(posStart + 1, len);
-					value = enviroments.getValue(exp);
+					value = enviroments.getStringValue(exp);
 					string.replace(exp, value);
 					continue;
 				}

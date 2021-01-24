@@ -17,45 +17,61 @@ public class IncludeTag extends BaseTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
-		Node attributeValue;
+		Node attributeFileNode;
+		Node attributeNameNode;
+		Node attributeValueNode;
 		Node parent;
 
 		parent = node.getParentNode();
 
 		attributes = node.getAttributes();
-		attributeValue = attributes.getNamedItem("file");
-		if (attributeValue != null) {
-			String file;
-			InputStream is = null;
-			Document doc;
-			Node includeNode;
+		attributeFileNode = attributes.getNamedItem("file");
+		assertNotNull(attributeFileNode, "missing attribute file");
 
-			file = processor.getPath() + this.evaluation(processor.getEnviroments(), attributeValue.getNodeValue());
+		attributeNameNode = attributes.getNamedItem("name");
+		attributeValueNode = attributes.getNamedItem("value");
 
-			try {
-				is = Enviroments.getServletContext().getResourceAsStream(file);
-				doc = processor.load(is);
-				is.close();
-				is = null;
-				includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
-				parent.replaceChild(includeNode, node);
-				processor.processNode(includeNode);
-				node = null;
-			} catch (IOException | ParserConfigurationException | SAXException e) {
-				throw new H2JFilterException(file, e);
-			} finally {
-				try {
-					if (is != null) {
-						is.close();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+		if (attributeNameNode != null) {
+			assertNotNull(attributeNameNode.getNodeValue(), "missing contents for attribute name");
+			assertNotNull(attributeValueNode, "missing attribute value");
+			assertNotNull(attributeValueNode.getNodeValue(), "missing contents for attribute value");
 		}
 
-		if (node != null) {
-			parent.removeChild(node);
+		String file;
+		InputStream is = null;
+		Document doc;
+		Node includeNode;
+
+		file = processor.getPath() + this.evaluation(processor.getEnviroments(), attributeFileNode.getNodeValue());
+
+		try {
+//			is = Enviroments.getServletContext().getResourceAsStream(file);
+			is = Enviroments.getFileSystem().load(file);
+			doc = processor.load(is);
+			is.close();
+			is = null;
+			includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
+			parent.replaceChild(includeNode, node);
+			try {
+				if (attributeNameNode != null) {
+					processor.getEnviroments().push(attributeNameNode.getNodeName(),
+							processor.getEnviroments().getObject(attributeValueNode.getNodeValue()));
+				}
+				processor.processNode(includeNode);
+			} finally {
+				processor.getEnviroments().pop(attributeNameNode.getNodeValue());
+			}
+			node = null;
+		} catch (IOException | ParserConfigurationException | SAXException e) {
+			throw new H2JFilterException(file, e);
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

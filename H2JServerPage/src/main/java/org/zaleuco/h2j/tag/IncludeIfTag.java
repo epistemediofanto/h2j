@@ -40,7 +40,7 @@ public class IncludeIfTag extends BaseTag {
 
 		elName = this.trasforlELname(expValue);
 		if (elName != null) {
-			value = processor.getEnviroments().getValue(elName);
+			value = processor.getEnviroments().getStringValue(elName);
 		} else {
 			value = elName;
 		}
@@ -64,7 +64,8 @@ public class IncludeIfTag extends BaseTag {
 			file = processor.getPath() + file;
 
 			try {
-				is = Enviroments.getServletContext().getResourceAsStream(file);
+//				is = Enviroments.getServletContext().getResourceAsStream(file);
+				is = Enviroments.getFileSystem().load(file);
 				assertNotNull(is, "file not found: " + file);
 				doc = processor.load(is);
 				is.close();
