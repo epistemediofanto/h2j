@@ -59,7 +59,9 @@ public class IncludeTag extends BaseTag {
 				}
 				processor.processNode(includeNode);
 			} finally {
-				processor.getEnviroments().pop(attributeNameNode.getNodeValue());
+				if (attributeNameNode != null) {
+					processor.getEnviroments().pop(attributeNameNode.getNodeValue());
+				}
 			}
 			node = null;
 		} catch (IOException | ParserConfigurationException | SAXException e) {

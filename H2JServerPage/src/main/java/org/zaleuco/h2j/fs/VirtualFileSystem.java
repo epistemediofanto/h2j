@@ -17,6 +17,7 @@ public class VirtualFileSystem {
 
 	public VirtualFileSystem(ServletContext context) {
 		this.fileCache = new HashMap<String, byte[]>();
+		this.context=context;
 	}
 
 	public InputStream load(String filename) throws FileNotFoundException, IOException {
