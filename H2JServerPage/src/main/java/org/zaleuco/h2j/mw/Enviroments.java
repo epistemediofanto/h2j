@@ -23,16 +23,25 @@ import org.zaleuco.h2j.mw.ExpNode.Type;
 public class Enviroments extends LocalEnviroment {
 
 	private static final long serialVersionUID = 1L;
+	private static final String CACHE_FILE = "h2j.filecache";
+
 	private static ServletContext servletContext;
 	private static ComponentCast componentCast;
 	private static String contextRoot;
 	private static VirtualFileSystem fileSystem;
+	private static boolean enableCacheFile = true;
 
 	public static void init(ServletContext context) throws H2JFilterException {
 		Enviroments.servletContext = context;
 		Enviroments.componentCast = new ComponentCast();
 		Enviroments.contextRoot = Enviroments.servletContext.getContextPath();
 		Enviroments.fileSystem = new VirtualFileSystem(context);
+
+		Enviroments.enableCacheFile = booleanValue(CACHE_FILE, context.getInitParameter(CACHE_FILE), true);
+
+		if (!Enviroments.enableCacheFile) {
+			System.out.println("\nH2J: *** WARNING: cache system is disabled ***\n");
+		}
 	}
 
 	public String getStringValue(String element) throws H2JFilterException {
@@ -237,7 +246,7 @@ public class Enviroments extends LocalEnviroment {
 
 	/**
 	 * 
-	 * prepara l'espressione da chiamara alla submit da html valuta solo gli
+	 * prepara l'espressione da chiamare alla submit da html valuta solo gli
 	 * elementi dell'ambiente locale
 	 * 
 	 * @param fullName
@@ -274,10 +283,10 @@ public class Enviroments extends LocalEnviroment {
 		return fullName;
 	}
 
-	private void evalForHTMLCall(ExpNode node, boolean onlyParameters) throws H2JFilterException {
+	private void evalForHTMLCall(ExpNode node, boolean onlyLocal) throws H2JFilterException {
 		if (node != null) {
 
-			if ((this.peek(node.getObjectName()) != null) && !onlyParameters) {
+			if ((this.peek(node.getObjectName()) != null) && onlyLocal) {
 				ObjectCastModel ocm;
 				Object o;
 
@@ -290,13 +299,24 @@ public class Enviroments extends LocalEnviroment {
 				if (o instanceof String) {
 					node.setObjectName("'" + node.getObjectName() + "'");
 				}
-//				node.setParameterList(new ArrayList<ExpNode>());
 				node.setProperty(null);
 			} else {
+				Object oVal;
 				for (ExpNode n : node.getParameterList()) {
-					this.evalForHTMLCall(n, false);
+					if (null != getCDIObject(n.getObjectName())) {
+						oVal = this.invoke(n, false, null);
+						if (oVal instanceof String) {
+							n.setObjectName("'" + oVal + "'");
+						} else {
+							n.setObjectName(oVal != null ? oVal.toString() : null);
+						}
+						n.setProperty(null);
+						n.setType(Type.Property);
+					} else {
+						this.evalForHTMLCall(n, true);
+					}
 				}
-				this.evalForHTMLCall(node.getProperty(), true);
+				this.evalForHTMLCall(node.getProperty(), false);
 			}
 		}
 	}
@@ -334,5 +354,15 @@ public class Enviroments extends LocalEnviroment {
 
 	public static VirtualFileSystem getFileSystem() {
 		return fileSystem;
+	}
+
+	public static boolean booleanValue(String name, String str, boolean def) {
+		if (("true".equals(str)) || ("false".equals(str))) {
+			return Boolean.parseBoolean(str);
+		}
+		if (str != null) {
+			System.out.println("Invalid setting: " + name + "=" + str + ", use: " + def);
+		}
+		return def;
 	}
 }

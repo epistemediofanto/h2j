@@ -24,7 +24,7 @@ import org.zaleuco.h2j.mw.Enviroments;
 import org.zaleuco.h2j.mw.Trasnslator;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
-@WebFilter(filterName = "h2jfilter2", urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "h2j"))
+@WebFilter(filterName = "h2jfilter", urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "h2j"))
 public class H2JProcessorFilter implements Filter {
 
 	public static final String EXT = ".h2j";
@@ -32,10 +32,13 @@ public class H2JProcessorFilter implements Filter {
 
 	private static final Logger Log = Logger.getLogger(H2JProcessorFilter.class.getName());
 
-	public void init(FilterConfig fConfig) throws ServletException { 
+	public void init(FilterConfig fConfig) throws ServletException {
 		try {
 			Enviroments.init(fConfig.getServletContext());
 			Trasnslator.init();
+
+			System.out.println("H2J: *** h2j processor started. ***");
+
 		} catch (H2JFilterException e) {
 			e.printStackTrace();
 			Log.log(Level.SEVERE, e.getMessage(), e);
@@ -43,8 +46,7 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -88,15 +90,15 @@ public class H2JProcessorFilter implements Filter {
 		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
 	}
 
-	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response,
-			FilterChain chain) throws H2JFilterException {
+	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
+			throws H2JFilterException {
 		String envName;
 		String objName;
 		String newPage;
 		String prefixPage;
 		int pos;
 		try {
-			pos = page.lastIndexOf('/') + 1;
+			pos = lastPos(page, '/') + 1;
 			prefixPage = page.substring(0, pos);
 			envName = page.substring(pos);
 			envName = envName.substring(0, envName.length() - CALL_STRING_EXT.length());
@@ -112,8 +114,7 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
-			FilterChain chain) throws H2JFilterException {
+	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response, FilterChain chain) throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -127,8 +128,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
-			ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
+			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 
@@ -165,4 +166,18 @@ public class H2JProcessorFilter implements Filter {
 //		InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
 	}
 
+	private static int lastPos(String str, char c) {
+		char e;
+		int pos = 0;
+		int len = str.length();
+		for (int i = 0; i < len; ++i) {
+			e = str.charAt(i);
+			if (e == '/') {
+				pos = i;
+			} else if (e == '\'') {
+				break;
+			}
+		}
+		return pos;
+	}
 }

@@ -45,7 +45,6 @@ public class IncludeTag extends BaseTag {
 		file = processor.getPath() + this.evaluation(processor.getEnviroments(), attributeFileNode.getNodeValue());
 
 		try {
-//			is = Enviroments.getServletContext().getResourceAsStream(file);
 			is = Enviroments.getFileSystem().load(file);
 			doc = processor.load(is);
 			is.close();

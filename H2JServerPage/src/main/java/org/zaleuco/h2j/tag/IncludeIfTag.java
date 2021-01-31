@@ -42,7 +42,7 @@ public class IncludeIfTag extends BaseTag {
 		if (elName != null) {
 			value = processor.getEnviroments().getStringValue(elName);
 		} else {
-			value = elName;
+			value = expValue;
 		}
 
 		if ("true".equals(value)) {

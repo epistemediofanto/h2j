@@ -22,7 +22,7 @@ public class VirtualFileSystem {
 
 	public InputStream load(String filename) throws FileNotFoundException, IOException {
 		byte[] stream;
-		
+				
 		stream = this.fileCache.get(filename);
 		if (stream == null) {
 			stream = this.store(filename);

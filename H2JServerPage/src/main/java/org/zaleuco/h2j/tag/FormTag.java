@@ -21,11 +21,12 @@ public class FormTag extends DefaultH2JTag {
 		valueAction = nodeAction.getNodeValue();
 		assertNotNull(nodeAction, "missing action attribute on form");
 
-		valueAction = this.trasforlELname(valueAction);
+		valueAction = processor.getEnviroments().evalForHTMLCall(valueAction);
 		if (valueAction != null) {
 			attributes = node.getAttributes();
 			nodeName = attributes.getNamedItem("name");
 			assertNotNull(nodeName, "missing name attribute on form");
+			
 			valueName = nodeName.getNodeValue();
 			assertNotNull(valueName, "missing name attribute on form");
 
