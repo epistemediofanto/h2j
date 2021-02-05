@@ -17,10 +17,12 @@ public class RepeatTag extends BaseTag {
 		Node nodeVar;
 		Node indexVar;
 		Node sizeVar;
+		Node rowVar;
 		String nameValues;
 		String nameVar;
 		String nameIndex;
 		String nameSize;
+		String nameRow;
 		Node parent;
 		Enviroments enviroments;
 
@@ -44,7 +46,10 @@ public class RepeatTag extends BaseTag {
 		nameIndex = indexVar != null ? indexVar.getNodeValue() : null;
 
 		sizeVar = attributes.getNamedItem("size");
-		nameSize = indexVar != null ? sizeVar.getNodeValue() : null;
+		nameSize = sizeVar != null ? sizeVar.getNodeValue() : null;
+
+		rowVar = attributes.getNamedItem("row");
+		nameRow = rowVar != null ? rowVar.getNodeValue() : null;
 
 		nameValues = this.trasforlELname(nameValues);
 		if (nameValues != null) {
@@ -69,8 +74,12 @@ public class RepeatTag extends BaseTag {
 					}
 					for (Object item : items) {
 						enviroments.push(nameVar, item);
+						if (nameRow != null) {
+							enviroments.push(nameRow, j);
+						}
+						++j;
 						if (nameIndex != null) {
-							enviroments.push(nameIndex, ++j);
+							enviroments.push(nameIndex, j);
 						}
 						try {
 
@@ -79,7 +88,7 @@ public class RepeatTag extends BaseTag {
 								child = childs.item(i).cloneNode(true);
 								parent.appendChild(child);
 								processor.processNode(child);
-								child.setUserData("h2j", "skip", null);								
+								child.setUserData("h2j", "skip", null);
 							}
 
 						} finally {
