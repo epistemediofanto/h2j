@@ -20,6 +20,7 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.zaleuco.expression.InvokerException;
 import org.zaleuco.h2j.mw.Enviroments;
 import org.zaleuco.h2j.mw.Trasnslator;
 import org.zaleuco.h2j.mw.XmlProcessor;
@@ -73,7 +74,7 @@ public class H2JProcessorFilter implements Filter {
 					} else {
 						this.processResponse(enviroments, page, servletRequest, response, chain);
 					}
-				} catch (H2JFilterException e) {
+				} catch (InvokerException | H2JFilterException e) {
 					e.printStackTrace();
 					Log.log(Level.SEVERE, e.getMessage(), e);
 					this.defaultPage(response);

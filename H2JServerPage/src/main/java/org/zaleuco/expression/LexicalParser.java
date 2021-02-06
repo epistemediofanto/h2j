@@ -18,7 +18,7 @@ import org.zaleuco.expression.NodeToken.Type;
  * PARVAL ::= ADD [, ADD]*
  * NAME ::= (alfa [num])* | NUM | 'stringa'
  * NUM ::= numero
- * 
+ *
  * @author Achille
  *
  */
@@ -32,7 +32,7 @@ public class LexicalParser {
 		String s;
 		NodeToken nt;
 
-		s = "method1.func()";
+		s = "method1.func('ciao')";
 		nt = LexicalParser.process(s);
 		System.out.println(nt);
 	}

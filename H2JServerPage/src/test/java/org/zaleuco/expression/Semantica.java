@@ -36,7 +36,7 @@ class Semantica {
 
 		nodeToken = LexicalParser.process("ooo.intero");
 		o = Executor.get(nodeToken, this.context);
-		assertEquals(this.bean.getIntero(), o);
+		assertEquals(13, o);
 	}
 
 	@Test
@@ -46,7 +46,7 @@ class Semantica {
 
 		nodeToken = LexicalParser.process("ooo.stringa");
 		o = Executor.get(nodeToken, this.context);
-		assertEquals(this.bean.getStringa(), o);
+		assertEquals("ciao", o);
 	}
 
 	@Test
@@ -219,6 +219,15 @@ class Semantica {
 		assertEquals(this.bean.getData(), o);
 	}
 
+	@Test
+	void oggetto_18() throws SyntaxError, InvokerException {
+		NodeToken nodeToken;
+		Object o;
+
+		nodeToken = LexicalParser.process("ooo.setStringa('bau')");
+		Executor.get(nodeToken, this.context);
+		assertEquals("bau", this.bean.getStringa());
+	}
 	@Test
 	void oggetto_100() throws SyntaxError, InvokerException {
 		NodeToken nodeToken;

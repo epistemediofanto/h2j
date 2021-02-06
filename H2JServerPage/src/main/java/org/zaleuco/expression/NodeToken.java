@@ -6,7 +6,7 @@ import java.util.List;
 public class NodeToken {
 
 	public enum Type {
-		nil, name, function, number, string, arrayIndex, dot, add, sub, mul, div, pow, not, and, or, lt, let, gt, get, eq, neq, neg;
+		nil, name, function, number, string, arrayIndex, dot, add, sub, mul, div, pow, not, and, or, lt, let, gt, get, eq, neq, neg, undef;
 	}
 
 	private String value;
@@ -56,7 +56,8 @@ public class NodeToken {
 
 	public String toString() {
 		String out = null;
-		switch (this.type) {
+		Type type = this.type != null ? this.type : Type.undef;
+		switch (type) {
 		case add:
 			out = this.getChilds().get(0) + " + " + this.getChilds().get(1);
 			break;
@@ -118,6 +119,9 @@ public class NodeToken {
 			break;
 		case sub:
 			out = this.getChilds().get(0) + " - " + this.getChilds().get(1);
+			break;
+		case undef:
+			out = "???";
 			break;
 		}
 

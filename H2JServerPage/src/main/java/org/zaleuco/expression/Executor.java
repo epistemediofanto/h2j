@@ -113,6 +113,8 @@ public class Executor {
 			o = this.sub(node);
 			break;
 
+		case undef:
+			throw new SyntaxError(node, "undefined type ");
 		}
 
 		return o;
@@ -375,10 +377,11 @@ public class Executor {
 					return true;
 				} else if ("false".equals(v)) {
 					return false;
-				} else if ((v.length() > 2) && (v.startsWith("'")) && (v.endsWith("'"))) {
-					return new String(v.substring(1, v.length() - 1));
-				}
-				throw new SyntaxError(node, "unsupported operation");
+				} else // if ((v.length() > 2) && (v.startsWith("'")) && (v.endsWith("'"))) {
+//					return new String(v.substring(1, v.length() - 1));
+					return v;
+//				}
+				// throw new SyntaxError(node, "unsupported operation");
 			}
 		}
 	}
@@ -412,6 +415,7 @@ public class Executor {
 		List<NodeToken> childs;
 		NodeToken nodeParams = null;
 		int numParams = 0;
+		Object old;
 
 		childs = node.getChilds();
 		classMethods = object.getClass().getMethods();
@@ -437,7 +441,8 @@ public class Executor {
 				}
 
 				try {
-					object = method.invoke(object, paramValue);
+					old = object;
+					object = method.invoke(old, paramValue);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					throw new InvokerException(node, e);
 				}
