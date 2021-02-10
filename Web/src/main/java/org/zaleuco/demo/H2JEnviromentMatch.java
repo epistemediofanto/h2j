@@ -11,7 +11,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
 import javax.servlet.ServletContext;
 
-import org.zaleuco.h2j.mw.ObjectCastModel;
+import org.zaleuco.expression.ObjectCastModel;
 import org.zaleuco.h2j.filter.H2JFilterException;
 
 public class H2JEnviromentMatch {
@@ -87,8 +87,8 @@ public class H2JEnviromentMatch {
 			parameter = method.getParameters()[0];
 			parClassName = parameter.getParameterizedType().getTypeName();
 			cast = this.castComponents.get(parClassName);
-			value = cast.cast(fieldStringValue);
-			method.invoke(object, value);
+//			value = cast.cast(fieldStringValue);
+//			method.invoke(object, value);
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			throw new IllegalArgumentException(e);

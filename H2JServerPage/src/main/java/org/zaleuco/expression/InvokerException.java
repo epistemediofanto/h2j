@@ -9,10 +9,10 @@ public class InvokerException extends Exception {
 	}
 	
 	public InvokerException(NodeToken token, Exception e) {
-		super(token.getValue() + " at " + token.getPos(), e);
+		super(token.getValue() + " at pos " + token.getPos(), e);
 	}
 
 	public InvokerException(NodeToken token, String message) {
-		super(token.getValue() + " at " + token.getPos() + " - " + message);
+		super(token.getValue() + " at pos " + token.getPos() + " - " + message);
 	}
 }

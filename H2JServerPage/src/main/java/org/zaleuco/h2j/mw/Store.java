@@ -14,7 +14,7 @@ import javax.enterprise.inject.spi.CDI;
 import org.zaleuco.expression.EnvContext;
 import org.zaleuco.expression.InvokerException;
 
-public class Store extends Assertion implements EnvContext {
+public class Store extends HtmlBindName implements EnvContext {
 
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, List<Object>> storeSpace;
@@ -116,7 +116,7 @@ public class Store extends Assertion implements EnvContext {
 	public Object get(String name) throws InvokerException {
 		Object object;
 		object = this.peek(name);
-		if ((object==null) && this.searchInCDI) {
+		if ((object == null) && this.searchInCDI) {
 			object = getCDIObject(name);
 		}
 		return object;
@@ -125,7 +125,7 @@ public class Store extends Assertion implements EnvContext {
 	public void enableCDIContext() {
 		this.searchInCDI = true;
 	}
-	
+
 	public void disableCDIContext() {
 		this.searchInCDI = false;
 	}

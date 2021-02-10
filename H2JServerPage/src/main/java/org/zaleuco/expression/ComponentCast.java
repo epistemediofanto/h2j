@@ -1,4 +1,4 @@
-package org.zaleuco.h2j.mw;
+package org.zaleuco.expression;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,11 +49,11 @@ public class ComponentCast {
 		this.castAdapter.put("java.lang.String", (String value) -> {
 			return value;
 		});
-	
+
 		this.castAdapter.put("java.util.Calendar", (String value) -> {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			GregorianCalendar gc;
-			
+
 			gc = new GregorianCalendar();
 			try {
 				gc.setTime(sdf.parse(value));
@@ -62,15 +62,15 @@ public class ComponentCast {
 			}
 			return gc;
 		});
-		
+
 		this.castAdapter.put("java.util.Date", (String value) -> {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date;
-		
+
 			try {
 				date = sdf.parse(value);
 			} catch (ParseException e) {
-				date = new Date(0);
+				throw new SyntaxError(null, value); 
 			}
 			return date;
 		});

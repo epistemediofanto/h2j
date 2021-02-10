@@ -22,7 +22,7 @@ public class IncludeIfTag extends BaseTag {
 		Node parent;
 		String expValue;
 		String thenValue;
-		String elName;
+//		String elName;
 		String value;
 		String file = null;
 
@@ -38,13 +38,14 @@ public class IncludeIfTag extends BaseTag {
 		assertNotNull(expNode, "element then is missing");
 		thenValue = thenNode.getNodeValue();
 
-		elName = this.trasforlELname(expValue);
-		if (elName != null) {
-			value = processor.getEnviroments().getStringValue(elName);
-		} else {
-			value = expValue;
-		}
-
+//		elName = this.trasforlELname(expValue);
+//		if (elName != null) {
+//			value = processor.getEnviroments().getStringValue(elName);
+//		} else {
+//			value = expValue;
+//		}
+		value = processor.getEnviroments().eval(expValue);
+		
 		if ("true".equals(value)) {
 			file = thenValue;
 		} else {

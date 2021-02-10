@@ -7,6 +7,10 @@ import org.zaleuco.h2j.mw.Enviroments;
 
 public abstract class BaseTag implements TagMap {
 
+	protected static boolean isMapName(String mapName) {
+		return (mapName != null) && mapName.startsWith("#{") && mapName.endsWith("}");
+	}
+
 	@Deprecated
 	protected String trasforlELname(String htmlValue) {
 		String value = null;
@@ -25,7 +29,7 @@ public abstract class BaseTag implements TagMap {
 
 		for (int i = 0; i < attributes.getLength(); ++i) {
 			qualifiedName = attributes.item(i).getNodeName();
-			if (!this.ignore(qualifiedName, ignore)) {
+			if (!in(qualifiedName, ignore)) {
 				value = attributes.item(i).getNodeValue();
 				namespaceURI = "";
 				name = this.trasforlELname(value);
@@ -37,7 +41,7 @@ public abstract class BaseTag implements TagMap {
 		}
 	}
 
-	private boolean ignore(String q, String... values) {
+	protected static boolean in(String q, String... values) {
 		boolean ignore = false;
 		if (values != null) {
 			for (String v : values) {

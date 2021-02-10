@@ -5,11 +5,13 @@ import java.util.HashMap;
 import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.tag.AnchorTag;
 import org.zaleuco.h2j.tag.ButtonTag;
+import org.zaleuco.h2j.tag.DeclareTag;
 import org.zaleuco.h2j.tag.DefaultH2JTag;
 import org.zaleuco.h2j.tag.DefaultHtmlTag;
 import org.zaleuco.h2j.tag.FormTag;
 import org.zaleuco.h2j.tag.IncludeIfTag;
 import org.zaleuco.h2j.tag.IncludeTag;
+import org.zaleuco.h2j.tag.InputTag;
 import org.zaleuco.h2j.tag.OptionsTag;
 import org.zaleuco.h2j.tag.OutTag;
 import org.zaleuco.h2j.tag.RepeatTag;
@@ -46,6 +48,9 @@ public class Trasnslator {
 		tagMap = new ButtonTag();
 		this.registerTag("button", tagMap);
 
+		tagMap = new DeclareTag();
+		this.registerTag("declare", tagMap);
+
 		tagMap = new FormTag();
 		this.registerTag("form", tagMap);
 
@@ -54,6 +59,9 @@ public class Trasnslator {
 
 		tagMap = new IncludeIfTag();
 		this.registerTag("includeif", tagMap);
+
+		tagMap = new InputTag();
+		this.registerTag("input", tagMap);
 
 		tagMap = new OptionsTag();
 		this.registerTag("options", tagMap);

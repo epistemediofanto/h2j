@@ -29,11 +29,12 @@ public class RepeatTag extends BaseTag {
 		enviroments = processor.getEnviroments();
 
 		parent = node.getParentNode();
-		parent.removeChild(node);
+
+//		parent.removeChild(node);
 
 		attributes = node.getAttributes();
 		nodeValues = attributes.getNamedItem("values");
-		assertNotNull(nodeValues, "element values is missing");
+		assertNotNull(nodeValues, "missing 'values' attribute in 'repeat' tag");
 		nameValues = nodeValues.getNodeValue();
 		assertNotEmpty(nameValues, "missing values contents");
 
@@ -86,7 +87,8 @@ public class RepeatTag extends BaseTag {
 							// Ciclo REPEAT
 							for (int i = 0; i < childs.getLength(); ++i) {
 								child = childs.item(i).cloneNode(true);
-								parent.appendChild(child);
+//								parent.appendChild(child);
+								parent.insertBefore(child, node);
 								processor.processNode(child);
 								child.setUserData("h2j", "skip", null);
 							}
@@ -109,6 +111,7 @@ public class RepeatTag extends BaseTag {
 				}
 			}
 		}
+		parent.removeChild(node);
 	}
 
 }

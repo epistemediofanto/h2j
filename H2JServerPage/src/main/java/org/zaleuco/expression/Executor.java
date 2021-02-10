@@ -2,6 +2,7 @@ package org.zaleuco.expression;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
 
 import org.zaleuco.expression.NodeToken.Type;
@@ -10,6 +11,8 @@ public class Executor {
 
 	private EnvContext context;
 	private Object value;
+	private boolean setter = false;
+	private ComponentCast cast = new ComponentCast();
 
 	public static Object get(NodeToken node, EnvContext context) throws SyntaxError, InvokerException {
 		Executor e;
@@ -23,6 +26,7 @@ public class Executor {
 		e = new Executor();
 		e.context = context;
 		e.value = value;
+		e.setter = true;
 		return e.eval(node);
 	}
 
@@ -416,16 +420,21 @@ public class Executor {
 		NodeToken nodeParams = null;
 		int numParams = 0;
 		Object old;
+		boolean setter;
 
 		childs = node.getChilds();
 		classMethods = object.getClass().getMethods();
 		found = false;
+		setter = this.setter && (node.getChilds().size() == 0);
 
 		if ((childs.size() > childPos) && (childs.get(childPos).getType() == Type.function)) {
 			nodeParams = childs.get(childPos);
 			numParams = nodeParams.getChilds().size();
 			propertyName = node.getValue();
 			++childPos;
+		} else if (setter) {
+			propertyName = adjustName("set", node.getValue());
+			numParams = 1;
 		} else {
 			propertyName = adjustName("get", node.getValue());
 		}
@@ -434,10 +443,17 @@ public class Executor {
 			method = classMethods[i];
 			if (method.getName().equals(propertyName) && (method.getParameterCount() == numParams)) {
 				Object[] paramValue;
+				Parameter[] parameters;
 
+				parameters = method.getParameters();
 				paramValue = new Object[numParams];
-				for (int j = 0; j < numParams; ++j) {
-					paramValue[j] = this.eval(nodeParams.getChilds().get(j));
+				if (setter) {
+					paramValue[0] = this.cast(parameters[0], this.value);
+				} else {
+					for (int j = 0; j < numParams; ++j) {
+						value = this.eval(nodeParams.getChilds().get(j));
+						paramValue[j] = this.cast(parameters[j], this.value);
+					}
 				}
 
 				try {
@@ -452,7 +468,7 @@ public class Executor {
 		}
 
 		if (!found) {
-			throw new InvokerException(node, "Missing " + node.getValue());
+			throw new InvokerException(node, "Missing property or function: " + node.getValue());
 		}
 
 		while ((childs.size() > childPos) && (childs.get(childPos).getType() == Type.arrayIndex)) {
@@ -473,6 +489,23 @@ public class Executor {
 		}
 
 		assertTrue(childs.size() == childPos, node, "invalid operation");
+
+		return object;
+	}
+
+	private Object cast(Parameter parameter, Object object) throws SyntaxError {
+		ObjectCastModel ocm;
+		String parType;
+
+		if (object != null) {
+			parType = parameter.getParameterizedType().getTypeName();
+			if (!parType.equals(object.getClass().getCanonicalName())) {
+				ocm = this.cast.get(parType);
+				if (ocm != null) {
+					object = ocm.cast(object.toString());
+				}
+			}
+		}
 
 		return object;
 	}

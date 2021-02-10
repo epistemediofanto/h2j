@@ -11,6 +11,7 @@ import java.util.Base64;
 
 import org.zaleuco.h2j.filter.H2JFilterException;
 
+@Deprecated
 public class ObjectWrapper {
 
 	public static final String MARKER = "#$@-@$#";

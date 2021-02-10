@@ -9,6 +9,16 @@ import org.zaleuco.h2j.mw.XmlProcessor;
 public class DefaultHtmlTag extends BaseTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
+
+//		if (in(node.getNodeName(), "input")) {
+//			hideNodeAttribute(processor, node, "name", "value");
+//		} else if (in(node.getNodeName(), "a")) {
+//			if (hideNodeAttribute(processor, node, "href", "href")) {
+//				Node href = node.getAttributes().getNamedItem("href");
+//				href.setNodeValue(href.getNodeValue() + H2JProcessorFilter.CALL_STRING_EXT);
+//			}
+//		}
+
 		this.processAttributes(processor, node.getAttributes());
 		this.processNodes(processor, node.getChildNodes());
 	}
@@ -38,7 +48,7 @@ public class DefaultHtmlTag extends BaseTag {
 				s = n.getNodeType();
 				prefix = n.getPrefix();
 				value = n.getNodeValue();
-				
+
 				if (s == Node.ATTRIBUTE_NODE) {
 					if ("xmlns".equals(prefix) && XmlProcessor.NAMESPACE.equals(value)) {
 						attributes.removeNamedItem(n.getNodeName());
@@ -55,15 +65,7 @@ public class DefaultHtmlTag extends BaseTag {
 
 		nodeName = node.getNodeName();
 		if ("value".equals(nodeName)) {
-			nodeName = node.getNodeValue();
-
-			nodeName = this.trasforlELname(nodeName);
-			if (nodeName != null) {
-				String nodeValue;
-
-				nodeValue = processor.getEnviroments().getStringValue(nodeName);
-				node.setNodeValue(nodeValue);
-			}
+			node.setNodeValue(processor.getEnviroments().eval(node.getNodeValue()));
 		}
 	}
 

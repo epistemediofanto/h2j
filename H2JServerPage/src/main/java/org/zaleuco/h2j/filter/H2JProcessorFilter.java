@@ -3,11 +3,10 @@ package org.zaleuco.h2j.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.System.Logger.Level;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,33 +20,42 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.zaleuco.expression.InvokerException;
+import org.zaleuco.h2j.filter.cast.Converter;
+import org.zaleuco.h2j.filter.cast.DefaultConverter;
 import org.zaleuco.h2j.mw.Enviroments;
 import org.zaleuco.h2j.mw.Trasnslator;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
-@WebFilter(filterName = "h2jfilter", urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "h2j"))
+@WebFilter(filterName = "org.zaleuco.h2j.filter", urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "h2j"))
 public class H2JProcessorFilter implements Filter {
 
-	public static final String EXT = ".h2j";
-	public static final String CALL_STRING_EXT = ".call" + EXT;
-
-	private static final Logger Log = Logger.getLogger(H2JProcessorFilter.class.getName());
+	public static final String LOGNAME = "h2j";
+	public static String EXT = ".h2j";
+	public static String CALL_STRING_EXT = ".call" + EXT;
 
 	public void init(FilterConfig fConfig) throws ServletException {
+		String ext;
 		try {
+			DefaultConverter.initCommonConverter();
 			Enviroments.init(fConfig.getServletContext());
 			Trasnslator.init();
 
-			System.out.println("H2J: *** h2j processor started. ***");
+			ext = fConfig.getServletContext().getInitParameter("h2j.fileTypes");
+			if (ext != null) {
+				EXT = "." + ext;
+				CALL_STRING_EXT = ".call" + EXT;
+			}
+			System.getLogger(LOGNAME).log(Level.INFO, "h2j page type: " + EXT);
+			System.getLogger(LOGNAME).log(Level.INFO, "H2J: *** h2j processor started. ***");
 
 		} catch (H2JFilterException e) {
-			e.printStackTrace();
-			Log.log(Level.SEVERE, e.getMessage(), e);
+			System.getLogger(LOGNAME).log(Level.ERROR, e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -72,11 +80,11 @@ public class H2JProcessorFilter implements Filter {
 					if (page.endsWith(CALL_STRING_EXT)) {
 						this.processCall(enviroments, page, servletRequest, response, chain);
 					} else {
+						enviroments.clearBindName();
 						this.processResponse(enviroments, page, servletRequest, response, chain);
 					}
 				} catch (InvokerException | H2JFilterException e) {
-					e.printStackTrace();
-					Log.log(Level.SEVERE, e.getMessage(), e);
+					System.getLogger(LOGNAME).log(Level.ERROR, e.getMessage(), e);
 					this.defaultPage(response);
 				}
 				return;
@@ -91,8 +99,8 @@ public class H2JProcessorFilter implements Filter {
 		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
 	}
 
-	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
-			throws H2JFilterException {
+	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response,
+			FilterChain chain) throws H2JFilterException {
 		String envName;
 		String objName;
 		String newPage;
@@ -103,11 +111,14 @@ public class H2JProcessorFilter implements Filter {
 			prefixPage = page.substring(0, pos);
 			envName = page.substring(pos);
 			envName = envName.substring(0, envName.length() - CALL_STRING_EXT.length());
-
 			envName = URLDecoder.decode(envName, StandardCharsets.UTF_8.toString());
+			// TODO
+			envName = enviroments.originalName(envName).name;
 //			objName = Enviroments.getCDIObject(envName).toString();
 			objName = enviroments.getStringValue(envName);
 			newPage = prefixPage + objName;
+
+			enviroments.clearBindName();
 
 			this.processResponse(enviroments, newPage, request, response, chain);
 		} catch (UnsupportedEncodingException e) {
@@ -115,7 +126,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
+			FilterChain chain) throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -125,12 +137,19 @@ public class H2JProcessorFilter implements Filter {
 		while (eList.hasMoreElements()) {
 			pName = eList.nextElement();
 			value = request.getParameter(pName);
-			enviroments.setBean(pName, value);
+			// TODO
+			Converter converter = enviroments.originalName(pName).converter;
+			pName = enviroments.originalName(pName).name;
+			if (converter != null) {
+				enviroments.setBean(pName, converter.fromString(value));
+			} else {
+				enviroments.setBean(pName, value);
+			}
 		}
 	}
 
-	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
-			throws H2JFilterException {
+	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
+			ServletResponse response, FilterChain chain) throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 
@@ -181,4 +200,5 @@ public class H2JProcessorFilter implements Filter {
 		}
 		return pos;
 	}
+
 }

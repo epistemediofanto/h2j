@@ -13,17 +13,32 @@ public class OutTag extends BaseTag {
 		String elName;
 		String value;
 		Node parent;
+		
+		String formatString = null;
 
 		parent = node.getParentNode();
-	
+
 		attributes = node.getAttributes();
+
+		attributeValue = attributes.getNamedItem("format");
+		if (attributeValue != null) {
+			formatString = attributeValue.getNodeValue();
+		}
+
 		attributeValue = attributes.getNamedItem("value");
 		assertNotNull(attributeValue, "element value is missing");
 		value = attributeValue.getNodeValue();
+
 		elName = this.trasforlELname(value);
 		if (elName != null) {
-			value = processor.getEnviroments().getStringValue(elName);
+			if (formatString != null) {
+				Object object = processor.getEnviroments().getObject(elName);
+				value = String.format(formatString, object);
+			} else {
+				value = processor.getEnviroments().getStringValue(elName);
+			}
 		}
-		parent.replaceChild(node.getOwnerDocument().createTextNode(value), node);		
+
+		parent.replaceChild(node.getOwnerDocument().createTextNode(value), node);
 	}
 }

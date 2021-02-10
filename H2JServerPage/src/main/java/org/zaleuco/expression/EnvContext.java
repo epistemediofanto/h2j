@@ -2,5 +2,5 @@ package org.zaleuco.expression;
 
 public interface EnvContext {
 
-	public Object get(String name) throws InvokerException ;
+	public Object get(String name) throws InvokerException;
 }
