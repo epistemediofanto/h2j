@@ -7,14 +7,25 @@ import java.util.Date;
 
 public class DateConverter implements Converter {
 
+	private String format;
+
+	public DateConverter(String format) {
+		this.format = format;
+	}
+
 	public String toString(Object value) {
-		return String.format("%1$td/%1$tm/%1$ty", value);
+		if (value != null) {
+			SimpleDateFormat sdf = new SimpleDateFormat(this.format);
+			return sdf.format((Date) value);
+		} else {
+			return "";
+		}
 	}
 
 	public Date fromString(String value) {
 		Date date = null;
 		if (value != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat(this.format);
 			try {
 				date = sdf.parse(value);
 			} catch (ParseException e) {

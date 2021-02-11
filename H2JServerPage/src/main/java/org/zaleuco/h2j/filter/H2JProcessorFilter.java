@@ -21,8 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.zaleuco.expression.InvokerException;
 import org.zaleuco.h2j.filter.cast.Converter;
-import org.zaleuco.h2j.filter.cast.DefaultConverter;
+import org.zaleuco.h2j.filter.cast.Shape;
 import org.zaleuco.h2j.mw.Enviroments;
+import org.zaleuco.h2j.mw.HtmlBindName.StoreObject;
 import org.zaleuco.h2j.mw.Trasnslator;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
@@ -36,7 +37,7 @@ public class H2JProcessorFilter implements Filter {
 	public void init(FilterConfig fConfig) throws ServletException {
 		String ext;
 		try {
-			DefaultConverter.initCommonConverter();
+			Shape.initCommonConverter();
 			Enviroments.init(fConfig.getServletContext());
 			Trasnslator.init();
 
@@ -132,14 +133,17 @@ public class H2JProcessorFilter implements Filter {
 		Enumeration<String> eList;
 		String pName;
 		String value;
+		StoreObject storeObject;
+		Converter converter;
 
 		eList = request.getParameterNames();
 		while (eList.hasMoreElements()) {
 			pName = eList.nextElement();
 			value = request.getParameter(pName);
 			// TODO
-			Converter converter = enviroments.originalName(pName).converter;
-			pName = enviroments.originalName(pName).name;
+			storeObject = enviroments.originalName(pName);
+			pName = storeObject.name;
+			converter = storeObject.converter;
 			if (converter != null) {
 				enviroments.setBean(pName, converter.fromString(value));
 			} else {

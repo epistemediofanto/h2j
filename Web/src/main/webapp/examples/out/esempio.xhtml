@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+	<p>
+		Cognome:
+		<j:out value="#{oggettoForm.cognome}" />
+	</p>
+	<p>
+		Numero:
+		<j:out value="#{oggettoForm.numero}" />
+	</p>
+	<p>
+		Reale:
+		<j:out value="#{oggettoForm.reale}" format="%3.3f" />
+	</p>
+	<p>
+		Data:
+		<j:out value="#{oggettoForm.oggi}" />
+	</p>
+
+	<p>
+		Data:
+		<j:out value="#{oggettoForm.oggi}" shape="dmyDate" />
+	</p>
+
+	<p>
+		Data:
+		<j:out value="#{oggettoForm.oggi}" shape="mdyDate" />
+	</p>
+
+	<p>
+		Data:
+		<j:out value="#{oggettoForm.oggi}" format="%1$td/%1$tm/%1$ty" />
+	</p>
+
+	<br />
+	<br />
+	<a href="../../index.html">Home</a>
+</body>
+</html>

@@ -39,6 +39,7 @@ public class DefaultH2JTag extends BaseTag {
 				s = n.getNodeType();
 				prefix = n.getPrefix();
 				value = n.getNodeValue();
+//				System.out.println("prefix: " + prefix + ", value: " + value);
 				if (s == Node.ATTRIBUTE_NODE) {
 					if ("xmlns".equals(prefix) && XmlProcessor.NAMESPACE.equals(value)) {
 						attributes.removeNamedItem(n.getNodeName());

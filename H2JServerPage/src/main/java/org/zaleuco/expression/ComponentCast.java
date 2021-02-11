@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import org.zaleuco.h2j.filter.cast.Shape;
+
 public class ComponentCast {
 
 	private HashMap<String, ObjectCastModel> castAdapter;
@@ -64,13 +66,14 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("java.util.Date", (String value) -> {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date;
-
-			try {
-				date = sdf.parse(value);
-			} catch (ParseException e) {
-				throw new SyntaxError(null, value); 
+			SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
+			Date date = null;
+			if ((value != null) && (value.length() > 0)) {
+				try {
+					date = sdf.parse(value);
+				} catch (ParseException e) {
+					throw new SyntaxError(null, value);
+				}
 			}
 			return date;
 		});

@@ -14,6 +14,9 @@ public class OggettoForm {
 	private String nome;
 	private String cognome = "Rossi";
 	private String link = "target.xhtml";
+	private Date oggi = new Date();
+	private int numero = 1999;
+	private double reale = 1.25;
 	private List<Dato> dati;
 
 	public OggettoForm() {
@@ -61,5 +64,29 @@ public class OggettoForm {
 
 	public void setDati(List<Dato> dati) {
 		this.dati = dati;
+	}
+
+	public Date getOggi() {
+		return this.oggi;
+	}
+
+	public void setOggi(Date oggi) {
+		this.oggi = oggi;
+	}
+
+	public int getNumero() {
+		return this.numero;
+	}
+
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+
+	public double getReale() {
+		return this.reale;
+	}
+
+	public void setReale(double reale) {
+		this.reale = reale;
 	}
 }

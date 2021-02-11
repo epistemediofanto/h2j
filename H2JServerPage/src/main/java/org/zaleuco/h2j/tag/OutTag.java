@@ -3,6 +3,8 @@ package org.zaleuco.h2j.tag;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.filter.cast.Converter;
+import org.zaleuco.h2j.filter.cast.Shape;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class OutTag extends BaseTag {
@@ -13,7 +15,8 @@ public class OutTag extends BaseTag {
 		String elName;
 		String value;
 		Node parent;
-		
+		Converter converter = null;
+
 		String formatString = null;
 
 		parent = node.getParentNode();
@@ -25,15 +28,23 @@ public class OutTag extends BaseTag {
 			formatString = attributeValue.getNodeValue();
 		}
 
+		attributeValue = attributes.getNamedItem("shape");
+		if (attributeValue != null) {
+			converter = Shape.get(attributeValue.getNodeValue());
+		}
+
 		attributeValue = attributes.getNamedItem("value");
 		assertNotNull(attributeValue, "element value is missing");
 		value = attributeValue.getNodeValue();
 
 		elName = this.trasforlELname(value);
 		if (elName != null) {
-			if (formatString != null) {
+			if (converter != null) {
 				Object object = processor.getEnviroments().getObject(elName);
-				value = String.format(formatString, object);
+				value = converter.toString(object);
+			} else if (formatString != null) {
+				Object object = processor.getEnviroments().getObject(elName);
+				value = object != null ? String.format(formatString, object) : "";
 			} else {
 				value = processor.getEnviroments().getStringValue(elName);
 			}

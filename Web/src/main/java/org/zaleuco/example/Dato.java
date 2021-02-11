@@ -8,6 +8,7 @@ public class Dato {
 	private String cognome;
 	private Date data = new Date();
 	private int numero;
+	private Date nascita;
 
 	public Dato() {
 	}
@@ -48,6 +49,14 @@ public class Dato {
 
 	public void setNumero(int numero) {
 		this.numero = numero;
+	}
+
+	public Date getNascita() {
+		return this.nascita;
+	}
+
+	public void setNascita(Date nascita) {
+		this.nascita = nascita;
 	}
 
 }

@@ -11,7 +11,7 @@ import org.zaleuco.expression.NodeToken;
 import org.zaleuco.expression.SyntaxError;
 import org.zaleuco.h2j.filter.H2JBean;
 import org.zaleuco.h2j.filter.H2JFilterException;
-import org.zaleuco.h2j.filter.cast.DefaultConverter;
+import org.zaleuco.h2j.filter.cast.Shape;
 import org.zaleuco.h2j.fs.VirtualFileSystem;
 
 @Named("env")
@@ -54,7 +54,7 @@ public class Enviroments extends Store {
 		if (o instanceof H2JBean) {
 			return ObjectWrapper.write(o);
 		} else {
-			return o != null ? DefaultConverter.toHTML(o) : "";
+			return o != null ? Shape.toHTML(o) : "";
 		}
 	}
 

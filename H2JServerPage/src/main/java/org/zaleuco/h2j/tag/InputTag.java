@@ -5,7 +5,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.filter.cast.Converter;
-import org.zaleuco.h2j.filter.cast.DefaultConverter;
+import org.zaleuco.h2j.filter.cast.Shape;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class InputTag extends DefaultH2JTag {
@@ -26,13 +26,13 @@ public class InputTag extends DefaultH2JTag {
 			Node converterNode;
 			Converter converter = null;
 
-			converterNode = attributes.getNamedItem("format");
+			converterNode = attributes.getNamedItem("shape");
 			if (converterNode != null) {
-				String clsName = converterNode.getNodeValue();
-				assertNotEmpty(clsName, "found empty value in attribute 'format' in 'input' tag");
-				converter = DefaultConverter.get(clsName);
-				assertNotNull(converter, "invalid converter " + clsName + " in 'input' tag");
-				attributes.removeNamedItem("format");
+				String castName = converterNode.getNodeValue();
+				assertNotEmpty(castName, "found empty value in attribute 'shape' in 'input' tag");
+				converter = Shape.get(castName);
+				assertNotNull(converter, "invalid converter " + castName + " in 'input' tag");
+				attributes.removeNamedItem("shape");
 			}
 
 			nodeValue.setNodeValue(processor.getEnviroments().eval(value));
