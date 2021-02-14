@@ -1,5 +1,6 @@
 package org.zaleuco.h2j.mw;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import org.zaleuco.h2j.filter.cast.Converter;
@@ -42,7 +43,8 @@ public class HtmlBindName extends Assertion {
 		return generator;
 	}
 
-	public class StoreObject {
+	public class StoreObject implements Serializable {
+		private static final long serialVersionUID = 1L;
 		public Converter converter;
 		public String name;
 

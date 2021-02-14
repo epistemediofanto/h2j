@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript">
+
+function show(id) {
+	document.getElementById(id).removeAttribute("hidden"); 
+}
+
+</script>
+</head>
+<body>
+
+	<j:form action="#{oggettoForm.addDato(o)}">
+		<table>
+			<tr>
+				<th>Indice</th>
+				<th>Nome 1</th>
+				<th>Nome 2</th>
+				<th>Nascita</th>
+				<th>Data</th>
+				<th>Numero</th>
+			</tr>
+			<j:repeat var="v" values="#{oggettoForm.dati}" index="ix" size="n">
+				<tr>
+					<td><j:out value="#{ix}" /> di <j:out value="#{n}" /></td>
+					<td><j:out value="#{v.nome}" /></td>
+					<td><j:out value="#{oggettoForm.dati.get(ix-1).cognome}" /></td>
+					<td><j:out value="#{v.nascita}" format="%1$td/%1$tm/%1$ty" /></td>
+					<td><j:out value="#{v.data}" /></td>
+					<td><j:out value="#{v.numero}" /></td>
+				</tr>
+			</j:repeat>
+			<j:declare var="o" bean="org.zaleuco.example.Dato" />
+			<tr hidden="true" id="nuovo">
+				<td></td>
+				<td><j:input type="text" value="#{o.nome}" /></td>
+				<td><j:input type="text" value="#{o.cognome}" /></td>
+				<td><j:input type="text" value="#{o.nascita}" placeholder="dd/mm/yyyy" shape="dmyDate" /></td>
+				<td><j:input type="text" value="#{o.data}" /></td>
+				<td><j:input type="text" value="#{o.numero}" /></td>
+				<td></td>
+			</tr>
+		</table>
+		<input type="submit" value="submit" />
+		<input type="button" onclick="show('nuovo');" value="nuovo" />
+	</j:form>
+</body>
+</html>

@@ -29,7 +29,7 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("java.lang.Integer", (String value) -> {
-			return Integer.parseInt(value);
+			return (value != null) && (value.length() > 0) ? Integer.parseInt(value) : null;
 		});
 
 		this.castAdapter.put("long", (String value) -> {
@@ -37,7 +37,7 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("java.lang.Long", (String value) -> {
-			return Long.parseLong(value);
+			return (value != null) && (value.length() > 0) ? Long.parseLong(value) : null;
 		});
 
 		this.castAdapter.put("boolean", (String value) -> {
@@ -45,7 +45,7 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("java.lang.Boolean", (String value) -> {
-			return Boolean.parseBoolean(value);
+			return (value != null) && (value.length() > 0) ? Boolean.parseBoolean(value) : null;
 		});
 
 		this.castAdapter.put("java.lang.String", (String value) -> {
@@ -53,22 +53,24 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("java.util.Calendar", (String value) -> {
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			GregorianCalendar gc;
+			GregorianCalendar gc = null;
+			if ((value != null) && (value.length() > 0)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-			gc = new GregorianCalendar();
-			try {
-				gc.setTime(sdf.parse(value));
-			} catch (ParseException e) {
-				gc.setTimeInMillis(0);
+				gc = new GregorianCalendar();
+				try {
+					gc.setTime(sdf.parse(value));
+				} catch (ParseException e) {
+					gc.setTimeInMillis(0);
+				}
 			}
 			return gc;
 		});
 
 		this.castAdapter.put("java.util.Date", (String value) -> {
-			SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
 			Date date = null;
 			if ((value != null) && (value.length() > 0)) {
+				SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
 				try {
 					date = sdf.parse(value);
 				} catch (ParseException e) {

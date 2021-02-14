@@ -335,7 +335,7 @@ public class LexicalParser {
 	private void assertName(NodeToken token) throws SyntaxError {
 		String value = token.getValue();
 		if ((value.length() == 0) || !isAlpha(value.charAt(0))) {
-			throw new SyntaxError(token, "invalid name");
+			throw new SyntaxError(null, "invalid name");
 		}
 		for (int i = 1; i < token.getValue().length(); ++i) {
 			char c = value.charAt(i);

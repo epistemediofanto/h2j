@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+<title>Insert title here</title>
+</head>
+<body>
+	<form>
+		<j:repeat var="v" values="#{oggettoForm.dati}" index="ix" size="n">
+			<j:a href="#{oggettoForm.invia(ix, 'ciao', v.nome)}">Link <j:out value="#{ix}" />
+			</j:a>
+			<br />
+		</j:repeat>
+	</form>
+</body>
+</html>

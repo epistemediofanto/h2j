@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+	<j:form action="#{manualCtrl.submit('example.xhtml', 'target.xhtml')}" name="my_form" method="post" id="my_form">
+
+		<label for="nome">Nome</label>
+		<j:input id="nome" type="text" placeholder="testo" value="#{manualCtrl.dato.nome}" />
+		<br />
+		<label for="cognome">Cognome (write ok to exit)</label>
+		<j:input id="cognome" type="text" value="#{manualCtrl.dato.cognome}" placehoder="ok" />
+		<br />
+		<label for="numero">Numero</label>
+		<j:input id="numero" type="text" value="#{manualCtrl.dato.numero}" />
+		<br />
+		<input type="submit" value="Submit" />
+	</j:form>
+
+</body>
+</html>

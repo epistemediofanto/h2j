@@ -10,15 +10,20 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.CDI;
+import javax.inject.Inject;
 
 import org.zaleuco.expression.EnvContext;
 import org.zaleuco.expression.InvokerException;
+import org.zaleuco.h2j.filter.DialogueBoost;
 
 public class Store extends HtmlBindName implements EnvContext {
 
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, List<Object>> storeSpace;
 	private boolean searchInCDI = true;
+
+	@Inject
+	private DialogueBoost dialogueBoost;
 
 	protected Store() {
 		this.storeSpace = new HashMap<String, List<Object>>();
@@ -115,9 +120,17 @@ public class Store extends HtmlBindName implements EnvContext {
 
 	public Object get(String name) throws InvokerException {
 		Object object;
-		object = this.peek(name);
-		if ((object == null) && this.searchInCDI) {
-			object = getCDIObject(name);
+
+		object = this.dialogueBoost.beat(name);
+		if (object != null) {
+			DialogueBoost.Beat boost = (DialogueBoost.Beat) object;
+			boost.beat();
+			object = boost.object();
+		} else {
+			object = this.peek(name);
+			if ((object == null) && this.searchInCDI) {
+				object = getCDIObject(name);
+			}
 		}
 		return object;
 	}
@@ -129,4 +142,5 @@ public class Store extends HtmlBindName implements EnvContext {
 	public void disableCDIContext() {
 		this.searchInCDI = false;
 	}
+
 }

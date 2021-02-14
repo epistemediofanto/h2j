@@ -13,7 +13,7 @@ public class ButtonTag extends DefaultH2JTag {
 		NamedNodeMap attributes;
 		Node nodeAction;
 		String valueAction;
-		Converter converter=null;
+		Converter converter = null;
 
 		attributes = node.getAttributes();
 		nodeAction = attributes.getNamedItem("formaction");
@@ -23,12 +23,11 @@ public class ButtonTag extends DefaultH2JTag {
 		assertNotEmpty(valueAction, "found empty value in attribute 'formaction' in 'button' tag");
 
 		if (isMapName(valueAction)) {
-			valueAction = valueAction.substring(2, valueAction.length() - 1);
 			valueAction = processor.getEnviroments().evalForHTMLCall(valueAction);
 			valueAction = processor.getEnviroments().htmlName(valueAction, converter);
 			nodeAction.setNodeValue(valueAction + H2JProcessorFilter.CALL_STRING_EXT);
 		}
-		
+
 		super.processNode(processor, node);
 	}
 

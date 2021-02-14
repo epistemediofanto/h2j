@@ -422,6 +422,8 @@ public class Executor {
 		Object old;
 		boolean setter;
 
+		assertTrue(object != null, node, "can't set/get property, object is null");
+
 		childs = node.getChilds();
 		classMethods = object.getClass().getMethods();
 		found = false;
@@ -451,7 +453,7 @@ public class Executor {
 					paramValue[0] = this.cast(parameters[0], this.value);
 				} else {
 					for (int j = 0; j < numParams; ++j) {
-						value = this.eval(nodeParams.getChilds().get(j));
+						this.value = this.eval(nodeParams.getChilds().get(j));
 						paramValue[j] = this.cast(parameters[j], this.value);
 					}
 				}

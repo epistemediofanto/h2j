@@ -9,7 +9,6 @@ import org.zaleuco.expression.InvokerException;
 import org.zaleuco.expression.LexicalParser;
 import org.zaleuco.expression.NodeToken;
 import org.zaleuco.expression.SyntaxError;
-import org.zaleuco.h2j.filter.H2JBean;
 import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.filter.cast.Shape;
 import org.zaleuco.h2j.fs.VirtualFileSystem;
@@ -49,13 +48,8 @@ public class Enviroments extends Store {
 
 	public String getStringValue(String element) throws H2JFilterException {
 		Object o;
-
 		o = this.getObject(element);
-		if (o instanceof H2JBean) {
-			return ObjectWrapper.write(o);
-		} else {
-			return o != null ? Shape.toHTML(o) : "";
-		}
+		return o != null ? Shape.toHTML(o) : "";
 	}
 
 	public Object getObject(String fullName) throws H2JFilterException {

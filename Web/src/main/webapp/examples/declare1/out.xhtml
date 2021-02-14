@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+	<h1>Nuova lista</h1>
+	<table>
+		<tr>
+			<th>Indice</th>
+			<th>Nome 1</th>
+			<th>Nome 2</th>
+			<th>Data</th>
+		</tr>
+		<j:repeat var="v" values="#{oggettoForm.dati}" index="ix" size="n">
+			<tr>
+				<td><j:out value="#{ix}" /> di <j:out value="#{n}" /></td>
+				<td><j:out value="#{v.nome}" /></td>
+				<td><j:out value="#{oggettoForm.dati.get(ix-1).cognome}" /></td>
+				<td><j:out value="#{v.nascita}" format="%1$td/%1$tm/%1$ty" /></td>
+				<td><j:out value="#{v.data}" /></td>
+				<td><j:out value="#{v.numero}" /></td>
+			</tr>
+		</j:repeat>
+	</table>
+
+	<br />
+	<br />
+	<a href="../../index.html">Home</a>
+
+</body>
+</html>

@@ -1,9 +1,11 @@
 package org.zaleuco.h2j.filter.cast;
 
-import java.lang.System.Logger.Level;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DateConverter implements Converter {
 
@@ -29,7 +31,7 @@ public class DateConverter implements Converter {
 			try {
 				date = sdf.parse(value);
 			} catch (ParseException e) {
-				System.getLogger("converter").log(Level.ERROR, e);
+				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 		return date;

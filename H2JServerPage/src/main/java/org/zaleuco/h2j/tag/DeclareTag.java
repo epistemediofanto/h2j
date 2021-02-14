@@ -17,6 +17,7 @@ public class DeclareTag extends BaseTag {
 		String nameVar;
 		String valueBean;
 		Node parent;
+		Object object;
 
 		parent = node.getParentNode();
 		parent.removeChild(node);
@@ -34,14 +35,17 @@ public class DeclareTag extends BaseTag {
 		assertNotEmpty(valueBean, "found empty value in attribute 'bean' in 'addList' tag");
 
 		try {
-			Object object;
-			Class<?> clz;
-			Constructor<?> constructor;
+			if (isMapName(valueBean)) {
+				object = processor.getEnviroments().getObject(valueBean.substring(2, valueBean.length() - 1));
+			} else {
 
-			clz = Class.forName(valueBean);
-			constructor = clz.getDeclaredConstructor();
-			object = constructor.newInstance();
+				Class<?> clz;
+				Constructor<?> constructor;
 
+				clz = Class.forName(valueBean);
+				constructor = clz.getDeclaredConstructor();
+				object = constructor.newInstance();
+			}
 			processor.getEnviroments().push(nameVar, object);
 		} catch (NoSuchMethodException e) {
 			throw new H2JFilterException(valueBean + " missing default constructor", e);

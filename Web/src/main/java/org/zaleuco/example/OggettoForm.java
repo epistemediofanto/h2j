@@ -30,6 +30,10 @@ public class OggettoForm {
 		return "out.xhtml";
 	}
 
+	public String trasmetti(String p) {
+		return p;
+	}
+
 	public String getLink() {
 		return link;
 	}
@@ -88,5 +92,10 @@ public class OggettoForm {
 
 	public void setReale(double reale) {
 		this.reale = reale;
+	}
+
+	public String invia(Integer numero, String testo, String nome) {
+		this.numero = numero;
+		return this.link;
 	}
 }

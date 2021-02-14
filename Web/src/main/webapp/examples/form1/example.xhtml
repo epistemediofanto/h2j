@@ -7,9 +7,10 @@
 
 	<form action="target.xhtml" name="my_form" method="post" id="my_form">
 
-		<label for="oggettoForm.nome">Nome</label>
-		<j:input type="text" placeholder="testo" value="#{oggettoForm.nome}" />
-		<j:input type="text" value="#{oggettoForm.cognome}" />
+		<label for="nome">Nome</label>
+		<j:input id="nome" type="text" placeholder="testo" value="#{oggettoForm.nome}" />
+		<label for="cognome">Cognome</label>
+		<j:input id="cognome" type="text" value="#{oggettoForm.cognome}" />
 		<input type="submit" value="submit" />
 	</form>
 
