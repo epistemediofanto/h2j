@@ -1,0 +1,33 @@
+<div xmlns:j="http://java.h2j.org">
+	<p>
+		Cognome:
+		<j:out value="#{v.cognome}" />
+	</p>
+	<p>
+		Numero:
+		<j:out value="#{v.numero}" />
+	</p>
+	<p>
+		Reale:
+		<j:out value="#{v.reale}" format="%3.3f" />
+	</p>
+	<p>
+		Data:
+		<j:out value="#{v.oggi}" />
+	</p>
+
+	<p>
+		Data:
+		<j:out value="#{v.oggi}" shape="dmyDate" />
+	</p>
+
+	<p>
+		Data:
+		<j:out value="#{v.oggi}" shape="mdyDate" />
+	</p>
+
+	<p>
+		Data:
+		<j:out value="#{v.oggi}" format="%1$td/%1$tm/%1$ty" />
+	</p>
+</div>

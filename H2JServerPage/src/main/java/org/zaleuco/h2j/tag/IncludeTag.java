@@ -53,8 +53,14 @@ public class IncludeTag extends BaseTag {
 			parent.replaceChild(includeNode, node);
 			try {
 				if (attributeNameNode != null) {
-					processor.getEnviroments().push(attributeNameNode.getNodeName(),
-							processor.getEnviroments().getObject(attributeValueNode.getNodeValue()));
+					String value = attributeValueNode.getNodeValue();
+					if (isMapName(value)) {
+						value = value.substring(2, value.length() - 1);
+						processor.getEnviroments().push(attributeNameNode.getNodeValue(), processor.getEnviroments().getObject(value));
+					} else {
+						processor.getEnviroments().push(attributeNameNode.getNodeName(), value);
+					}
+
 				}
 				processor.processNode(includeNode);
 			} finally {

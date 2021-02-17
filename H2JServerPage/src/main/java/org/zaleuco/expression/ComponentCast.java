@@ -25,7 +25,7 @@ public class ComponentCast {
 		this.castAdapter = new HashMap<String, ObjectCastModel>();
 
 		this.castAdapter.put("int", (String value) -> {
-			return Integer.parseInt(value);
+			return (value != null) && (value.length() > 0) ? Integer.parseInt(value) : 0;
 		});
 
 		this.castAdapter.put("java.lang.Integer", (String value) -> {
@@ -33,7 +33,7 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("long", (String value) -> {
-			return Long.parseLong(value);
+			return (value != null) && (value.length() > 0) ? Long.parseLong(value) : 0;
 		});
 
 		this.castAdapter.put("java.lang.Long", (String value) -> {
@@ -41,7 +41,7 @@ public class ComponentCast {
 		});
 
 		this.castAdapter.put("boolean", (String value) -> {
-			return Boolean.parseBoolean(value);
+			return (value != null) && (value.length() > 0) ? Boolean.parseBoolean(value) : false;
 		});
 
 		this.castAdapter.put("java.lang.Boolean", (String value) -> {

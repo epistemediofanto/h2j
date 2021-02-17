@@ -13,9 +13,18 @@ public class SelectTag extends DefaultH2JTag {
 		NamedNodeMap attributes;
 		Node nodeValue;
 
+		attributes = node.getAttributes();
+		nodeValue = attributes.getNamedItem("value");
+
+		if ((nodeValue != null) && isMapName(nodeValue.getNodeValue())) {
+			String value = nodeValue.getNodeValue();
+			value = value.substring(2, value.length() - 1);
+			value = processor.getEnviroments().htmlName(value, null);
+			((Element) node).setAttribute("name", value);
+		}
+
 		super.processNode(processor, node);
 
-		attributes = node.getAttributes();
 		nodeValue = attributes.getNamedItem("value");
 		if (nodeValue != null) {
 			NodeList nodeList;
