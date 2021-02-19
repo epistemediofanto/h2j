@@ -10,6 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -35,7 +40,8 @@ public class H2JProcessorFilter implements Filter {
 	public static final String LOGNAME = "h2j";
 	public static String EXT = ".h2j";
 	public static String CALL_STRING_EXT = ".call" + EXT;
-	
+	public static String AJAX_STRING_EXT = ".ajax" + EXT;
+
 	@Inject
 	private DialogueBoost dialogueBoost;
 
@@ -60,7 +66,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -82,7 +89,9 @@ public class H2JProcessorFilter implements Filter {
 
 					this.processRequest(enviroments, servletRequest, response, chain);
 
-					if (page.endsWith(CALL_STRING_EXT)) {
+					if (page.endsWith(AJAX_STRING_EXT)) {
+						this.processAjax(enviroments, page, servletRequest, response, chain);
+					} else if (page.endsWith(CALL_STRING_EXT)) {
 						this.processCall(enviroments, page, servletRequest, response, chain);
 					} else {
 						enviroments.clearBindName();
@@ -105,8 +114,30 @@ public class H2JProcessorFilter implements Filter {
 		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
 	}
 
-	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
-			throws H2JFilterException {
+	private void processAjax(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response,
+			FilterChain chain) throws H2JFilterException {
+		String rmi;
+		Object object;
+		String jsonString;
+		byte[] byteString;
+
+		rmi = request.getParameter("rmi");
+		object = enviroments.eval(rmi);
+
+		Jsonb jsonb = JsonbBuilder.create();
+		jsonString = jsonb.toJson(object);
+		byteString = jsonString.getBytes();
+
+		response.setContentType("application/json");
+		try {
+			response.getOutputStream().write(byteString, 0, byteString.length);
+		} catch (IOException e) {
+			throw new H2JFilterException(e);
+		}
+	}
+
+	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response,
+			FilterChain chain) throws H2JFilterException {
 		String envName;
 		String objName;
 		String newPage;
@@ -132,7 +163,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
+			FilterChain chain) throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -156,8 +188,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
-			throws H2JFilterException {
+	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
+			ServletResponse response, FilterChain chain) throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 
@@ -190,7 +222,7 @@ public class H2JProcessorFilter implements Filter {
 		} catch (IOException e) {
 			throw new H2JFilterException(e);
 		}
-		
+
 		this.dialogueBoost.cancel();
 
 //		InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");

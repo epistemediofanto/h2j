@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript">
+	function carica() {
+
+	}
+</script>
+</head>
+<body>
+	
+	<j:declare remotename="o" bean="#{oggettoRMI.dato}" />
+	<j:a href="#{oggettoRMI.dato}">Carica</j:a>	
+
+	<select name="cars" id="cars">
+		<option value="volvo">Volvo</option>
+		<option value="saab">Saab</option>
+		<option value="mercedes">Mercedes</option>
+		<option value="audi">Audi</option>
+	</select>
+
+	<br />
+	<br />
+	<a href="../../index.html">Home</a>
+</body>
+</html>

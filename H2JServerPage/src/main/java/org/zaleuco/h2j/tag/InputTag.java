@@ -35,10 +35,16 @@ public class InputTag extends DefaultH2JTag {
 				attributes.removeNamedItem("shape");
 			}
 
-			nodeValue.setNodeValue(processor.getEnviroments().eval(value));
+			if (converter != null) {
+				nodeValue.setNodeValue(converter.toString(processor.getEnviroments().getObject(value.substring(2, value.length() - 1))));
+			} else {
+				nodeValue.setNodeValue(processor.getEnviroments().eval(value));
+			}
+
 			value = value.substring(2, value.length() - 1);
 			value = processor.getEnviroments().htmlName(value, converter);
 			((Element) node).setAttribute("name", value);
+
 		}
 
 		super.processNode(processor, node);
