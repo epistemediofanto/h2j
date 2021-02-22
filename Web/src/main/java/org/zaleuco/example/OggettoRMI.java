@@ -10,13 +10,12 @@ import javax.inject.Named;
 public class OggettoRMI {
 
 	private String jsonObject;
-	
-	
+
 	public Dato oggettoDato() {
 		return new Dato("Maria", "Sany", new Date());
 	}
 
-	public String valida() {		
+	public String valida() {
 		return jsonObject;
 	}
 
@@ -28,4 +27,9 @@ public class OggettoRMI {
 		this.jsonObject = jsonObject;
 	}
 
+	public Coppia[] select(String value) {
+		Coppia[] c = new Coppia[] { new Coppia("a", value + " Lettera a"), new Coppia("b", value + " Lettera b"),
+				new Coppia("c", value + " Lettera c") };
+		return c;
+	}
 }
