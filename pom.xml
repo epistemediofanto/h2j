@@ -156,8 +156,8 @@
 
 	<scm>
 		<url>https://github.com/epistemediofanto/h2j</url>
-		<connection>scm:git:https://github.com/epistemediofanto/h2j</connection>
-		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j</developerConnection>
+		<connection>scm:git:https://github.com/epistemediofanto/h2j.git</connection>
+		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
