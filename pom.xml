@@ -11,16 +11,11 @@
 	<properties>
 		<java.source.version>1.8</java.source.version>
 		<java.target.version>1.8</java.target.version>
-		<javaee.version>8.0</javaee.version>
-		<ejb.version>3.1</ejb.version>
 		<mvn.source.plugin.version>3.2.1</mvn.source.plugin.version>
 		<mvn.compiler.plugin.version>3.8.1</mvn.compiler.plugin.version>
 		<mvn.jar.plugin.version>3.2.0</mvn.jar.plugin.version>
-		<mvn.ejb.plugin.version>3.1.0</mvn.ejb.plugin.version>
 		<mvn.war.plugin.version>3.1.0</mvn.war.plugin.version>
-		<mvn.ear.plugin.version>3.1.0</mvn.ear.plugin.version>
 		<mvn.surefire.plugin>3.0.0-M5</mvn.surefire.plugin>
-		<min.openliberty.runtime>20.0.0.9</min.openliberty.runtime>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -106,17 +101,47 @@
 				</plugin>
 
 				<plugin>
-					<artifactId>maven-ear-plugin</artifactId>
-					<version>${mvn.ear.plugin.version}</version>
-					<configuration>
-						<defaultLibBundleDir>lib/</defaultLibBundleDir>
-					</configuration>
-				</plugin>
-
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${mvn.surefire.plugin}</version>
+				</plugin>
+
+				<!-- Release configuration: -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5</version>
+
+					<configuration>
+						<!-- Automated passphrase entry: -->
+
+						<!-- To pass your passphrase to the build automatically, so avoiding 
+							manual interaction, you'll need to put the passphrase into settings.xml. 
+							You don't really want that to be in plain text, so you'll want to follow: 
+							http://maven.apache.org/guides/mini/guide-encryption.html -->
+						<!-- <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments> -->
+
+						<!-- Manual passphrase entry: -->
+
+						<!-- This is the simplest secure solution, but requires you to type 
+							your key passphrase in manually when performing a release. No biggie unless 
+							you want your CI server to decide when to release for you. -->
+						<mavenExecutorId>forked-path</mavenExecutorId>
+
+					</configuration>
+				</plugin>
+
+				<!-- Deployment -->
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.4</version>
+					<extensions>true</extensions>
+					<configuration>
+						<serverId>sonatype-nexus-staging</serverId>
+						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+						<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					</configuration>
 				</plugin>
 
 			</plugins>
@@ -124,10 +149,33 @@
 
 	</build>
 
-
-
 	<modules>
 		<module>Web</module>
 		<module>H2JServerPage</module>
 	</modules>
+
+	<scm>
+		<url>https://github.com/epistemediofanto/h2j</url>
+		<connection>scm:git:git://github.com/epistemediofanto/h2j.git</connection>
+		<developerConnection>scm:git:git@github.com/epistemediofanto/h2j.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<distributionManagement>
+
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Nexus release repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+
+	</distributionManagement>
+
+
 </project>
