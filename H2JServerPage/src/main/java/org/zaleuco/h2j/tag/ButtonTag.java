@@ -5,6 +5,7 @@ import org.w3c.dom.Node;
 import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.filter.H2JProcessorFilter;
 import org.zaleuco.h2j.filter.cast.Converter;
+import org.zaleuco.h2j.mw.HtmlBindName;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class ButtonTag extends DefaultH2JTag {
@@ -24,7 +25,7 @@ public class ButtonTag extends DefaultH2JTag {
 
 		if (isMapName(valueAction)) {
 			valueAction = processor.getEnviroments().evalForHTMLCall(valueAction);
-			valueAction = processor.getEnviroments().htmlName(valueAction, converter);
+			valueAction = processor.getEnviroments().htmlName(valueAction, converter, HtmlBindName.DYNAMIC_CALL);
 			nodeAction.setNodeValue(valueAction + H2JProcessorFilter.CALL_STRING_EXT);
 		}
 

@@ -1,6 +1,5 @@
 package org.zaleuco.h2j.filter.cast;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +25,7 @@ public class DateConverter implements Converter {
 
 	public Date fromString(String value) {
 		Date date = null;
-		if (value != null) {
+		if ((value != null) && (value.length() > 0)) {
 			SimpleDateFormat sdf = new SimpleDateFormat(this.format);
 			try {
 				date = sdf.parse(value);

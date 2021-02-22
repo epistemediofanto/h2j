@@ -27,7 +27,7 @@ public class OggettoForm {
 
 	public String addDato(Dato d) {
 		this.dati.add(d);
-		return "out.xhtml";
+		return "target.xhtml";
 	}
 
 	public String trasmetti(String p) {

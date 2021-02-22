@@ -5,6 +5,7 @@ import org.w3c.dom.Node;
 import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.filter.H2JProcessorFilter;
 import org.zaleuco.h2j.filter.cast.Converter;
+import org.zaleuco.h2j.mw.HtmlBindName;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class FormTag extends DefaultH2JTag {
@@ -25,7 +26,7 @@ public class FormTag extends DefaultH2JTag {
 		if (isMapName(value)) {
 			value = value.substring(2, value.length() - 1);
 			value = processor.getEnviroments().evalForHTMLCall(value);
-			value = processor.getEnviroments().htmlName(value, converter);
+			value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
 			nodeAction.setNodeValue(value + H2JProcessorFilter.CALL_STRING_EXT);
 		}
 

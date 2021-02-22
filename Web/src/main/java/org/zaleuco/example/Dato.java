@@ -1,9 +1,14 @@
 package org.zaleuco.example;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Dato {
+public class Dato implements  Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1;
 	private String nome;
 	private String cognome;
 	private Date data = new Date();

@@ -5,6 +5,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.zaleuco.h2j.filter.H2JFilterException;
+import org.zaleuco.h2j.mw.HtmlBindName;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
 public class SelectTag extends DefaultH2JTag {
@@ -19,7 +20,7 @@ public class SelectTag extends DefaultH2JTag {
 		if ((nodeValue != null) && isMapName(nodeValue.getNodeValue())) {
 			String value = nodeValue.getNodeValue();
 			value = value.substring(2, value.length() - 1);
-			value = processor.getEnviroments().htmlName(value, null);
+			value = processor.getEnviroments().htmlName(value, null, HtmlBindName.OBJECT);
 			((Element) node).setAttribute("name", value);
 		}
 

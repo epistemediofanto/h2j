@@ -2,19 +2,12 @@ package org.zaleuco.h2j.filter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -34,13 +27,15 @@ import org.zaleuco.h2j.mw.HtmlBindName.StoreObject;
 import org.zaleuco.h2j.mw.Trasnslator;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @WebFilter(filterName = "org.zaleuco.h2j.filter", urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "h2j"))
 public class H2JProcessorFilter implements Filter {
 
 	public static final String LOGNAME = "h2j";
 	public static String EXT = ".h2j";
-	public static String CALL_STRING_EXT = ".call" + EXT;
-	public static String AJAX_STRING_EXT = ".ajax" + EXT;
+	public static String CALL_STRING_EXT = EXT;
+	public static String JSON_RESPONSE_ID = "_json";
 
 	@Inject
 	private DialogueBoost dialogueBoost;
@@ -55,7 +50,7 @@ public class H2JProcessorFilter implements Filter {
 			ext = fConfig.getServletContext().getInitParameter("h2j.fileTypes");
 			if (ext != null) {
 				EXT = "." + ext;
-				CALL_STRING_EXT = ".call" + EXT;
+				CALL_STRING_EXT = EXT;
 			}
 			Logger.getGlobal().log(Level.INFO, "h2j page type: " + EXT);
 			Logger.getGlobal().log(Level.INFO, "H2J: *** h2j processor started. ***");
@@ -79,6 +74,7 @@ public class H2JProcessorFilter implements Filter {
 
 			if (page.endsWith(EXT)) {
 				String contextRoot;
+				boolean jsonResponse;
 
 				try {
 
@@ -87,16 +83,40 @@ public class H2JProcessorFilter implements Filter {
 					contextRoot = Enviroments.getServletContext().getContextPath();
 					page = page.substring(contextRoot.length());
 
-					this.processRequest(enviroments, servletRequest, response, chain);
+					jsonResponse = this.processRequest(enviroments, servletRequest, response, chain);
 
-					if (page.endsWith(AJAX_STRING_EXT)) {
-						this.processAjax(enviroments, page, servletRequest, response, chain);
-					} else if (page.endsWith(CALL_STRING_EXT)) {
-						this.processCall(enviroments, page, servletRequest, response, chain);
+					page = URLDecoder.decode(page, "utf-8");
+
+					int n;
+					char c;
+					int lastPos = -1;
+					String path;
+					String name;
+
+					n = page.length();
+					for (int i = 0; i < n; ++i) {
+						c = page.charAt(i);
+						if (c == '/') {
+							lastPos = i;
+						} else if (c == '(') {
+							break;
+						}
+					}
+
+					path = page.substring(0, lastPos + 1);
+					name = page.substring(lastPos + 1, n - H2JProcessorFilter.EXT.length());
+
+					StoreObject storeObject = enviroments.getObjectFromNameStore(name);
+					if (jsonResponse) {
+						this.processAjax(enviroments, path, name, servletRequest, response, chain);
 					} else {
+						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
+							page = path + enviroments.getStringValue(name);
+						}
 						enviroments.clearBindName();
 						this.processResponse(enviroments, page, servletRequest, response, chain);
 					}
+
 				} catch (InvokerException | H2JFilterException e) {
 					Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 					e.printStackTrace();
@@ -114,56 +134,29 @@ public class H2JProcessorFilter implements Filter {
 		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
 	}
 
-	private void processAjax(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response,
-			FilterChain chain) throws H2JFilterException {
-		String rmi;
+	private void processAjax(Enviroments enviroments, String path, String name, HttpServletRequest request,
+			ServletResponse response, FilterChain chain) throws H2JFilterException {
 		Object object;
 		String jsonString;
 		byte[] byteString;
+		ObjectMapper mapper;
+		
+		object = enviroments.getObject(name);
+		mapper = new ObjectMapper();
 
-		rmi = request.getParameter("rmi");
-		object = enviroments.eval(rmi);
-
-		Jsonb jsonb = JsonbBuilder.create();
-		jsonString = jsonb.toJson(object);
-		byteString = jsonString.getBytes();
-
-		response.setContentType("application/json");
 		try {
+			jsonString = mapper.writeValueAsString(object);
+			byteString = jsonString.getBytes();
+
+			response.setContentType("application/json");
 			response.getOutputStream().write(byteString, 0, byteString.length);
+			response.flushBuffer();
 		} catch (IOException e) {
 			throw new H2JFilterException(e);
 		}
 	}
 
-	private void processCall(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response,
-			FilterChain chain) throws H2JFilterException {
-		String envName;
-		String objName;
-		String newPage;
-		String prefixPage;
-		int pos;
-		try {
-			pos = lastPos(page, '/') + 1;
-			prefixPage = page.substring(0, pos);
-			envName = page.substring(pos);
-			envName = envName.substring(0, envName.length() - CALL_STRING_EXT.length());
-			envName = URLDecoder.decode(envName, StandardCharsets.UTF_8.toString());
-			// TODO
-			envName = enviroments.originalName(envName).name;
-//			objName = Enviroments.getCDIObject(envName).toString();
-			objName = enviroments.getStringValue(envName);
-			newPage = prefixPage + objName;
-
-			enviroments.clearBindName();
-
-			this.processResponse(enviroments, newPage, request, response, chain);
-		} catch (UnsupportedEncodingException e) {
-			throw new H2JFilterException(e);
-		}
-	}
-
-	private void processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
+	private boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
 			FilterChain chain) throws H2JFilterException {
 
 		Enumeration<String> eList;
@@ -171,13 +164,17 @@ public class H2JProcessorFilter implements Filter {
 		String value;
 		StoreObject storeObject;
 		Converter converter;
+		boolean jsonResponse = false;
 
 		eList = request.getParameterNames();
 		while (eList.hasMoreElements()) {
 			pName = eList.nextElement();
 			value = request.getParameter(pName);
-			// TODO
-			storeObject = enviroments.originalName(pName);
+
+			if (JSON_RESPONSE_ID.equals(pName)) {
+				jsonResponse = "true".equals(value);
+			}
+			storeObject = enviroments.getObjectFromNameStore(pName);
 			pName = storeObject.name;
 			converter = storeObject.converter;
 			if (converter != null) {
@@ -186,6 +183,7 @@ public class H2JProcessorFilter implements Filter {
 				enviroments.setBean(pName, value);
 			}
 		}
+		return jsonResponse;
 	}
 
 	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
@@ -228,19 +226,6 @@ public class H2JProcessorFilter implements Filter {
 //		InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
 	}
 
-	private static int lastPos(String str, char c) {
-		char e;
-		int pos = 0;
-		int len = str.length();
-		for (int i = 0; i < len; ++i) {
-			e = str.charAt(i);
-			if (e == '/') {
-				pos = i;
-			} else if (e == '\'') {
-				break;
-			}
-		}
-		return pos;
-	}
+
 
 }
