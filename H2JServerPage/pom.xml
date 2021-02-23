@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>it.zaleuco.h2j</groupId>
 		<artifactId>H2J</artifactId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>0.0.3</version>
 	</parent>
 	<artifactId>H2JServerPage</artifactId>
 
