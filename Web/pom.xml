@@ -3,12 +3,18 @@
 	<parent>
 		<groupId>it.zaleuco.h2j</groupId>
 		<artifactId>H2J</artifactId>
-		<version>0.0.5</version>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>Web</artifactId>
 	<packaging>war</packaging>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>H2JServerPage</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
