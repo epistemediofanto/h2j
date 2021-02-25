@@ -1,8 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.zaleuco.h2j</groupId>
 	<artifactId>H2J</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -155,7 +157,7 @@
 		<url>https://github.com/epistemediofanto/h2j</url>
 		<connection>scm:git:git://github.com/epistemediofanto/h2j.git</connection>
 		<developerConnection>scm:git:git@github.com/epistemediofanto/h2j.git</developerConnection>
-		<tag>0.0.4</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 
