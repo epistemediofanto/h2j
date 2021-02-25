@@ -20,7 +20,7 @@ public class HtmlBindName extends Assertion {
 			name = newName;
 		}
 		if (developmentMode) {
-			newName = name;
+			newName = "h2j-" + name.replace("/", "-");
 		}
 		this.envName.put(newName, new StoreObject(name, converter, type));
 		return newName;
@@ -28,24 +28,6 @@ public class HtmlBindName extends Assertion {
 
 	public StoreObject getObjectFromNameStore(String name) {
 		StoreObject sName;
-//		int n;
-//		char c;
-//		int lastPos = -1;
-//		String path;
-//		String name;
-//
-//		n = page.length();
-//		for (int i = 0; i < n; ++i) {
-//			c = page.charAt(i);
-//			if (c == '/') {
-//				lastPos = i;
-//			} else if (c == '(') {
-//				break;
-//			}
-//		}
-//
-//		path = page.substring(0, lastPos + 1);
-//		name = page.substring(lastPos + 1, n - H2JProcessorFilter.EXT.length());
 
 		sName = this.envName.get(name);
 		if (sName == null) {
@@ -85,6 +67,10 @@ public class HtmlBindName extends Assertion {
 			this.name = name;
 			this.converter = converter;
 			this.type = type;
+		}
+
+		public String toString() {
+			return "StoreObject [converter=" + converter + ", name=" + name + ", type=" + type + "]";
 		}
 	}
 }

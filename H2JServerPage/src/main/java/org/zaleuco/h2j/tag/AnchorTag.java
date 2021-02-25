@@ -1,9 +1,5 @@
 package org.zaleuco.h2j.tag;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.zaleuco.h2j.filter.H2JFilterException;
@@ -30,12 +26,7 @@ public class AnchorTag extends DefaultH2JTag {
 		if (isMapName(value)) {
 			value = processor.getEnviroments().evalForHTMLCall(value);
 			value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
-			try {
-				value = URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-				nodeAction.setNodeValue(value + H2JProcessorFilter.CALL_STRING_EXT);
-			} catch (UnsupportedEncodingException e) {
-				throw new H2JFilterException(e);
-			}
+			nodeAction.setNodeValue(value + H2JProcessorFilter.CALL_STRING_EXT);
 		}
 
 		super.processNode(processor, node);

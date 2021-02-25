@@ -61,8 +61,7 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -111,7 +110,7 @@ public class H2JProcessorFilter implements Filter {
 						this.processAjax(enviroments, path, name, servletRequest, response, chain);
 					} else {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
-							page = path + enviroments.getStringValue(name);
+							page = path + enviroments.getStringValue(storeObject.name);
 						}
 						enviroments.clearBindName();
 						this.processResponse(enviroments, page, servletRequest, response, chain);
@@ -134,13 +133,13 @@ public class H2JProcessorFilter implements Filter {
 		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
 	}
 
-	private void processAjax(Enviroments enviroments, String path, String name, HttpServletRequest request,
-			ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private void processAjax(Enviroments enviroments, String path, String name, HttpServletRequest request, ServletResponse response, FilterChain chain)
+			throws H2JFilterException {
 		Object object;
 		String jsonString;
 		byte[] byteString;
 		ObjectMapper mapper;
-		
+
 		object = enviroments.getObject(name);
 		mapper = new ObjectMapper();
 
@@ -156,8 +155,7 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
-			FilterChain chain) throws H2JFilterException {
+	private boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response, FilterChain chain) throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -186,8 +184,8 @@ public class H2JProcessorFilter implements Filter {
 		return jsonResponse;
 	}
 
-	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
-			ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
+			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 
@@ -225,7 +223,5 @@ public class H2JProcessorFilter implements Filter {
 
 //		InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
 	}
-
-
 
 }
