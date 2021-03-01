@@ -33,8 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class H2JProcessorFilter implements Filter {
 
 	public static final String LOGNAME = "h2j";
-	public static String EXT = ".h2j";
-	public static String CALL_STRING_EXT = EXT;
+	public static String EXT = ".xhtml";
+	public static String RMI = ".rmi";
+	public static String CALL_STRING_EXT = RMI + EXT;
 	public static String JSON_RESPONSE_ID = "_json";
 
 	@Inject
@@ -50,7 +51,7 @@ public class H2JProcessorFilter implements Filter {
 			ext = fConfig.getServletContext().getInitParameter("h2j.fileTypes");
 			if (ext != null) {
 				EXT = "." + ext;
-				CALL_STRING_EXT = EXT;
+				CALL_STRING_EXT = RMI + EXT;
 			}
 			Logger.getGlobal().log(Level.INFO, "h2j page type: " + EXT);
 			Logger.getGlobal().log(Level.INFO, "H2J: *** h2j processor started. ***");
@@ -103,7 +104,11 @@ public class H2JProcessorFilter implements Filter {
 					}
 
 					path = page.substring(0, lastPos + 1);
-					name = page.substring(lastPos + 1, n - H2JProcessorFilter.EXT.length());
+					if (page.endsWith(CALL_STRING_EXT)) {
+						name = page.substring(lastPos + 1, n - H2JProcessorFilter.CALL_STRING_EXT.length());
+					} else {
+						name = page.substring(lastPos + 1, n - H2JProcessorFilter.EXT.length());
+					}
 
 					StoreObject storeObject = enviroments.getObjectFromNameStore(name);
 					if (jsonResponse) {
@@ -111,7 +116,7 @@ public class H2JProcessorFilter implements Filter {
 					} else {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
 							page = path + enviroments.getStringValue(storeObject.name);
-						}
+						} 
 						enviroments.clearBindName();
 						this.processResponse(enviroments, page, servletRequest, response, chain);
 					}

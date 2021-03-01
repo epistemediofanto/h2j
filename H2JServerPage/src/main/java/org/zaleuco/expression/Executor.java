@@ -407,6 +407,7 @@ public class Executor {
 		} else if (this.value != null) {
 			throw new SyntaxError(node, "unsupported operation (set value) ");
 		}
+
 		return object;
 	}
 
@@ -454,7 +455,7 @@ public class Executor {
 				} else {
 					for (int j = 0; j < numParams; ++j) {
 						this.value = this.eval(nodeParams.getChilds().get(j));
-						paramValue[j] = this.cast(parameters[j], this.value);
+						paramValue[j] = this.value != null ? this.cast(parameters[j], this.value) : null;
 					}
 				}
 
