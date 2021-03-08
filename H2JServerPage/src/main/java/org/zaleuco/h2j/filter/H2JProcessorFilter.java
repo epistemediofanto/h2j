@@ -36,7 +36,7 @@ public class H2JProcessorFilter implements Filter {
 	public static String EXT = ".xhtml";
 	public static String RMI = ".rmi";
 	public static String CALL_STRING_EXT = RMI + EXT;
-	public static String JSON_RESPONSE_ID = "_json";
+	public static String JSON_RESPONSE_ID = "_json";	
 
 	@Inject
 	private DialogueBoost dialogueBoost;
@@ -168,6 +168,7 @@ public class H2JProcessorFilter implements Filter {
 		StoreObject storeObject;
 		Converter converter;
 		boolean jsonResponse = false;
+		Object o;
 
 		eList = request.getParameterNames();
 		while (eList.hasMoreElements()) {
@@ -177,14 +178,20 @@ public class H2JProcessorFilter implements Filter {
 			if (JSON_RESPONSE_ID.equals(pName)) {
 				jsonResponse = "true".equals(value);
 			}
+			
 			storeObject = enviroments.getObjectFromNameStore(pName);
 			pName = storeObject.name;
 			converter = storeObject.converter;
+			
 			if (converter != null) {
-				enviroments.setBean(pName, converter.fromString(value));
+				o = converter.fromString(value); 
 			} else {
-				enviroments.setBean(pName, value);
+				o=value;
 			}
+			if (Enviroments.trace) {
+				System.out.println("set: " + pName + " = " + o);
+			}
+			enviroments.setBean(pName, o);			
 		}
 		return jsonResponse;
 	}

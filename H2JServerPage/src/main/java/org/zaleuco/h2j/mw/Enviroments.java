@@ -20,12 +20,14 @@ public class Enviroments extends Store {
 	private static final long serialVersionUID = 1L;
 	private static final String CACHE_FILE = "h2j.fileCache";
 	private static final String DEVELOPMENT_DOME = "h2j.developmentMode";
+	private static final String TRACE = "h2j.trace";
 
 	private static ServletContext servletContext;
 	private static String contextRoot;
 	private static VirtualFileSystem fileSystem;
 	private static boolean enableCacheFile = true;
-
+	public static boolean trace = false;
+	
 	public static void init(ServletContext context) throws H2JFilterException {
 		Enviroments.servletContext = context;
 		Enviroments.contextRoot = Enviroments.servletContext.getContextPath();
@@ -34,6 +36,7 @@ public class Enviroments extends Store {
 		Enviroments.enableCacheFile = booleanValue(CACHE_FILE, context.getInitParameter(CACHE_FILE), enableCacheFile);
 		Enviroments.developmentMode = booleanValue(DEVELOPMENT_DOME, context.getInitParameter(DEVELOPMENT_DOME),
 				developmentMode);
+		Enviroments.trace = booleanValue(TRACE, context.getInitParameter(TRACE), trace);
 
 		if (Enviroments.developmentMode) {
 			System.out.println("\nH2J: *** WARNING: system is in development mode ***\n");

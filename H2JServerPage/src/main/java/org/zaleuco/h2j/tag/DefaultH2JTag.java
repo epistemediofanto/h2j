@@ -39,22 +39,40 @@ public class DefaultH2JTag extends BaseTag {
 				s = n.getNodeType();
 				prefix = n.getPrefix();
 				value = n.getNodeValue();
-//				System.out.println("prefix: " + prefix + ", value: " + value);
+
 				if (s == Node.ATTRIBUTE_NODE) {
 					if ("xmlns".equals(prefix) && XmlProcessor.NAMESPACE.equals(value)) {
 						attributes.removeNamedItem(n.getNodeName());
 					} else {
-						this.processAttribute(processor, attributes.item(i));
+						if (this.processAttribute(processor, attributes.item(i))) {
+							attributes.removeNamedItem(n.getNodeName());
+						}
 					}
 				}
 			}
 		}
 	}
 
-	protected void processAttribute(XmlProcessor processor, Node node) throws H2JFilterException {
+	protected boolean processAttribute(XmlProcessor processor, Node node) throws H2JFilterException {
 		String nodeValue;
+		String nodeName;
+		boolean remove = false;
+
+		nodeName = node.getNodeName();
 		nodeValue = node.getNodeValue();
 		node.setNodeValue(processor.getEnviroments().eval(nodeValue));
+		switch (nodeName) {
+		case "autofocus":
+		case "checked":
+		case "disabled":
+		case "display":
+		case "hidden":
+		case "readonly":
+		case "required":
+			remove = "false".equals(node.getNodeValue());
+			break;
+		}
+		return remove;
 	}
 
 }

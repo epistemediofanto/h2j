@@ -103,6 +103,7 @@ public class Store extends HtmlBindName implements EnvContext {
 		Iterator<Bean<?>> iter;
 
 		bm = CDI.current().getBeanManager();
+		
 		set = bm.getBeans(objectName);
 		if (set == null) {
 			throw new InvokerException("cannot invoke " + objectName + " to object null");

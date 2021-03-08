@@ -27,12 +27,13 @@ public class LexicalParser {
 	private String source;
 	private List<NodeToken> tokensList;
 	private int currentTokenPos = 0;
+	private boolean skipSpace = true;
 
 	public static void main(String[] argv) throws SyntaxError {
 		String s;
 		NodeToken nt;
 
-		s = "method1.func('ciao')";
+		s = "'ciao' + ' '";
 		nt = LexicalParser.process(s);
 		System.out.println(nt);
 	}
@@ -57,12 +58,12 @@ public class LexicalParser {
 		stringTokenizer = new StringTokenizer(this.source, ".,:;#@[]{}!'$%&|/()=<>?^/*-+ ", true);
 		while (stringTokenizer.hasMoreTokens()) {
 			value = stringTokenizer.nextToken();
-			if (!" ".equals(value)) {
-				token = new NodeToken();
-				token.setValue(value);
-				token.setPos(pos);
-				this.tokensList.add(token);
-			}
+//			if (!" ".equals(value)) {
+			token = new NodeToken();
+			token.setValue(value);
+			token.setPos(pos);
+			this.tokensList.add(token);
+//			}
 			pos += value.length();
 		}
 		return this.createSyntaxTree();
@@ -249,7 +250,9 @@ public class LexicalParser {
 		} else if (isNumber(token.getValue())) {
 			token.setType(Type.number);
 		} else if (eq(token, "'")) {
+			this.skipSpace = false;
 			token = prodString(token);
+			this.skipSpace = true;
 		} else {
 			NodeToken nToken;
 
@@ -381,7 +384,12 @@ public class LexicalParser {
 
 		if (this.currentTokenPos < this.tokensList.size()) {
 			token = this.tokensList.get(this.currentTokenPos);
+			if ((token != null) && (" ".equals(token.getValue()) && this.skipSpace)) {
+				++this.currentTokenPos;
+				return this.peekToken();
+			}
 		}
+
 		return token;
 	}
 
@@ -393,6 +401,9 @@ public class LexicalParser {
 		if (this.currentTokenPos < this.tokensList.size()) {
 			nt = this.tokensList.get(this.currentTokenPos);
 			this.currentTokenPos++;
+			if ((nt != null) && (" ".equals(nt.getValue()) && this.skipSpace)) {
+				return this.nextToken();
+			}
 		}
 		return nt;
 	}
