@@ -50,7 +50,7 @@ public class DialogueBoost implements Serializable {
 	 * @return
 	 * @throws IllegalStateException
 	 */
-	public boolean isDialogue(String dialogue) throws IllegalStateException {
+	public boolean isInDialogue(String dialogue) throws IllegalStateException {
 		for (Beat b : this.beats) {
 			if (b.dialogue.equals(dialogue)) {
 				return true;
