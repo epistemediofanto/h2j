@@ -20,7 +20,7 @@ public class ManualCtrl implements Serializable {
 	private DialogueBoost dialogueBoost;
 
 	public DatoBean getDato() {
-		if (this.dialogueBoost.isDialogue(DIALOGUE_NAME)) {
+		if (this.dialogueBoost.isInDialogue(DIALOGUE_NAME)) {
 			return (DatoBean) this.dialogueBoost.beat(DIALOGUE_NAME);
 		} else {
 			DatoBean dato = new DatoBean();

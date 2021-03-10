@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+	ID:
+	<j:out value="#{longCtrl.id}" />
+	<br />
+
+	<form method="post" id="my_form">
+
+		Nome
+		<j:out value="#{longCtrl.nome}" />
+		<br /> Cognome
+		<j:out value="#{longCtrl.cognome}" />
+		<br /> Numero
+		<j:out value="#{longCtrl.numero}" />
+		<br /> Indirizzo
+		<j:out value="#{longCtrl.indirizzo}" />
+		<br /> <label for="localita">Località</label>
+		<j:input id="localita" type="text" value="#{longCtrl.localita}" />
+		<br />
+		<j:button type="submit" formaction="#{longCtrl.submit('page2.xhtml')}">Indietro</j:button>
+		<j:button type="submit" formaction="#{longCtrl.newBean('example.xhtml')}">New Bean</j:button>
+	</form>
+
+</body>
+</html>
