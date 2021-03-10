@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+	<form>
+		ID:
+		<j:out value="#{conAlfa.id}" />
+		<br />
+		ID:
+		<j:out value="#{conAlfa.dato.id}" />
+		<br />
+		<label for="nome11">Valore 1 - 1</label>
+		<j:input id="nome11" type="text" value="#{conAlfa.dato.valore11}" />
+		<br />
+		<label for="nome12">Valore 1 - 2</label>
+		<j:input id="nome12" type="text" value="#{conAlfa.dato.valore12}" />
+		<br />
+		<j:button formaction="#{conAlfa.submit('pagina2.xhtml')}">Avanti</j:button>
+	</form>
+
+</body>
+</html>

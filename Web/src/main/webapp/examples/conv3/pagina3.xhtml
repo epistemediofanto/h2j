@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+	<form>
+		ID:
+		<j:out value="#{conAlfa.id}" />
+		<br />
+		ID:
+		<j:out value="#{conAlfa.dato.id}" />
+		<br />
+		Valore 1 - 1:
+		<j:out value="#{conAlfa.dato.valore11}" />
+		<br />
+		Valore 1 - 2:
+		<j:out value="#{conAlfa.dato.valore12}" />
+		<br />
+		Valore 2 - 1:
+		<j:out value="#{conAlfa.dato.valore21}" />
+		<br />
+		Valore 2 - 2:
+		<j:out value="#{conAlfa.dato.valore22}" />
+		<br />
+		<label for="nome31">Valore 3 - 1</label>
+		<j:input id="nome31" type="text" value="#{conAlfa.dato.valore31}" />
+		<br />
+		<label for="nome32">Valore 3 - 2</label>
+		<j:input id="nome32" type="text" value="#{conAlfa.dato.valore32}" />
+		<br />
+		<j:button formaction="#{conAlfa.submit('pagina2.xhtml')}">Indietro</j:button>
+		<j:button formaction="#{conAlfa.nuovo('example.xhtml')}">Nuovo</j:button>
+	</form>
+
+</body>
+</html>

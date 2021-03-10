@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:j="http://java.h2j.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+	<form>
+		ID:
+		<j:out value="#{conDatoBean2.id}" />
+		<br />
+		ID:
+		<j:out value="#{conDatoBean2.dato.id}" />
+		<br />
+		Valore 1 - 1:
+		<j:out value="#{conDatoBean2.dato.valore11}" />
+		<br />
+		Valore 1 - 2:
+		<j:out value="#{conDatoBean2.dato.valore12}" />
+		<br />
+		<label for="nome21">Valore 2 - 1</label>
+		<j:input id="nome21" type="text" value="#{conDatoBean2.dato.valore21}" />
+		<br />
+		<label for="nome22">Valore 2 - 2</label>
+		<j:input id="nome22" type="text" value="#{conDatoBean2.dato.valore22}" />
+		<br />
+		<j:button formaction="#{conDatoBean2.submit('example.xhtml')}">Indietro</j:button>
+		<j:button formaction="#{conDatoBean2.submit('pagina3.xhtml')}">Avanti</j:button>
+	</form>
+
+</body>
+</html>
