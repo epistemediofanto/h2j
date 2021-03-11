@@ -40,7 +40,7 @@ public class ConversationRequest implements Serializable {
 		this.destroyBean(this.getBean(cls));
 	}
 	
-	public void endAll() {
+	public void end() {
 		this.beans.forEach((k,v)->{
 			this.destroyBean(v);
 		});
