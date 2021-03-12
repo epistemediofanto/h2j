@@ -3,13 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.zaleuco.h2j</groupId>
-	<artifactId>H2J</artifactId>
+	<artifactId>H2JServerPage</artifactId>
 	<version>0.0.5-SNAPSHOT</version>
-	<packaging>pom</packaging>
 
 	<name>H2J</name>
 	<description>very tiny front-end framework</description>
 	<url>https://github.com/epistemediofanto/h2j</url>
+
+	<developers>
+		<developer>
+			<name>Episteme Diofanto</name>
+			<email>episteme.diofanto@gmail.com</email>			
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
@@ -26,58 +32,103 @@
 	</scm>
 
 	<properties>
+
+		<!-- configuration -->
 		<java.source.version>1.8</java.source.version>
 		<java.target.version>1.8</java.target.version>
-		<mvn.source.plugin.version>3.2.1</mvn.source.plugin.version>
-		<mvn.compiler.plugin.version>3.8.1</mvn.compiler.plugin.version>
-		<mvn.jar.plugin.version>3.2.0</mvn.jar.plugin.version>
-		<mvn.war.plugin.version>3.1.0</mvn.war.plugin.version>
-		<mvn.surefire.plugin>3.0.0-M5</mvn.surefire.plugin>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- dependences version -->
+		<jakarta.enterprise.cdi-api>2.0.2</jakarta.enterprise.cdi-api>
+		<jakarta.servlet-api>4.0.2</jakarta.servlet-api>
+		<jackson-databind>2.6.1</jackson-databind>
+		<junit-jupiter-engine>5.4.0</junit-jupiter-engine>
+
+		<!-- plugin version -->
+		<mvn-compiler-plugin-version>3.8.1</mvn-compiler-plugin-version>
+		<mvn-surefire-plugin-version>3.0.0-M5</mvn-surefire-plugin-version>
+		<maven-source-plugin-version>3.2.1</maven-source-plugin-version>
+		<maven-javadoc-plugin-version>2.9.1</maven-javadoc-plugin-version>
+		<maven-gpg-plugin-version>1.5</maven-gpg-plugin-version>
+		<nexus-staging-maven-plugin-version>1.6.7</nexus-staging-maven-plugin-version>
+
 	</properties>
-
-
-	<dependencyManagement>
-		<dependencies>
-
-			<dependency>
-				<groupId>jakarta.enterprise</groupId>
-				<artifactId>jakarta.enterprise.cdi-api</artifactId>
-				<version>2.0.2</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>jakarta.servlet</groupId>
-				<artifactId>jakarta.servlet-api</artifactId>
-				<version>4.0.2</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.6.1</version>
-			</dependency>
-
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>
 
+			<!-- 1. Compile -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${mvn-compiler-plugin-version}</version>
+				<configuration>
+					<source>${java.source.version}</source>
+					<target>${java.target.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- 2. Test -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${mvn-surefire-plugin-version}</version>
 				<configuration>
 					<skipTests>${skipTests}</skipTests>
 				</configuration>
 			</plugin>
 
+			<!-- 3. Source -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 4. Java DOC -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 5. Signature -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven-gpg-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 6. nexus -->
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<version>${nexus-staging-maven-plugin-version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -87,76 +138,46 @@
 			</plugin>
 
 		</plugins>
-
-		<pluginManagement>
-			<plugins>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>${mvn.source.plugin.version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${mvn.compiler.plugin.version}</version>
-					<configuration>
-						<source>${java.source.version}</source>
-						<target>${java.target.version}</target>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>${mvn.jar.plugin.version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>${mvn.war.plugin.version}</version>
-					<configuration>
-						<defaultLibBundleDir>lib/</defaultLibBundleDir>
-						<archive>
-							<manifest>
-								<addClasspath>true</addClasspath>
-								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-								<classpathPrefix>lib/</classpathPrefix>
-							</manifest>
-						</archive>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${mvn.surefire.plugin}</version>
-				</plugin>
-
-			</plugins>
-		</pluginManagement>
-
 	</build>
-
-	<modules>
-		<module>Web</module>
-		<module>H2JServerPage</module>
-	</modules>
-
-	<developers>
-		<developer>
-			<name>Episteme Diofanto</name>
-			<email>episteme.diofanto@gmail.com</email>
-		</developer>
-	</developers>
 
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
 			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>jakarta.enterprise</groupId>
+			<artifactId>jakarta.enterprise.cdi-api</artifactId>
+			<version>${jakarta.enterprise.cdi-api}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>${jakarta.servlet-api}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-databind}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit-jupiter-engine}</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
 
 </project>

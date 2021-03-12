@@ -1,9 +1,0 @@
-
-<select id="seleziona" title="Scegli un'Kop" xmlns:j="http://java.h2j.org">
-	<option value="Value 1">Kop 1</option>
-	<option value="Value 2">Kop 2</option>
-	<option value="Value 3">Kop 3</option>
-	<option value="Value 4">Kop 4</option>
-	<option value="Value 5">Kop 5</option>
-	<j:options values="#{demo.lista}" />
-</select>
