@@ -27,7 +27,7 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/epistemediofanto/h2j.git</connection>
-		<developerConnection>scm:git:ssh://github.com/epistemediofanto/h2j.git</developerConnection>
+		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j.git</developerConnection>
 		<url>https://github.com/epistemediofanto/h2j.git</url>
 	</scm>
 
