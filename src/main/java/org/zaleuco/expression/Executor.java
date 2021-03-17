@@ -422,6 +422,7 @@ public class Executor {
 		int numParams = 0;
 		Object old;
 		boolean setter;
+		boolean isGetter = false;
 
 		assertTrue(object != null, node, "can't set/get property, object is null");
 
@@ -439,12 +440,14 @@ public class Executor {
 			propertyName = adjustName("set", node.getValue());
 			numParams = 1;
 		} else {
+			isGetter = true;
 			propertyName = adjustName("get", node.getValue());
 		}
 
 		for (int i = 0; i < classMethods.length; ++i) {
 			method = classMethods[i];
-			if (method.getName().equals(propertyName) && (method.getParameterCount() == numParams)) {
+			if ((method.getName().equals(propertyName) && (method.getParameterCount() == numParams))
+					|| (isGetter && this.isBooleanGetter(method, propertyName))) {
 				Object[] paramValue;
 				Parameter[] parameters;
 
@@ -494,6 +497,17 @@ public class Executor {
 		assertTrue(childs.size() == childPos, node, "invalid operation");
 
 		return object;
+	}
+
+	private boolean isBooleanGetter(Method method, String propertyName) {
+		boolean is = false;
+		if (method.getParameterCount() == 0) {
+			String a;
+			is = method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Boolean.class);
+			a = method.getName();
+			is = is && a.startsWith("is") && (propertyName.startsWith("get")) && a.substring(2).equals(propertyName.substring(3));
+		}
+		return is;
 	}
 
 	private Object cast(Parameter parameter, Object object) throws SyntaxError {

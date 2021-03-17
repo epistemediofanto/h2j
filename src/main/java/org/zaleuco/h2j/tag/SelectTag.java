@@ -8,6 +8,7 @@ import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.mw.HtmlBindName;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
+@Deprecated
 public class SelectTag extends DefaultH2JTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
