@@ -3,7 +3,7 @@ package org.zaleuco.h2j.mw;
 import java.util.HashMap;
 
 import org.zaleuco.h2j.filter.H2JFilterException;
-import org.zaleuco.h2j.tag.AnchorTag;
+import org.zaleuco.h2j.tag.ATag;
 import org.zaleuco.h2j.tag.ButtonTag;
 import org.zaleuco.h2j.tag.DeclareTag;
 import org.zaleuco.h2j.tag.DefaultH2JTag;
@@ -42,7 +42,7 @@ public class Trasnslator {
 		this.defaultHtmlTag = new DefaultHtmlTag();
 		this.tags = new HashMap<String, TagMap>();
 
-		tagMap = new AnchorTag();
+		tagMap = new ATag();
 		this.registerTag("a", tagMap);
 
 		tagMap = new ButtonTag();

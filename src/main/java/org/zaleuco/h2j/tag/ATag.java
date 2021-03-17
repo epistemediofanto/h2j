@@ -8,7 +8,7 @@ import org.zaleuco.h2j.filter.cast.Converter;
 import org.zaleuco.h2j.mw.HtmlBindName;
 import org.zaleuco.h2j.mw.XmlProcessor;
 
-public class AnchorTag extends DefaultH2JTag {
+public class ATag extends DefaultH2JTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;

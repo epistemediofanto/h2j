@@ -9,6 +9,7 @@ import org.zaleuco.h2j.filter.H2JFilterException;
 import org.zaleuco.h2j.mw.XmlProcessor;
 import org.zaleuco.h2j.tagstruct.Options;
 
+@Deprecated
 public class OptionsTag extends BaseTag {
 
 	@SuppressWarnings("unchecked")
