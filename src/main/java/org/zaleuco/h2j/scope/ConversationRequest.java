@@ -1,8 +1,10 @@
 package org.zaleuco.h2j.scope;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -51,10 +53,32 @@ public class ConversationRequest implements Serializable {
 	 * Termina tutte le conversazioni aperte
 	 */
 	public void end() {
+		List<String> keys = new ArrayList<String>();
+	
 		Set<Entry<String, ScopeInstance<?>>> set = this.beans.entrySet();
 		set.forEach(e -> {
-			this.destroyBean(e.getValue());
+			keys.add(e.getKey());
 		});
+		for (String s : keys) {
+			this.beans.remove(s);
+		}
+	}
+
+	/**
+	 * Termina tutte le conversazioni aperte tranne per object
+	 */
+	public void clear(Object object) {
+		List<String> keys = new ArrayList<String>();
+
+		Set<Entry<String, ScopeInstance<?>>> set = this.beans.entrySet();
+		set.forEach(e -> {
+			if (e.getValue().originalBean != object) {
+				keys.add(e.getKey());
+			}
+		});
+		for (String s : keys) {
+			this.beans.remove(s);
+		}
 	}
 
 }
