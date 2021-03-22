@@ -2,6 +2,11 @@ package org.zaleuco.expression;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.brioscia.javaz.expression.Executor;
+import org.brioscia.javaz.expression.InvokerException;
+import org.brioscia.javaz.expression.LexicalParser;
+import org.brioscia.javaz.expression.NodeToken;
+import org.brioscia.javaz.expression.SyntaxError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.zaleuco.expression.utils.CaseBean;
