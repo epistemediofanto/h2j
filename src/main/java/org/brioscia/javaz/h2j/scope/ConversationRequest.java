@@ -66,13 +66,14 @@ public class ConversationRequest implements Serializable {
 
 	/**
 	 * Termina tutte le conversazioni aperte tranne per object
+	 * @param excludeObject  unico oggetto da preservare
 	 */
-	public void clear(Object object) {
+	public void clear(Object excludeObject) {
 		List<String> keys = new ArrayList<String>();
 
 		Set<Entry<String, ScopeInstance<?>>> set = this.beans.entrySet();
 		set.forEach(e -> {
-			if (e.getValue().originalBean != object) {
+			if (e.getValue().originalBean != excludeObject) {
 				keys.add(e.getKey());
 			}
 		});

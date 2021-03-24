@@ -17,6 +17,7 @@ import org.brioscia.javaz.h2j.tag.OutTag;
 import org.brioscia.javaz.h2j.tag.RepeatTag;
 import org.brioscia.javaz.h2j.tag.SelectTag;
 import org.brioscia.javaz.h2j.tag.TagMap;
+import org.brioscia.javaz.h2j.tag.TextAreaTag;
 
 public class Trasnslator {
 
@@ -74,7 +75,10 @@ public class Trasnslator {
 
 		tagMap = new SelectTag();
 		this.registerTag("select", tagMap);
-	}
+
+		tagMap = new TextAreaTag();
+		this.registerTag("textarea", tagMap);
+}
 
 	public TagMap getTag(String fullName) {
 		TagMap map;
