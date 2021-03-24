@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class TextArea extends DefaultH2JTag {
+public class TextAreaTag extends DefaultH2JTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
@@ -18,14 +18,15 @@ public class TextArea extends DefaultH2JTag {
 
 		attributes = node.getAttributes();
 		nodeValue = attributes.getNamedItem("value");
-		assertNotNull(nodeValue, "missing 'value' attribute in 'input' tag");
+		assertNotNull(nodeValue, "missing 'value' attribute in 'textarea' tag");
 
 		value = nodeValue.getNodeValue();
-		assertNotEmpty(value, "found empty value in attribute 'value' in 'input' tag");
+		assertNotEmpty(value, "found empty text in attribute 'value' in 'textarea' tag");
 
 		if (isMapName(value)) {
-			Node converterNode;
 			Converter converter = null;
+			Node converterNode;
+			String name = value;
 
 			converterNode = attributes.getNamedItem("shape");
 			if (converterNode != null) {
@@ -37,16 +38,17 @@ public class TextArea extends DefaultH2JTag {
 			}
 
 			if (converter != null) {
-				nodeValue.setNodeValue(converter
-						.toString(processor.getEnviroments().getObject(value.substring(2, value.length() - 1))));
+				value = converter
+						.toString(processor.getEnviroments().getObject(value.substring(2, value.length() - 1)));
 			} else {
-				nodeValue.setNodeValue(processor.getEnviroments().eval(value));
+				value = processor.getEnviroments().eval(value);
 			}
+			
+			node.appendChild(node.getOwnerDocument().createTextNode(value));
 
-			value = value.substring(2, value.length() - 1);
-			value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
-			((Element) node).setAttribute("name", value);
-
+			name = name.substring(2, name.length() - 1);
+			name = processor.getEnviroments().htmlName(name, converter, HtmlBindName.DYNAMIC_CALL);
+			((Element) node).setAttribute("name", name);
 		}
 
 		super.processNode(processor, node);

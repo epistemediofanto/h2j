@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.brioscia.javaz</groupId>
 	<artifactId>h2j</artifactId>
@@ -11,7 +13,7 @@
 	<developers>
 		<developer>
 			<name>Episteme Diofanto</name>
-			<email>episteme.diofanto@gmail.com</email>			
+			<email>episteme.diofanto@gmail.com</email>
 		</developer>
 	</developers>
 
@@ -27,8 +29,8 @@
 		<connection>scm:git:git://github.com/epistemediofanto/h2j.git</connection>
 		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j.git</developerConnection>
 		<url>https://github.com/epistemediofanto/h2j.git</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<properties>
 
@@ -107,35 +109,14 @@
 				</executions>
 			</plugin>
 
-			<!-- 5. Signature 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>${maven-gpg-plugin-version}</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
--->
-			<!-- 6. nexus 
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>${nexus-staging-maven-plugin-version}</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-				</configuration>
-			</plugin>
--->
+			<!-- 5. Signature <plugin> <groupId>org.apache.maven.plugins</groupId> 
+				<artifactId>maven-gpg-plugin</artifactId> <version>${maven-gpg-plugin-version}</version> 
+				<executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> <goals> 
+				<goal>sign</goal> </goals> </execution> </executions> </plugin> -->
+			<!-- 6. nexus <plugin> <groupId>org.sonatype.plugins</groupId> <artifactId>nexus-staging-maven-plugin</artifactId> 
+				<version>${nexus-staging-maven-plugin-version}</version> <extensions>true</extensions> 
+				<configuration> <serverId>ossrh</serverId> <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl> 
+				<autoReleaseAfterClose>true</autoReleaseAfterClose> </configuration> </plugin> -->
 
 		</plugins>
 	</build>
