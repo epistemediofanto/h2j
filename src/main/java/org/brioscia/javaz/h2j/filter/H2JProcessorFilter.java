@@ -29,7 +29,7 @@ import org.brioscia.javaz.h2j.mw.HtmlBindName.StoreObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebFilter(urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "h2j"))
+@WebFilter(urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "xhtml"))
 public class H2JProcessorFilter implements Filter {
 
 	public static final String LOGNAME = "h2j";
