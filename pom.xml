@@ -15,6 +15,10 @@
 			<name>Episteme Diofanto</name>
 			<email>episteme.diofanto@gmail.com</email>
 		</developer>
+		<developer>
+			<name>Zaleuco di Locri Diofanto</name>
+			<email>zaleuco.magna.grecia@gmail.com</email>
+		</developer>
 	</developers>
 
 	<licenses>
@@ -29,7 +33,6 @@
 		<connection>scm:git:git://github.com/epistemediofanto/h2j.git</connection>
 		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j.git</developerConnection>
 		<url>https://github.com/epistemediofanto/h2j.git</url>
-		<tag>HEAD</tag>
 	</scm>
 
 	<properties>
@@ -109,14 +112,34 @@
 				</executions>
 			</plugin>
 
-			<!-- 5. Signature <plugin> <groupId>org.apache.maven.plugins</groupId> 
-				<artifactId>maven-gpg-plugin</artifactId> <version>${maven-gpg-plugin-version}</version> 
-				<executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> <goals> 
-				<goal>sign</goal> </goals> </execution> </executions> </plugin> -->
-			<!-- 6. nexus <plugin> <groupId>org.sonatype.plugins</groupId> <artifactId>nexus-staging-maven-plugin</artifactId> 
-				<version>${nexus-staging-maven-plugin-version}</version> <extensions>true</extensions> 
-				<configuration> <serverId>ossrh</serverId> <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl> 
-				<autoReleaseAfterClose>true</autoReleaseAfterClose> </configuration> </plugin> -->
+			<!-- 5. Signature -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven-gpg-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 6. nexus -->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>${nexus-staging-maven-plugin-version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>
@@ -138,14 +161,12 @@
 			<groupId>jakarta.enterprise</groupId>
 			<artifactId>jakarta.enterprise.cdi-api</artifactId>
 			<version>${jakarta.enterprise.cdi-api}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 			<version>${jakarta.servlet-api}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
