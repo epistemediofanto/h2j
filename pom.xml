@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.brioscia.javaz</groupId>
+	<groupId>org.brioscia</groupId>
 	<artifactId>h2j</artifactId>
 	<version>0.0.9-SNAPSHOT</version>
 
 	<name>H2J</name>
 	<description>very tiny front-end framework</description>
-	<url>https://github.com/epistemediofanto/h2j</url>
+	<url>http://www.brioscia.org</url>
 
 	<developers>
 		<developer>
 			<name>Episteme Diofanto</name>
-			<email>episteme.diofanto@gmail.com</email>
+			<email>episteme.diofanto@gmail.com</email>			
 		</developer>
 		<developer>
 			<name>Zaleuco di Locri Diofanto</name>
