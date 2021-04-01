@@ -128,12 +128,10 @@ public class Executor {
 		Object a, b, r;
 		a = this.eval(node.getChilds().get(0));
 		b = this.eval(node.getChilds().get(1));
-		if (a instanceof String) {
-			if (b instanceof String) {
-				r = (String) a + (String) b;
-			} else {
-				r = (String) a + (b != null ? b.toString() : "null");
-			}
+		if ((a == null) || (a instanceof String)) {
+			String sa = (a == null) ? "" : (String) a;
+			String sb = (b == null) ? "" : b.toString();
+			r = sa + sb;
 		} else if ((a instanceof Integer) && (b instanceof Integer)) {
 			r = (int) a + (int) b;
 		} else if ((a instanceof Integer) && (b instanceof Double)) {
