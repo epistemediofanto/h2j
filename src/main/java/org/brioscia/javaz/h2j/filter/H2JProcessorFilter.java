@@ -36,10 +36,13 @@ public class H2JProcessorFilter implements Filter {
 	public static String EXT = ".xhtml";
 	public static String RMI = ".rmi";
 	public static String CALL_STRING_EXT = RMI + EXT;
-	public static String JSON_RESPONSE_ID = "_json";	
+	public static String JSON_RESPONSE_ID = "_json";
 
 	@Inject
 	private DialogueBoost dialogueBoost;
+
+	@Inject
+	private RawContext rawContext;
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		String ext;
@@ -62,7 +65,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -79,6 +83,7 @@ public class H2JProcessorFilter implements Filter {
 				try {
 
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
+					this.rawContext.set(request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
 					page = page.substring(contextRoot.length());
@@ -116,7 +121,7 @@ public class H2JProcessorFilter implements Filter {
 					} else {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
 							page = path + enviroments.getStringValue(storeObject.name);
-						} 
+						}
 						enviroments.clearBindName();
 						this.processResponse(enviroments, page, servletRequest, response, chain);
 					}
@@ -138,8 +143,8 @@ public class H2JProcessorFilter implements Filter {
 		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
 	}
 
-	private void processAjax(Enviroments enviroments, String path, String name, HttpServletRequest request, ServletResponse response, FilterChain chain)
-			throws H2JFilterException {
+	private void processAjax(Enviroments enviroments, String path, String name, HttpServletRequest request,
+			ServletResponse response, FilterChain chain) throws H2JFilterException {
 		Object object;
 		String jsonString;
 		byte[] byteString;
@@ -160,7 +165,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
+			FilterChain chain) throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -178,62 +184,62 @@ public class H2JProcessorFilter implements Filter {
 			if (JSON_RESPONSE_ID.equals(pName)) {
 				jsonResponse = "true".equals(value);
 			}
-			
+
 			storeObject = enviroments.getObjectFromNameStore(pName);
 			pName = storeObject.name;
 			converter = storeObject.converter;
-			
+
 			if (converter != null) {
-				o = converter.fromString(value); 
+				o = converter.fromString(value);
 			} else {
-				o=value;
+				o = value;
 			}
 			if (Enviroments.trace) {
 				System.out.println("set: " + pName + " = " + o);
 			}
-			enviroments.setBean(pName, o);			
+			enviroments.setBean(pName, o);
 		}
 		return jsonResponse;
 	}
 
-	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response, FilterChain chain)
-			throws H2JFilterException {
+	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
+			ServletResponse response, FilterChain chain) throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 
-		is = Enviroments.getServletContext().getResourceAsStream(page);
-		if (is == null) {
-			throw new H2JFilterException("page not found: " + page);
-		}
-		try {
+		if (!this.rawContext.isDirectResponse()) {
 
-			response.setContentType("text/html");
-
-			if (page.endsWith(EXT)) {
-				xmlProcessor = new XmlProcessor(enviroments, page);
-				xmlProcessor.process(is, response.getOutputStream());
-			} else {
-				byte[] buffer;
-				int size = 4096;
-				int read;
-				int offset = 0;
-
-				buffer = new byte[size];
-				while ((read = is.read(buffer, 0, size)) != -1) {
-					response.getOutputStream().write(buffer, offset, read);
-					offset += read;
-				}
+			is = Enviroments.getServletContext().getResourceAsStream(page);
+			if (is == null) {
+				throw new H2JFilterException("page not found: " + page);
 			}
+			try {
 
-			is.close();
+				response.setContentType("text/html");
 
-		} catch (IOException e) {
-			throw new H2JFilterException(e);
+				if (page.endsWith(EXT)) {
+					xmlProcessor = new XmlProcessor(enviroments, page);
+					xmlProcessor.process(is, response.getOutputStream());
+				} else {
+					byte[] buffer;
+					int size = 4096;
+					int read;
+					int offset = 0;
+
+					buffer = new byte[size];
+					while ((read = is.read(buffer, 0, size)) != -1) {
+						response.getOutputStream().write(buffer, offset, read);
+						offset += read;
+					}
+				}
+
+				is.close();
+
+			} catch (IOException e) {
+				throw new H2JFilterException(e);
+			}
 		}
-
 		this.dialogueBoost.cancel();
-
-//		InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
 	}
 
 }
