@@ -15,10 +15,10 @@ public class ConversationRequestScopeContext implements Context, Serializable {
 
 	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
-	private ConversationRequest conversationRequest;
+	private ConversationRequestContext conversationRequest;
 
 	public ConversationRequestScopeContext() {
-		this.conversationRequest = javax.enterprise.inject.spi.CDI.current().select(ConversationRequest.class).get();
+		this.conversationRequest = javax.enterprise.inject.spi.CDI.current().select(ConversationRequestContext.class).get();
 	}
 
 	@SuppressWarnings("unchecked")
