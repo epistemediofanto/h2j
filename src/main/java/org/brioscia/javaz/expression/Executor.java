@@ -422,7 +422,7 @@ public class Executor {
 		boolean setter;
 		boolean isGetter = false;
 
-		assertTrue(object != null, node, "can't set/get property, object is null");
+		assertTrue(object != null, node, "class method not found or object is null");
 
 		childs = node.getChilds();
 		classMethods = object.getClass().getMethods();

@@ -12,13 +12,13 @@ import java.util.Set;
 import javax.enterprise.context.SessionScoped;
 
 @SessionScoped
-public class ConversationRequest implements Serializable {
+public class ConversationRequestContext implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Map<String, ScopeInstance<?>> beans;
 
-	public ConversationRequest() {
+	public ConversationRequestContext() {
 		this.beans = Collections.synchronizedMap(new HashMap<String, ScopeInstance<?>>());
 	}
 

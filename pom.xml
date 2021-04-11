@@ -111,7 +111,7 @@
 				</executions>
 			</plugin>
 
-			<!-- 5. Signature -->
+			<!-- 5. Signature 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -127,7 +127,7 @@
 				</executions>
 			</plugin>
 
-			<!-- 6. nexus -->
+			6. nexus
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -139,7 +139,7 @@
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
-
+-->
 		</plugins>
 	</build>
 
