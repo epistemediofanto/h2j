@@ -17,15 +17,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.brioscia.javaz.expression.InvokerException;
 import org.brioscia.javaz.h2j.filter.cast.Converter;
 import org.brioscia.javaz.h2j.filter.cast.Shape;
 import org.brioscia.javaz.h2j.mw.Enviroments;
+import org.brioscia.javaz.h2j.mw.HtmlBindName.StoreObject;
 import org.brioscia.javaz.h2j.mw.Trasnslator;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
-import org.brioscia.javaz.h2j.mw.HtmlBindName.StoreObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,7 +41,7 @@ public class H2JProcessorFilter implements Filter {
 	private DialogueBoost dialogueBoost;
 
 	@Inject
-	private RawContext rawContext;
+	private H2JContext rawContext;
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		String ext;
@@ -78,17 +77,17 @@ public class H2JProcessorFilter implements Filter {
 
 			if (page.endsWith(EXT)) {
 				String contextRoot;
-				boolean jsonResponse;
+				boolean isJsonResponse;
 
 				try {
 
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
-					this.rawContext.set(request, response);
+					this.rawContext.set(this, enviroments, request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
 					page = page.substring(contextRoot.length());
 
-					jsonResponse = this.processRequest(enviroments, servletRequest, response, chain);
+					isJsonResponse = this.processRequest(enviroments, servletRequest, response);
 
 					page = URLDecoder.decode(page, "utf-8");
 
@@ -116,35 +115,34 @@ public class H2JProcessorFilter implements Filter {
 					}
 
 					StoreObject storeObject = enviroments.getObjectFromNameStore(name);
-					if (jsonResponse) {
-						this.processAjax(enviroments, path, name, servletRequest, response, chain);
+					if (isJsonResponse) {
+						this.processJSonResponse(enviroments, path, name, servletRequest, response);
 					} else {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
 							page = path + enviroments.getStringValue(storeObject.name);
 						}
-						enviroments.clearBindName();
-						this.processResponse(enviroments, page, servletRequest, response, chain);
+						if (!this.rawContext.isRefresh()) {
+							enviroments.clearBindName();
+							this.rawContext.setRefresh(false);
+						}
+						this.processResponse(enviroments, page, servletRequest, response);
 					}
 
 				} catch (InvokerException | H2JFilterException e) {
 					Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 					e.printStackTrace();
-					this.defaultPage(response);
 				}
 				return;
 			}
 		}
 
 		chain.doFilter(request, response);
+
 	}
 
-	@SuppressWarnings("deprecation")
-	private void defaultPage(ServletResponse response) {
-		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
-	}
 
-	private void processAjax(Enviroments enviroments, String path, String name, HttpServletRequest request,
-			ServletResponse response, FilterChain chain) throws H2JFilterException {
+	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request,
+			ServletResponse response) throws H2JFilterException {
 		Object object;
 		String jsonString;
 		byte[] byteString;
@@ -165,8 +163,8 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	private boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response,
-			FilterChain chain) throws H2JFilterException {
+	boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response)
+			throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -202,8 +200,8 @@ public class H2JProcessorFilter implements Filter {
 		return jsonResponse;
 	}
 
-	private void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
-			ServletResponse response, FilterChain chain) throws H2JFilterException {
+	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
+			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 

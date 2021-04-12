@@ -141,7 +141,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a + (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") - (" + b+ ")");
 		}
 		return r;
 	}
@@ -159,7 +159,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a - (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") - (" + b+ ")");
 		}
 		return r;
 	}
@@ -177,7 +177,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a * (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") * (" + b+ ")");
 		}
 		return r;
 	}
@@ -195,7 +195,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a / (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") / (" + b+ ")");
 		}
 		return r;
 	}
@@ -213,7 +213,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = Math.pow((Long) a, (Long) b);
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") ^ (" + b+ ")");
 		}
 		return r;
 	}
@@ -231,7 +231,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a < (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") < (" + b+ ")");
 		}
 		return r;
 	}
@@ -249,7 +249,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a <= (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") <= (" + b+ ")");
 		}
 		return r;
 	}
@@ -267,7 +267,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a >= (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") >= (" + b+ ")");
 		}
 		return r;
 	}
@@ -285,7 +285,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a > (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") > (" + b+ ")");
 		}
 		return r;
 	}
@@ -322,7 +322,7 @@ public class Executor {
 		if ((a instanceof Boolean) && (b instanceof Boolean)) {
 			r = (Boolean) a && (Boolean) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") && (" + b+ ")");
 		}
 		return r;
 	}
@@ -334,7 +334,7 @@ public class Executor {
 		if ((a instanceof Boolean) && (b instanceof Boolean)) {
 			r = (Boolean) a && (Boolean) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") || (" + b+ ")");
 		}
 		return r;
 	}
@@ -346,7 +346,7 @@ public class Executor {
 		if (a instanceof Boolean) {
 			r = !(Boolean) a;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: !(" + a + ")");
 		}
 		return r;
 	}
@@ -362,7 +362,7 @@ public class Executor {
 		} else if (a instanceof Long) {
 			r = -(Long) a;
 		} else {
-			throw new SyntaxError(node, "unsupported operation");
+			throw new SyntaxError(node, "unsupported operation: - (" + a + ")");
 		}
 		return r;
 	}
