@@ -47,9 +47,19 @@ public class H2JContext implements Serializable {
 		this.directResponse = directResponse;
 	}
 
+	public boolean processReuest() throws H2JFilterException {
+		return this.filter.processRequest(this.enviroments, (HttpServletRequest) this.request,
+				(HttpServletResponse) this.response);
+	}
+
 	public boolean processRequest(ServletRequest request, ServletResponse response) throws H2JFilterException {
 		return this.filter.processRequest(this.enviroments, (HttpServletRequest) request,
 				(HttpServletResponse) response);
+	}
+
+	public void processResponse(String page) throws H2JFilterException {
+		this.filter.processResponse(this.enviroments, page, (HttpServletRequest) this.request,
+				(HttpServletResponse) this.response);
 	}
 
 	public void processResponse(ServletRequest request, ServletResponse response, String page)
@@ -65,7 +75,7 @@ public class H2JContext implements Serializable {
 	public void setRefresh(boolean refresh) {
 		this.refresh = refresh;
 	}
-	
+
 	// /**
 //	 * Forwards a request from a current resource to another resource 
 //	 * 

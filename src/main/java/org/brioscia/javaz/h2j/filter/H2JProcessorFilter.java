@@ -17,7 +17,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.brioscia.javaz.expression.InvokerException;
 import org.brioscia.javaz.h2j.filter.cast.Converter;
@@ -122,7 +121,7 @@ public class H2JProcessorFilter implements Filter {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
 							page = path + enviroments.getStringValue(storeObject.name);
 						}
-						if (this.rawContext.isRefresh()) {
+						if (!this.rawContext.isRefresh()) {
 							enviroments.clearBindName();
 							this.rawContext.setRefresh(false);
 						}
@@ -132,7 +131,6 @@ public class H2JProcessorFilter implements Filter {
 				} catch (InvokerException | H2JFilterException e) {
 					Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 					e.printStackTrace();
-					this.defaultPage(response);
 				}
 				return;
 			}
@@ -142,10 +140,6 @@ public class H2JProcessorFilter implements Filter {
 
 	}
 
-	@SuppressWarnings("deprecation")
-	private void defaultPage(ServletResponse response) {
-		((HttpServletResponse) response).setStatus(500, "Contattare l'amministratore.");
-	}
 
 	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request,
 			ServletResponse response) throws H2JFilterException {
