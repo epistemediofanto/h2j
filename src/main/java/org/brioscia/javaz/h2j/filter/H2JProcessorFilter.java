@@ -41,7 +41,7 @@ public class H2JProcessorFilter implements Filter {
 	private DialogueBoost dialogueBoost;
 
 	@Inject
-	private H2JContext rawContext;
+	private H2JContext h2jContext;
 
 	public void init(FilterConfig fConfig) throws ServletException {
 		String ext;
@@ -82,7 +82,7 @@ public class H2JProcessorFilter implements Filter {
 				try {
 
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
-					this.rawContext.set(this, enviroments, request, response);
+					this.h2jContext.set(this, enviroments, request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
 					page = page.substring(contextRoot.length());
@@ -121,9 +121,9 @@ public class H2JProcessorFilter implements Filter {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
 							page = path + enviroments.getStringValue(storeObject.name);
 						}
-						if (!this.rawContext.isRefresh()) {
+						if (!this.h2jContext.isRefresh()) {
 							enviroments.clearBindName();
-							this.rawContext.setRefresh(false);
+							this.h2jContext.setRefresh(false);
 						}
 						this.processResponse(enviroments, page, servletRequest, response);
 					}
@@ -205,7 +205,7 @@ public class H2JProcessorFilter implements Filter {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 
-		if (!this.rawContext.isDirectResponse()) {
+		if (!this.h2jContext.isDirectResponse()) {
 
 			is = Enviroments.getServletContext().getResourceAsStream(page);
 			if (is == null) {
