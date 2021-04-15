@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.brioscia.javaz</groupId>
 	<artifactId>h2j</artifactId>
@@ -11,7 +13,7 @@
 	<developers>
 		<developer>
 			<name>Episteme Diofanto</name>
-			<email>episteme.diofanto@gmail.com</email>			
+			<email>episteme.diofanto@gmail.com</email>
 		</developer>
 		<developer>
 			<name>Zaleuco di Locri Diofanto</name>
@@ -31,8 +33,8 @@
 		<connection>scm:git:git://github.com/epistemediofanto/h2j.git</connection>
 		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j.git</developerConnection>
 		<url>https://github.com/epistemediofanto/h2j.git</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<properties>
 
@@ -71,7 +73,14 @@
 				</configuration>
 			</plugin>
 
-			<!-- 2. Test -->
+			<!-- 2. create Jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+
+			<!-- 3. Test -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -81,7 +90,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- 3. Source -->
+			<!-- 4. Source -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -96,7 +105,7 @@
 				</executions>
 			</plugin>
 
-			<!-- 4. Java DOC -->
+			<!-- 5. Java DOC -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
@@ -111,7 +120,7 @@
 				</executions>
 			</plugin>
 
-			<!-- 5. Signature -->
+			<!-- 6. Signature -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -127,7 +136,7 @@
 				</executions>
 			</plugin>
 
-			<!-- 6. nexus -->
+			<!-- 7. nexus -->
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>

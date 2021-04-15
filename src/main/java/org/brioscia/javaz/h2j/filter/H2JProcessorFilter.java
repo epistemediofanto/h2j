@@ -64,8 +64,7 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -78,16 +77,18 @@ public class H2JProcessorFilter implements Filter {
 			if (page.endsWith(EXT)) {
 				String contextRoot;
 				boolean isJsonResponse;
-
 				try {
-
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
 					this.h2jContext.set(this, enviroments, request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
 					page = page.substring(contextRoot.length());
 
-					isJsonResponse = this.processRequest(enviroments, servletRequest, response);
+					try {
+						isJsonResponse = this.processRequest(enviroments, servletRequest, response);
+					} catch (H2JFilterException e) {
+						throw new H2JFilterException("On request: " + page, e);
+					}
 
 					page = URLDecoder.decode(page, "utf-8");
 
@@ -116,7 +117,11 @@ public class H2JProcessorFilter implements Filter {
 
 					StoreObject storeObject = enviroments.getObjectFromNameStore(name);
 					if (isJsonResponse) {
-						this.processJSonResponse(enviroments, path, name, servletRequest, response);
+						try {
+							this.processJSonResponse(enviroments, path, name, servletRequest, response);
+						} catch (H2JFilterException e) {
+							throw new H2JFilterException("On json response: " + page, e);
+						}
 					} else {
 						if (storeObject.type == Enviroments.DYNAMIC_CALL) {
 							page = path + enviroments.getStringValue(storeObject.name);
@@ -125,11 +130,15 @@ public class H2JProcessorFilter implements Filter {
 							enviroments.clearBindName();
 							this.h2jContext.setRefresh(false);
 						}
-						this.processResponse(enviroments, page, servletRequest, response);
+						try {
+							this.processResponse(enviroments, page, servletRequest, response);
+						} catch (H2JFilterException e) {
+							throw new H2JFilterException("On response: " + page, e);
+						}
 					}
 
 				} catch (InvokerException | H2JFilterException e) {
-					Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+					Logger.getGlobal().log(Level.SEVERE, "on response:" + page + ": " + e.getMessage(), e);
 					e.printStackTrace();
 				}
 				return;
@@ -140,9 +149,8 @@ public class H2JProcessorFilter implements Filter {
 
 	}
 
-
-	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request,
-			ServletResponse response) throws H2JFilterException {
+	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request, ServletResponse response)
+			throws H2JFilterException {
 		Object object;
 		String jsonString;
 		byte[] byteString;
@@ -163,8 +171,7 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response)
-			throws H2JFilterException {
+	boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response) throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
@@ -200,8 +207,7 @@ public class H2JProcessorFilter implements Filter {
 		return jsonResponse;
 	}
 
-	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
-			throws H2JFilterException {
+	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response) throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 

@@ -9,7 +9,7 @@ import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 
-public class ConversationRequestScopeContext implements Context, Serializable {
+public class ConversationRequestRegisterContext implements Context, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,7 +17,7 @@ public class ConversationRequestScopeContext implements Context, Serializable {
 
 	private ConversationRequestContext conversationRequest;
 
-	public ConversationRequestScopeContext() {
+	public ConversationRequestRegisterContext() {
 		this.conversationRequest = javax.enterprise.inject.spi.CDI.current().select(ConversationRequestContext.class).get();
 	}
 

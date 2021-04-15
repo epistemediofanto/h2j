@@ -16,7 +16,7 @@ public class ConversationRequestExtension implements Extension, Serializable {
 	}
 
 	public void registerContext(@Observes final AfterBeanDiscovery event) {
-		event.addContext(new ConversationRequestScopeContext());
+		event.addContext(new ConversationRequestRegisterContext());
 	}
 
 }

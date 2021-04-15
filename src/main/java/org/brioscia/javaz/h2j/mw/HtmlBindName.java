@@ -15,6 +15,7 @@ public class HtmlBindName extends Assertion {
 	private HashMap<String, StoreObject> envName = new HashMap<String, StoreObject>();
 
 	public String htmlName(String name, Converter converter, int type) {
+		Enviroments enviroments = (Enviroments) this; // ORRIBILE!!!!
 		String newName = "hj2" + next();
 		if (name == null) {
 			name = newName;
@@ -57,6 +58,12 @@ public class HtmlBindName extends Assertion {
 	public static final int DYNAMIC_CALL = 1;
 	public static final int OBJECT = 2;
 
+	/***
+	 * Classe utilizzata per memorizzare il binding nome oggetto tra html e java 
+	 * 
+	 * @author Zaleuco
+	 *
+	 */
 	public class StoreObject implements Serializable {
 		private static final long serialVersionUID = 1L;
 		public Converter converter;

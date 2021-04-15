@@ -26,6 +26,7 @@ public class InputTag extends DefaultH2JTag {
 		if (isMapName(value)) {
 			Node converterNode;
 			Converter converter = null;
+			String valueName;
 
 			converterNode = attributes.getNamedItem("shape");
 			if (converterNode != null) {
@@ -36,15 +37,14 @@ public class InputTag extends DefaultH2JTag {
 				attributes.removeNamedItem("shape");
 			}
 
+			valueName = value.substring(2, value.length() - 1);
 			if (converter != null) {
-				nodeValue.setNodeValue(converter
-						.toString(processor.getEnviroments().getObject(value.substring(2, value.length() - 1))));
+				nodeValue.setNodeValue(converter.toString(processor.getEnviroments().getObject(valueName)));
 			} else {
 				nodeValue.setNodeValue(processor.getEnviroments().eval(value));
 			}
 
-			value = value.substring(2, value.length() - 1);
-			value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
+			value = processor.getEnviroments().htmlName(valueName, converter, HtmlBindName.DYNAMIC_CALL);
 			((Element) node).setAttribute("name", value);
 
 		}

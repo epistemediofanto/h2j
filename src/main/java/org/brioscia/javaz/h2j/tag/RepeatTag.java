@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.mw.Enviroments;
+import org.brioscia.javaz.h2j.mw.LoopVar;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -74,7 +75,8 @@ public class RepeatTag extends BaseTag {
 						enviroments.push(nameSize, items.size());
 					}
 					for (Object item : items) {
-						enviroments.push(nameVar, item);
+						LoopVar var = new LoopVar(nameVar, nameValues + ".get(" + j + ")", item);
+						enviroments.push(nameVar, var);
 						if (nameRow != null) {
 							enviroments.push(nameRow, j);
 						}
@@ -87,10 +89,10 @@ public class RepeatTag extends BaseTag {
 							// Ciclo REPEAT
 							for (int i = 0; i < childs.getLength(); ++i) {
 								child = childs.item(i).cloneNode(true);
-//								parent.appendChild(child);
 								parent.insertBefore(child, node);
 								processor.processNode(child);
-								child.setUserData("h2j", "skip", null);
+								child.setUserData("h2j", "skip", null); // marcatore di tag creato dal framework, verra
+																		// rimosso in valutazione
 							}
 
 						} finally {

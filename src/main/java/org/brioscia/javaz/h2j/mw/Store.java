@@ -59,6 +59,9 @@ public class Store extends HtmlBindName implements EnvContext {
 		list = this.storeSpace.get(element);
 		if (list != null) {
 			value = list.get(0);
+			if (value instanceof LoopVar) {
+				value = ((LoopVar) value).getObject();
+			}
 		}
 		return value;
 	}
@@ -76,6 +79,9 @@ public class Store extends HtmlBindName implements EnvContext {
 		list = this.storeSpace.get(element);
 		if (list != null) {
 			value = list.remove(0);
+			if (value instanceof LoopVar) {
+				value = ((LoopVar) value).getObject();
+			}
 		}
 		return value;
 	}

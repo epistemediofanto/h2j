@@ -80,7 +80,7 @@ public class XmlProcessor {
 		String namespace;
 		TagMap tagMap;
 
-		if ("skip".equals(node.getUserData("h2j"))) {
+		if ("skip".equals(node.getUserData("h2j"))) { // i tag creati dal framework non sono da processare
 			node.setUserData("h2j", null, null);
 		} else {
 

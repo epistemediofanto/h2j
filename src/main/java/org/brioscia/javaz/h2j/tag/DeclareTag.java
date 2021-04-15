@@ -41,7 +41,7 @@ public class DeclareTag extends BaseTag {
 
 				Class<?> clz;
 				Constructor<?> constructor;
-
+				
 				clz = Class.forName(valueBean);
 				constructor = clz.getDeclaredConstructor();
 				object = constructor.newInstance();
