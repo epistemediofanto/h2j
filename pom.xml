@@ -84,7 +84,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 						</manifest>
-						<manifestEntries>							
+						<manifestEntries>
 							<url>${project.url}</url>
 							<version>${project.version}</version>
 						</manifestEntries>
@@ -132,14 +132,35 @@
 				</executions>
 			</plugin>
 
-			<!-- 6. Signature <plugin> <groupId>org.apache.maven.plugins</groupId> 
-				<artifactId>maven-gpg-plugin</artifactId> <version>${maven-gpg-plugin-version}</version> 
-				<executions> <execution> <id>sign-artifacts</id> <phase>verify</phase> <goals> 
-				<goal>sign</goal> </goals> </execution> </executions> </plugin> 7. nexus 
-				<plugin> <groupId>org.sonatype.plugins</groupId> <artifactId>nexus-staging-maven-plugin</artifactId> 
-				<version>${nexus-staging-maven-plugin-version}</version> <extensions>true</extensions> 
-				<configuration> <serverId>ossrh</serverId> <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl> 
-				<autoReleaseAfterClose>true</autoReleaseAfterClose> </configuration> </plugin> -->
+			<!-- 6. Signature -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven-gpg-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- 7. nexus -->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>${nexus-staging-maven-plugin-version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
