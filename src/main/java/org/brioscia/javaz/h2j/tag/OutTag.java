@@ -12,7 +12,6 @@ public class OutTag extends BaseTag {
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
 		Node attributeValue;
-		String elName;
 		String value;
 		Node parent;
 		Converter converter = null;
@@ -36,9 +35,10 @@ public class OutTag extends BaseTag {
 		attributeValue = attributes.getNamedItem("value");
 		assertNotNull(attributeValue, "element value is missing");
 		value = attributeValue.getNodeValue();
-
-		elName = this.trasforlELname(value);
-		if (elName != null) {
+		
+		if (isEL(value)) {
+			String elName;
+			elName = value.substring(2, value.length() - 1);
 			if (converter != null) {
 				Object object = processor.getEnviroments().getObject(elName);
 				value = converter.toString(object);

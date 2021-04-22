@@ -23,7 +23,7 @@ public class ButtonTag extends DefaultH2JTag {
 		valueAction = nodeAction.getNodeValue();
 		assertNotEmpty(valueAction, "found empty value in attribute 'formaction' in 'button' tag");
 
-		if (isMapName(valueAction)) {
+		if (isEL(valueAction)) {
 			valueAction = processor.getEnviroments().evalForHTMLCall(valueAction);
 			valueAction = processor.getEnviroments().htmlName(valueAction, converter, HtmlBindName.DYNAMIC_CALL);
 			nodeAction.setNodeValue(valueAction + H2JProcessorFilter.CALL_STRING_EXT);

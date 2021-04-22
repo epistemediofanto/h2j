@@ -35,7 +35,7 @@ public class DeclareTag extends BaseTag {
 		assertNotEmpty(valueBean, "found empty value in attribute 'bean' in 'addList' tag");
 
 		try {
-			if (isMapName(valueBean)) {
+			if (isEL(valueBean)) {
 				object = processor.getEnviroments().getObject(valueBean.substring(2, valueBean.length() - 1));
 			} else {
 

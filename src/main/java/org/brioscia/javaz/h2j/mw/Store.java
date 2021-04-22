@@ -87,6 +87,28 @@ public class Store extends HtmlBindName implements EnvContext {
 	}
 
 	/**
+	 * return loop var index from element name
+	 * 
+	 * @param element loop name index
+	 * @return loopvar object or null in it not exist
+	 */
+	public LoopVar getLoopVar(String element) {
+		Object value = null;
+		List<Object> list;
+		list = this.storeSpace.get(element);
+		if (list != null) {
+			value = list.get(0);
+			if (value instanceof LoopVar) {
+				value = ((LoopVar) value);
+			} else {
+				value = null;
+			}
+		}
+		return (LoopVar) value;
+	}
+
+
+	/**
 	 * disallocates the space for the element
 	 * 
 	 * @param element elemento da rimuovere
@@ -141,7 +163,7 @@ public class Store extends HtmlBindName implements EnvContext {
 		}
 		return object;
 	}
-
+	
 	public void enableCDIContext() {
 		this.searchInCDI = true;
 	}

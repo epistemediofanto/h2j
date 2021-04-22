@@ -56,12 +56,19 @@ public class H2JProcessorFilter implements Filter {
 				CALL_STRING_EXT = RMI + EXT;
 			}
 			Logger.getGlobal().log(Level.INFO, "h2j page type: " + EXT);
-			Logger.getGlobal().log(Level.INFO, "H2J: *** h2j processor started. ***");
+			Logger.getGlobal().log(Level.INFO, "H2J: *** h2j processor started. *** " + this.getVersion());
 
 		} catch (H2JFilterException e) {
 			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private String getVersion() {
+		Package aPackage = this.getClass().getPackage();
+		String implementationVersion = aPackage.getImplementationVersion();
+		String implementationVendor = aPackage.getImplementationVendor();
+		return implementationVersion;
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

@@ -23,7 +23,7 @@ public class ATag extends DefaultH2JTag {
 		value = nodeAction.getNodeValue();
 		assertNotEmpty(value, "found empty value in attribute href in a tag");
 
-		if (isMapName(value)) {
+		if (isEL(value)) {
 			value = processor.getEnviroments().evalForHTMLCall(value);
 			value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
 			nodeAction.setNodeValue(value + H2JProcessorFilter.CALL_STRING_EXT);

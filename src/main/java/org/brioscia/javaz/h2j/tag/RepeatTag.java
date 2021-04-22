@@ -1,5 +1,7 @@
 package org.brioscia.javaz.h2j.tag;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
@@ -19,19 +21,17 @@ public class RepeatTag extends BaseTag {
 		Node indexVar;
 		Node sizeVar;
 		Node rowVar;
-		String nameValues;
 		String nameVar;
 		String nameIndex;
 		String nameSize;
 		String nameRow;
 		Node parent;
+		String nameValues;
 		Enviroments enviroments;
 
 		enviroments = processor.getEnviroments();
 
 		parent = node.getParentNode();
-
-//		parent.removeChild(node);
 
 		attributes = node.getAttributes();
 		nodeValues = attributes.getNamedItem("values");
@@ -53,17 +53,14 @@ public class RepeatTag extends BaseTag {
 		rowVar = attributes.getNamedItem("row");
 		nameRow = rowVar != null ? rowVar.getNodeValue() : null;
 
-		nameValues = this.trasforlELname(nameValues);
-		if (nameValues != null) {
-			List<?> items;
+		if (isEL(nameValues)) {
+			MultiData items;
 			Object oList;
 
+			nameValues = nameValues.substring(2, nameValues.length() - 1);
 			oList = enviroments.getObject(nameValues);
-			if (!(oList instanceof List<?>)) {
-				String type = oList != null ? "Found " + oList + " (" + oList.getClass().getName() + "), " : "";
-				throw new H2JFilterException(type + "expected List<?> value from " + nameValues);
-			}
-			items = (List<?>) oList;
+
+			items = new MultiData(oList, nameValues);
 			if (items != null) {
 				NodeList childs;
 				Node child;
@@ -71,10 +68,12 @@ public class RepeatTag extends BaseTag {
 				childs = node.getChildNodes();
 				try {
 					int j = 0;
+					Object item;
 					if (nameIndex != null) {
 						enviroments.push(nameSize, items.size());
 					}
-					for (Object item : items) {
+					for (int ix = 0; ix < items.size(); ++ix) {
+						item = items.get(ix);
 						LoopVar var = new LoopVar(nameVar, nameValues + ".get(" + j + ")", item);
 						enviroments.push(nameVar, var);
 						if (nameRow != null) {
@@ -116,4 +115,35 @@ public class RepeatTag extends BaseTag {
 		parent.removeChild(node);
 	}
 
+	private class MultiData {
+		private List<?> list;
+		private Object array;
+		private boolean isList = true;
+
+		public MultiData(Object o, String str) throws H2JFilterException {
+			if (o != null) {
+				if (o instanceof List<?>) {
+					this.isList = true;
+					this.list = (List<?>) o;
+				} else if (o.getClass().isArray()) {
+					this.isList = false;
+					this.array = o;
+				} else {
+					String type = "Found class " + o.getClass().getName() + " expected array or list in " + str;
+					throw new H2JFilterException(type);
+				}
+			} else {
+				this.list = new ArrayList<String>();
+				this.isList = true;
+			}
+		}
+
+		public int size() {
+			return this.isList ? this.list.size() : Array.getLength(this.array);
+		}
+
+		public Object get(int ix) {
+			return this.isList ? this.list.get(ix) : Array.get(this.array, ix);
+		}
+	}
 }

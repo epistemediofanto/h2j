@@ -7,7 +7,7 @@ import org.w3c.dom.NamedNodeMap;
 
 public abstract class BaseTag implements TagMap {
 
-	protected static boolean isMapName(String mapName) {
+	protected static boolean isEL(String mapName) {
 		return (mapName != null) && mapName.startsWith("#{") && mapName.endsWith("}");
 	}
 

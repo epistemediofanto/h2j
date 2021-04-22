@@ -23,7 +23,7 @@ public class TextAreaTag extends DefaultH2JTag {
 		value = nodeValue.getNodeValue();
 		assertNotEmpty(value, "found empty text in attribute 'value' in 'textarea' tag");
 
-		if (isMapName(value)) {
+		if (isEL(value)) {
 			Converter converter = null;
 			Node converterNode;
 			String name = value;

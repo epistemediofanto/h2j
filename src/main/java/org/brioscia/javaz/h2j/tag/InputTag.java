@@ -23,7 +23,7 @@ public class InputTag extends DefaultH2JTag {
 		value = nodeValue.getNodeValue();
 		assertNotEmpty(value, "found empty value in attribute 'value' in 'input' tag");
 
-		if (isMapName(value)) {
+		if (isEL(value)) {
 			Node converterNode;
 			Converter converter = null;
 			String valueName;
@@ -38,6 +38,7 @@ public class InputTag extends DefaultH2JTag {
 			}
 
 			valueName = value.substring(2, value.length() - 1);
+			valueName = processor.resolveLoopVar(valueName);
 			if (converter != null) {
 				nodeValue.setNodeValue(converter.toString(processor.getEnviroments().getObject(valueName)));
 			} else {

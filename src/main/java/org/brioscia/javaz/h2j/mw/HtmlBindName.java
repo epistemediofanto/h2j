@@ -15,7 +15,6 @@ public class HtmlBindName extends Assertion {
 	private HashMap<String, StoreObject> envName = new HashMap<String, StoreObject>();
 
 	public String htmlName(String name, Converter converter, int type) {
-		Enviroments enviroments = (Enviroments) this; // ORRIBILE!!!!
 		String newName = "hj2" + next();
 		if (name == null) {
 			name = newName;

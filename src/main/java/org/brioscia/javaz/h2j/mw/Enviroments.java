@@ -49,20 +49,20 @@ public class Enviroments extends Store {
 
 	}
 
-	public String getStringValue(String element) throws H2JFilterException {
+	public String getStringValue(String fullname) throws H2JFilterException {
 		Object o;
-		o = this.getObject(element);
+		o = this.getObject(fullname);
 		return o != null ? Shape.toHTML(o) : "";
 	}
 
-	public Object getObject(String fullName) throws H2JFilterException {
+	public Object getObject(String fullname) throws H2JFilterException {
 		NodeToken node;
 
 		try {
-			node = LexicalParser.process(fullName);
+			node = LexicalParser.process(fullname);
 			return Executor.get(node, this);
 		} catch (SyntaxError | InvokerException e) {
-			throw new H2JFilterException(fullName, e);
+			throw new H2JFilterException(fullname, e);
 		}
 	}
 
@@ -76,31 +76,31 @@ public class Enviroments extends Store {
 		}
 	}
 
-	public String eval(String text) throws H2JFilterException {
+	public String eval(String elname) throws H2JFilterException {
 		int posStart;
 		int posEnd;
 
 		while (true) {
-			posStart = text.indexOf("#{");
+			posStart = elname.indexOf("#{");
 			if (posStart != -1) {
-				posEnd = text.indexOf("}", posStart);
+				posEnd = elname.indexOf("}", posStart);
 				if (posEnd != -1) {
 					String exp;
 					String value;
 					String fullExp;
 
-					fullExp = text.substring(posStart, posEnd + 1);
-					exp = text.substring(posStart + 2, posEnd);
+					fullExp = elname.substring(posStart, posEnd + 1);
+					exp = elname.substring(posStart + 2, posEnd);
 					value = this.getStringValue(exp);
 
-					text = text.replace(fullExp, value);
+					elname = elname.replace(fullExp, value);
 					continue;
 				}
 			}
 			break;
 		}
 
-		return text;
+		return elname;
 	}
 
 	/**
@@ -108,45 +108,45 @@ public class Enviroments extends Store {
 	 * prepara l'espressione da chiamare alla submit da html valuta solo gli
 	 * elementi dell'ambiente locale
 	 * 
-	 * @param fullName stringa da valutare
+	 * @param elname stringa da valutare
 	 * @return stringa html
 	 * @throws H2JFilterException sollevata se la stringa è malformata o non è possibile valutarla
 	 */
-	public String evalForHTMLCall(String fullName) throws H2JFilterException {
+	public String evalForHTMLCall(String elname) throws H2JFilterException {
 		int posStart;
 		int posEnd;
 		NodeToken node;
 
 		while (true) {
-			posStart = fullName.indexOf("#{");
+			posStart = elname.indexOf("#{");
 			if (posStart != -1) {
-				posEnd = fullName.indexOf("}", posStart);
+				posEnd = elname.indexOf("}", posStart);
 				if (posEnd != -1) {
 					String exp;
 					String value;
 					String fullExp;
 
-					fullExp = fullName.substring(posStart, posEnd + 1);
-					exp = fullName.substring(posStart + 2, posEnd);
+					fullExp = elname.substring(posStart, posEnd + 1);
+					exp = elname.substring(posStart + 2, posEnd);
 
 					try {
 						node = LexicalParser.process(exp);
 						this.disableCDIContext();
 						value = Executor.get(node, this).toString();
 					} catch (SyntaxError | InvokerException e) {
-						throw new H2JFilterException(fullName, e);
+						throw new H2JFilterException(elname, e);
 					} finally {
 						this.enableCDIContext();
 					}
 
-					fullName = fullName.replace(fullExp, value);
+					elname = elname.replace(fullExp, value);
 					continue;
 				}
 			}
 			break;
 		}
 
-		return fullName;
+		return elname;
 	}
 
 	public static ServletContext getServletContext() {
@@ -173,5 +173,15 @@ public class Enviroments extends Store {
 			System.out.println("Invalid setting: " + name + "=" + str + ", use: " + def);
 		}
 		return def;
+	}
+	
+	/**
+	 * verifica se trattasi di una espressione da valutare
+	 * 
+	 * @param elname stringa da verificare
+	 * @return true se è una espressione
+	 */
+	public static boolean isELName(String elname) {
+		return (elname!=null) && (elname.startsWith("#{")) && (elname.endsWith("}"));
 	}
 }

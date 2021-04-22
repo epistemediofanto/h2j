@@ -54,7 +54,7 @@ public class IncludeTag extends BaseTag {
 			try {
 				if (attributeNameNode != null) {
 					String value = attributeValueNode.getNodeValue();
-					if (isMapName(value)) {
+					if (isEL(value)) {
 						value = value.substring(2, value.length() - 1);
 						processor.getEnviroments().push(attributeNameNode.getNodeValue(), processor.getEnviroments().getObject(value));
 					} else {

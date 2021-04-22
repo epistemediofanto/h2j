@@ -12,6 +12,7 @@ import org.brioscia.javaz.h2j.tag.FormTag;
 import org.brioscia.javaz.h2j.tag.IncludeIfTag;
 import org.brioscia.javaz.h2j.tag.IncludeTag;
 import org.brioscia.javaz.h2j.tag.InputTag;
+import org.brioscia.javaz.h2j.tag.JsonDataTag;
 import org.brioscia.javaz.h2j.tag.OptionsTag;
 import org.brioscia.javaz.h2j.tag.OutTag;
 import org.brioscia.javaz.h2j.tag.RepeatTag;
@@ -64,6 +65,9 @@ public class Trasnslator {
 		tagMap = new InputTag();
 		this.registerTag("input", tagMap);
 
+		tagMap = new JsonDataTag();
+		this.registerTag("jsondata", tagMap);
+
 		tagMap = new OptionsTag();
 		this.registerTag("options", tagMap);
 
@@ -78,7 +82,7 @@ public class Trasnslator {
 
 		tagMap = new TextAreaTag();
 		this.registerTag("textarea", tagMap);
-}
+	}
 
 	public TagMap getTag(String fullName) {
 		TagMap map;

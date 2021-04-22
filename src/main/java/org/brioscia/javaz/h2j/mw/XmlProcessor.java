@@ -14,6 +14,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.brioscia.javaz.expression.LexicalParser;
+import org.brioscia.javaz.expression.NodeToken;
+import org.brioscia.javaz.expression.SyntaxError;
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.tag.TagMap;
 import org.w3c.dom.Document;
@@ -93,6 +96,44 @@ public class XmlProcessor {
 				tagMap = this.trasnslator.getDefaultHTML();
 			}
 			tagMap.processNode(this, node);
+		}
+	}
+
+	public String resolveLoopVar(String element) throws H2JFilterException {
+		NodeToken node;
+		try {
+			node = LexicalParser.process(element);
+			this.replaceName(node);
+
+			element = node.toString();
+		} catch (SyntaxError e) {
+			throw new H2JFilterException(e);
+		}
+		return element;
+	}
+
+	private void replaceName(NodeToken node) {
+		LoopVar loopVar;
+
+		loopVar = this.getEnviroments().getLoopVar(node.getValue());
+		if (loopVar != null) {
+			node.setValue(loopVar.getFullName());
+		}
+		while ((node != null) && (node.getChilds().size() > 0)) {
+			node = node.getChilds().get(0);
+			if (node != null) {
+				if (node.getType() == NodeToken.Type.name) {
+					continue;
+				} else if (node.getType() == NodeToken.Type.function) {
+					for (int i = 0; i < node.getChilds().size(); ++i) {
+						replaceName(node.getChilds().get(i));
+					}
+				} else if (node.getType() == NodeToken.Type.arrayIndex) {
+					for (int i = 0; i < node.getChilds().size(); ++i) {
+						replaceName(node.getChilds().get(i));
+					}
+				}
+			}
 		}
 	}
 

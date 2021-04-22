@@ -141,7 +141,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a + (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") - (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") - (" + b + ")");
 		}
 		return r;
 	}
@@ -159,7 +159,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a - (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") - (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") - (" + b + ")");
 		}
 		return r;
 	}
@@ -177,7 +177,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a * (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") * (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") * (" + b + ")");
 		}
 		return r;
 	}
@@ -195,7 +195,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a / (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") / (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") / (" + b + ")");
 		}
 		return r;
 	}
@@ -213,7 +213,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = Math.pow((Long) a, (Long) b);
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") ^ (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") ^ (" + b + ")");
 		}
 		return r;
 	}
@@ -231,7 +231,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a < (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") < (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") < (" + b + ")");
 		}
 		return r;
 	}
@@ -249,7 +249,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a <= (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") <= (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") <= (" + b + ")");
 		}
 		return r;
 	}
@@ -267,7 +267,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a >= (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") >= (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") >= (" + b + ")");
 		}
 		return r;
 	}
@@ -285,7 +285,7 @@ public class Executor {
 		} else if ((a instanceof Long) && (b instanceof Long)) {
 			r = (Long) a > (Long) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") > (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") > (" + b + ")");
 		}
 		return r;
 	}
@@ -322,7 +322,7 @@ public class Executor {
 		if ((a instanceof Boolean) && (b instanceof Boolean)) {
 			r = (Boolean) a && (Boolean) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") && (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") && (" + b + ")");
 		}
 		return r;
 	}
@@ -334,7 +334,7 @@ public class Executor {
 		if ((a instanceof Boolean) && (b instanceof Boolean)) {
 			r = (Boolean) a && (Boolean) b;
 		} else {
-			throw new SyntaxError(node, "unsupported operation: (" + a + ") || (" + b+ ")");
+			throw new SyntaxError(node, "unsupported operation: (" + a + ") || (" + b + ")");
 		}
 		return r;
 	}
@@ -403,7 +403,7 @@ public class Executor {
 			node = node.getChilds().get(0);
 			object = this.invoke(object, node);
 		} else if (this.value != null) {
-			throw new SyntaxError(node, "unsupported operation (set value) ");
+			throw new SyntaxError(node, "the operation cannot be performed, invalid setter call");
 		}
 
 		return object;
@@ -448,6 +448,7 @@ public class Executor {
 					|| (isGetter && this.isBooleanGetter(method, propertyName))) {
 				Object[] paramValue;
 				Parameter[] parameters;
+				Object value;
 
 				parameters = method.getParameters();
 				paramValue = new Object[numParams];
@@ -455,8 +456,8 @@ public class Executor {
 					paramValue[0] = this.cast(parameters[0], this.value);
 				} else {
 					for (int j = 0; j < numParams; ++j) {
-						this.value = this.eval(nodeParams.getChilds().get(j));
-						paramValue[j] = this.value != null ? this.cast(parameters[j], this.value) : null;
+						value = this.eval(nodeParams.getChilds().get(j));
+						paramValue[j] = value != null ? this.cast(parameters[j], value) : null;
 					}
 				}
 
@@ -503,7 +504,8 @@ public class Executor {
 			String a;
 			is = method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Boolean.class);
 			a = method.getName();
-			is = is && a.startsWith("is") && (propertyName.startsWith("get")) && a.substring(2).equals(propertyName.substring(3));
+			is = is && a.startsWith("is") && (propertyName.startsWith("get"))
+					&& a.substring(2).equals(propertyName.substring(3));
 		}
 		return is;
 	}
