@@ -9,5 +9,10 @@ public class IntegerConverter implements Converter {
 	public Integer fromString(String value) {
 		return value != null ? Integer.parseInt(value) : null;
 	}
+	
+	public String getName() {
+		return "Integer";
+	}
+
 
 }

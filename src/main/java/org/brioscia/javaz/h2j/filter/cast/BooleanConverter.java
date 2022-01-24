@@ -10,4 +10,8 @@ public class BooleanConverter implements Converter {
 		return value != null ? "true".equals(value) : null;
 	}
 
+	public String getName() {
+		return "Boolean";
+	}
+
 }

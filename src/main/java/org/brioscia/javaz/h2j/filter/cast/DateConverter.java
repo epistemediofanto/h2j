@@ -36,4 +36,8 @@ public class DateConverter implements Converter {
 		return date;
 	}
 
+	public String getName() {
+		return "Date:" + this.format;
+	}
+
 }
