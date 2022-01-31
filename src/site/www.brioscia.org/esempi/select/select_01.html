@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<title>Brioscia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/css/w3css/4/w3.css">
+<link rel="stylesheet" href="/css/lib/w3-theme-teal.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<script src="/scripts.js"></script> 
+
+<body>
+
+<!-- Side Navigation -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <h1 class="w3-xlarge w3-text-theme">Mappa</h1>  
+  <a href="index.html" class="w3-bar-item w3-button">Home</a>
+  <a href="https://github.com/epistemediofanto/h2j" class="w3-bar-item w3-button">Source code (GIT)</a>
+  <a href="/autore/autore.html" class="w3-bar-item w3-button">Autore</a>
+  <a href="/why/why.html" class="w3-bar-item w3-button">Why</a>
+  <a href="/configurazione/configurazione.html" class="w3-bar-item w3-button">Configurazione</a>
+  <a href="/esempi/esempi.html" class="w3-bar-item w3-button">Esempi</a>
+  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
+</nav>
+<!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+		<h4>Framework open source per lo sviluppo di applicazioni web</h4>
+		<h1 class="w3-xxlarge w3-animate-bottom">HTML5 + H2J + JAVA</h1>
+		<a class="w3-button w3-circle w3-large w3-card-4" style="font-weight:900;height:60px; padding-top:14px;" href="/esempi.html">
+			<!-- onclick="document.getElementById('id01').style.display='block'" -->
+			<i class="fa fa-cogs" style="font-size:24pt"></i></a>
+	</div>
+</header>
+<div>
+<h2 class="w3-center">Esempio Select</h2>
+
+<!-- Tab --> 
+<div class="w3-container">
+	
+	<hr/>
+	
+	<div class="w3-border">
+		<div class="w3-bar w3-theme">
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T1')">Html</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T2')">Java</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T3')">Output</button>
+		</div>
+
+		<div id="T1" class="w3-container w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+&lt;html xmlns:j=&quot;http://java.h2j.org&quot;&gt;
+	...
+		&lt;form action="target.xhtml" method="post" id="my_form"&gt;
+
+		&lt;j:select title="Tipo" id="tipo" value="#{select1.valore}" required="true"&gt;
+			&lt;j:repeat var="v" values="#{select1.lista}"&gt;
+				&lt;option value="#{v.valore}"&gt;&lt;j:out value="#{v.nome}" /&gt;&lt;/option&gt;
+			&lt;/j:repeat&gt;
+		&lt;/j:select&gt;
+		&lt;input type="submit" /&gt;
+	&lt;/form&gt;
+
+	...
+&lt;/html&gt;
+				</code>
+			</pre>
+			<hr/>
+			<pre>
+				<code>
+&lt;!DOCTYPE html>
+&lt;html lang="it" xmlns:j="http://java.h2j.org">
+&lt;head>
+&lt;meta charset="utf-8" />
+&lt;/head>
+&lt;body&gt;
+	&lt;br /&gt; Valore:
+	&lt;j:out value="#{select1.valore}" /&gt;
+	&lt;br /&gt;
+	&lt;br /&gt;
+	&lt;a href="../../index.html">Home&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;			
+				</code>
+			</pre>
+		</div>
+
+		<div id="T2" class="w3-container city w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+@Named
+@RequestScoped
+public class Select1 {
+
+	private List<SelectBean1> lista;
+	private String valore;
+
+	@PostConstruct
+	private void init() {
+		this.lista = new ArrayList<SelectBean1>();
+		this.lista.add(new SelectBean1("Achille", "1-Achille"));
+		this.lista.add(new SelectBean1("Maria", "2-Maria"));
+	}
+
+	public List<SelectBean1> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<SelectBean1> lista) {
+		this.lista = lista;
+	}
+
+	public String getValore() {
+		return valore;
+	}
+
+	public void setValore(String valore) {
+		this.valore = valore;
+	}
+
+}
+				</code>
+			</pre>
+			<hr/>
+			<pre>
+				<code>
+public class SelectBean1 implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private String nome;
+	private String valore;
+	
+	public SelectBean1() {}
+	
+	public SelectBean1(String nome, String valore) {
+		this.nome = nome;
+		this.valore = valore;
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getValore() {
+		return valore;
+	}
+	public void setValore(String valore) {
+		this.valore = valore;
+	}
+	
+}
+
+				</code>
+			</pre>
+		</div>
+
+		<div id="T3" class="w3-container city w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+Valore: 1-Achille
+				</code>
+			</pre>
+		</div>
+		
+	</div>
+</div>
+<hr/>
+</div>
+<script>
+
+// Inizializzazione tab
+	var tab = document.getElementsByClassName("tabMark")[0];
+	tab.click();
+	
+</script>
+
+</body>
+</html>
+

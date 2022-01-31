@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<title>Brioscia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/css/w3css/4/w3.css">
+<link rel="stylesheet" href="/css/lib/w3-theme-teal.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<script src="/scripts.js"></script> 
+
+<body>
+
+<!-- Side Navigation -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <h1 class="w3-xlarge w3-text-theme">Mappa</h1>  
+  <a href="index.html" class="w3-bar-item w3-button">Home</a>
+  <a href="https://github.com/epistemediofanto/h2j" class="w3-bar-item w3-button">Source code (GIT)</a>
+  <a href="/autore/autore.html" class="w3-bar-item w3-button">Autore</a>
+  <a href="/why/why.html" class="w3-bar-item w3-button">Why</a>
+  <a href="/configurazione/configurazione.html" class="w3-bar-item w3-button">Configurazione</a>
+  <a href="/esempi/esempi.html" class="w3-bar-item w3-button">Esempi</a>
+  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
+</nav>
+
+<!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+		<h4>Framework open source per lo sviluppo di applicazioni web</h4>
+		<h1 class="w3-xxlarge w3-animate-bottom">HTML5 + H2J + JAVA</h1>
+		<a class="w3-button w3-circle w3-large w3-card-4" style="font-weight:900;height:60px; padding-top:14px;" href="../esempi.html">
+			<!-- onclick="document.getElementById('id01').style.display='block'" -->
+			<i class="fa fa-cogs" style="font-size:24pt"></i></a>
+	</div>
+</header>
+<div>
+<h2 class="w3-center">Esempio Form</h2>
+
+<!-- Tab --> 
+<div class="w3-container">
+	
+	<hr/>
+	
+	<div class="w3-border">
+		<div class="w3-bar w3-theme">
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T1')">Html</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T2')">Java</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T3')">Output</button>
+		</div>
+
+		<div id="T1" class="w3-container w3-animate-opacity tabContent">
+
+			<br/>
+			esempio.xhtml
+			<pre>
+				<code>
+&lt;html xmlns:j=&quot;http://java.h2j.org&quot;&gt;
+	...
+	&lt;form action="target.xhtml" method="post" id="my_form"&gt;
+		&lt;label style="width: 80px;display: inline-block;" for="nome"&gt;Nome&lt;/label&gt;
+		&lt;j:input id="nome" type="text" placeholder="testo" value="#{oggettoForm1.nome}" /&gt;
+		&lt;br/&gt;
+		&lt;label style="width: 80px;display: inline-block;" for="cognome"&gt;Cognome&lt;/label&gt;
+		&lt;j:input id="cognome" type="text" value="#{oggettoForm1.cognome}" /&gt;
+		&lt;input type="submit" value="submit" /&gt;
+	&lt;/form>
+	...
+&lt;/html&gt;
+				</code>
+			</pre>
+			target.xhtml
+			<pre>
+				<code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="it" xmlns:j="http://java.h2j.org"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	Ecco il valore:
+	&lt;br /&gt;
+	&lt;j:out value="#{oggettoForm1.nome}" /&gt;
+	&lt;br /&gt;
+	&lt;j:out value="#{oggettoForm1.cognome}" /&gt;
+	&lt;br /&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+				</code>
+			</pre>
+		</div>
+
+		<div id="T2" class="w3-container city w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+@Named
+@RequestScoped
+public class OggettoForm2 {
+
+	private String nome;
+	private String cognome = "Rossi";
+	private String link = "target.xhtml";
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getCognome() {
+		return cognome;
+	}
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
+	}	
+}
+				</code>
+			</pre>
+		</div>
+
+		<div id="T3" class="w3-container city w3-animate-opacity tabContent">
+
+			esempio.xhtml
+			<br/>
+			<br/>
+			<img src="form_1a.png"/>
+			<br/>
+			target.xhtml
+			<br/>
+			<br/>
+			<img src="form_1b.png"/>
+			
+		</div>
+		
+	</div>
+</div>
+<hr/>
+</div>
+<script>
+
+// Inizializzazione tab
+	var tab = document.getElementsByClassName("tabMark")[0];
+	tab.click();
+	
+</script>
+
+</body>
+</html>
+

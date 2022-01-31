@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<title>Brioscia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../css/w3css/4/w3.css">
+<link rel="stylesheet" href="../css/lib/w3-theme-teal.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css">
+<script src="../scripts.js"></script> 
+
+<body>
+
+<!-- Side Navigation -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <h1 class="w3-xlarge w3-text-theme">Mappa</h1>  
+  <a href="../index.html" class="w3-bar-item w3-button">Home</a>
+  <a href="https://github.com/epistemediofanto/h2j" class="w3-bar-item w3-button">Source code (GIT)</a>
+  <a href="../autore/autore.html" class="w3-bar-item w3-button">Autore</a>
+  <a href="#" class="w3-bar-item w3-button">Why</a>
+  <a href="../configurazione/configurazione.html" class="w3-bar-item w3-button">Configurazione</a>
+  <a href="esempi.html" class="w3-bar-item w3-button">Showcase</a>
+  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
+</nav>
+
+<!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+		<h4>Framework open source per lo sviluppo di applicazioni web</h4>
+		<h1 class="w3-xxxlarge w3-animate-bottom">HTML5 + H2J + JAVA</h1>
+		<a class="w3-button w3-circle w3-large w3-card-4" style="font-weight:900;height:60px; padding-top:14px;" href="../index.html">
+			<!-- onclick="document.getElementById('id01').style.display='block'" -->
+			<i class="fa fa-home" style="font-size:24pt"></i></a>
+	</div>
+</header>
+
+<div class="w3-row-padding w3-center w3-margin-top">
+
+	<!-- Primo riquadro -->	
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Text output</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="text/out_01.html">Simple text output</a></p>
+			<p><a href="text/data_01.html">Date format</a></p>
+			<p><a href="text/numero_01.html">Number</a></p>
+			<p><a href="text/all_01.html">Formatted</a></p>
+		</div>
+	</div>
+	
+	<!-- Secondo riquadro -->
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Input</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="input/input_01.html">input</a></p>
+			<p><a href="input/form_02.html">input (cast to)</a></p>
+			
+		</div>
+	</div>
+	<!--
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Form</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="form/form_01.html">input</a></p>
+			<p><a href="form/form_02.html">input, action</a></p>
+			<p><a href="form/form_03.html">input, action, repeat, declare</a></p>
+		</div>
+	</div>
+	-->
+	
+	<!-- Terzo riquadro -->
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Button</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="button/button_01.html">button</a></p>
+			<p><a href="button/button_02.html">repeat, submit</a></p>
+		</div>
+	</div>
+
+	<!-- Quarto riquadro -->
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Loop</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="loop/loop_01.html">out, repeat</a></p>
+			<p><a href="loop/loop_02.html">out, input, repeat, declare</a></p>
+		</div>
+	</div>
+</div>
+
+
+<div class="w3-row-padding w3-center w3-margin-top">
+
+	<!-- Primo riquadro -->	
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Link</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="text/out_01.html">Testo semplice</a></p>
+			<p><a href="text/data_01.html">Data</a></p>
+			<p><a href="text/numero_01.html">Numero</a></p>
+		</div>
+	</div>
+	
+	<!-- Secondo riquadro -->
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Declare</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="form/form_01.html">input</a></p>
+			<p><a href="form/form_02.html">input, action</a></p>
+			<p><a href="form/form_03.html">input, action, repeat, declare</a></p>
+		</div>
+	</div>
+	
+	<!-- Terzo riquadro -->
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Page inclusion</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="button/button_01.html">button</a></p>
+			<p><a href="button/button_02.html">repeat, submit</a></p>
+		</div>
+	</div>
+
+	<!-- Quarto riquadro -->
+	<div class="w3-quarter">
+		<div class="w3-card w3-container" style="min-height:380px">
+			<h3>Dialog</h3><br>
+			<i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+			<p><a href="loop/loop_01.html">out, repeat</a></p>
+			<p><a href="loop/loop_02.html">out, input, repeat, declare</a></p>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="w3-container">
+
+	<hr>
+	<h2 class="w3-center">Esempi</h2>
+
+	<div class="w3-bar w3-theme">
+		<a href="text/out_01.html" class="w3-bar-item w3-button w3-padding-16">Output</a>
+		<div class="w3-dropdown-hover">
+			<button class="w3-button w3-padding-16">Form<i class="fa fa-caret-down"></i></button>
+			<div class="w3-dropdown-content w3-card-4 w3-bar-block">
+				<a href="form/form_01.html" class="w3-bar-item w3-button">Form 1</a>
+				<a href="form/form_02.html" class="w3-bar-item w3-button">Form 2</a>
+				<a href="#" class="w3-bar-item w3-button">Form 3</a>
+			</div>
+		</div>
+		<a href="select/select_01.html" class="w3-bar-item w3-button w3-padding-16">Select</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Link</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Button</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Loop</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Layout</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Conversation</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Declaration</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Layout</a>
+		<a href="#" class="w3-bar-item w3-button w3-padding-16">Ajax</a>
+	</div>
+</div>
+
+
+
+
+</div>
+
+</body>
+</html>
+
