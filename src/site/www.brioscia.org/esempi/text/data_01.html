@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<title>Brioscia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/css/w3css/4/w3.css">
+<link rel="stylesheet" href="/css/lib/w3-theme-teal.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<script src="/scripts.js"></script> 
+
+<body>
+
+<!-- Side Navigation -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <h1 class="w3-xlarge w3-text-theme">Mappa</h1>  
+  <a href="index.html" class="w3-bar-item w3-button">Home</a>
+  <a href="https://github.com/epistemediofanto/h2j" class="w3-bar-item w3-button">Source code (GIT)</a>
+  <a href="/autore/autore.html" class="w3-bar-item w3-button">Autore</a>
+  <a href="/why/why.html" class="w3-bar-item w3-button">why</a>
+  <a href="/configurazione/configurazione.html" class="w3-bar-item w3-button">Configurazione</a>
+  <a href="/esempi/esempi.html" class="w3-bar-item w3-button">Showcase</a>
+  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
+</nav>
+
+<!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+		<h4>Framework open source per lo sviluppo di applicazioni web</h4>
+		<h1 class="w3-xxlarge w3-animate-bottom">HTML5 + H2J + JAVA</h1>
+		<a class="w3-button w3-circle w3-large w3-card-4" style="font-weight:900;height:60px; padding-top:14px;" href="/esempi/esempi.html">
+			<!-- onclick="document.getElementById('id01').style.display='block'" -->
+			<i class="fa fa-cogs" style="font-size:24pt"></i></a>
+	</div>
+</header>
+<div>
+<h2 class="w3-center">Date format</h2>
+
+<!-- Tab --> 
+<div class="w3-container">
+	
+	<hr/>
+	
+	<div class="w3-border">
+		<div class="w3-bar w3-theme">
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T1')">Html</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T2')">Java</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T3')">Output</button>
+		</div>
+
+		<div id="T1" class="w3-container w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+	...
+	&lt;p&gt;
+		Data:
+		&lt;j:out value="#{oggettoOut1.oggi}" /&gt;
+	&lt;/p&gt;
+
+	&lt;p&gt;
+		Data:
+		&lt;j:out value="#{oggettoOut1.oggi}" shape="dmyDate" /&gt;
+	&lt;/p&gt;
+
+	&lt;p&gt;
+		Data:
+		&lt;j:out value="#{oggettoOut1.oggi}" shape="mdyDate" /&gt;
+	&lt;/p&gt;
+
+	&lt;p&gt;
+		Data:
+		&lt;j:out value="#{oggettoOut1.oggi}" format="%1$td/%1$tm/%1$ty" /&gt;
+	&lt;/p&gt;
+	...
+				</code>
+			</pre>
+		</div>
+
+		<div id="T2" class="w3-container city w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+@Named
+@RequestScoped
+public class OggettoOut1 {
+
+	private Date oggi = new Date();
+
+	public Date getOggi() {
+		return oggi;
+	}
+
+}
+				</code>
+			</pre>
+		</div>
+
+		<div id="T3" class="w3-container city w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+	Data: 2021-04-16T08:22:24.111+0200
+	
+	Data: 16/04/2021
+
+	Data: 04/16/2021
+	
+	Data: 16/04/21 
+				</code>
+			</pre>
+		</div>
+		
+	</div>
+</div>
+<hr/>
+</div>
+<script>
+
+// Inizializzazione tab
+	var tab = document.getElementsByClassName("tabMark")[0];
+	tab.click();
+	
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<title>Brioscia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../../css/w3css/4/w3.css">
+<link rel="stylesheet" href="../../css/lib/w3-theme-teal.css">
+<link rel="stylesheet" href="../../css/font-awesome.min.css">
+<script src="../../scripts.js"></script> 
+
+<body>
+
+<!-- Side Navigation -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <h1 class="w3-xlarge w3-text-theme">Mappa</h1>  
+  <a href="index.html" class="w3-bar-item w3-button">Home</a>
+  <a href="https://github.com/epistemediofanto/h2j" class="w3-bar-item w3-button">Source code (GIT)</a>
+  <a href="../../autore/autore.html" class="w3-bar-item w3-button">Autore</a>
+  <a href="../../why/why.html" class="w3-bar-item w3-button">Why</a>
+  <a href="../../configurazione/configurazione.html" class="w3-bar-item w3-button">Configurazione</a>
+  <a href="../../esempi/esempi.html" class="w3-bar-item w3-button">Esempi</a>
+  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
+</nav>
+
+<!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+		<h4>Framework open source per lo sviluppo di applicazioni web</h4>
+		<h1 class="w3-xxlarge w3-animate-bottom">HTML5 + H2J + JAVA</h1>
+		<a class="w3-button w3-circle w3-large w3-card-4" style="font-weight:900;height:60px; padding-top:14px;" href="../esempi.html">
+			<!-- onclick="document.getElementById('id01').style.display='block'" -->
+			<i class="fa fa-cogs" style="font-size:24pt"></i></a>
+	</div>
+</header>
+<div>
+<h2 class="w3-center">Esempio repeat</h2>
+
+<!-- Tab --> 
+<div class="w3-container">
+	
+	<hr/>
+	
+	<div class="w3-border">
+		<div class="w3-bar w3-theme">
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T1')">Html</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T2')">Java</button>
+			<button class="w3-bar-item w3-button w3-padding-16 tabMark" onclick="selectTab(event, 'tabMark', 'tabContent', 'T3')">Output</button>
+		</div>
+
+		<div id="T1" class="w3-container w3-animate-opacity tabContent">
+			<br/>
+			esempio.xhtml
+			<pre>
+				<code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="it" xmlns:j="http://java.h2j.org"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;j:form action="#{oggettoRepeat2.addDato(o)}"&gt;
+		&lt;table&gt;		
+			&lt;tr&gt;
+				&lt;th&gt;Indice&lt;/th&gt;
+				&lt;th&gt;Nome 1&lt;/th&gt;
+				&lt;th&gt;Nome 2&lt;/th&gt;
+				&lt;th&gt;Nascita&lt;/th&gt;
+				&lt;th&gt;Data&lt;/th&gt;
+				&lt;th&gt;Numero&lt;/th&gt;
+			&lt;/tr&gt;
+			&lt;j:repeat var="v" values="#{oggettoRepeat2.dati}" index="ix" size="n"&gt;
+				&lt;tr&gt;
+					&lt;td&gt;&lt;j:out value="#{ix}" /&gt; di &lt;j:out value="#{n}" /&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;j:out value="#{v.nome}" /&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;j:out value="#{oggettoRepeat2.dati.get(ix-1).cognome}" /&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;j:out value="#{v.nascita}" format="%1$td/%1$tm/%1$ty" /&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;j:out value="#{v.data}" /&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;j:out value="#{v.numero}" /&gt;&lt;/td&gt;
+				&lt;/tr&gt;
+			&lt;/j:repeat&gt;
+			&lt;j:declare var="o" bean="org.brioscia.h2j.example.repeat2.DatoRepeat2" /&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:input type="text" value="#{o.nome}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:input type="text" value="#{o.cognome}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:input type="text" value="#{o.nascita}" placeholder="dd/mm/yyyy" shape="dmyDate" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:input type="text" value="#{o.data}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:input type="text" value="#{o.numero}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+		&lt;/table&gt;
+		&lt;input type="submit" value="submit" /&gt;
+	&lt;/j:form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+				</code>
+			</pre>			
+			<br/>						<pre>
+				<code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="it" xmlns:j="http://java.h2j.org"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;h1&gt;Nuova lista&lt;/h1&gt;
+	&lt;table&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Indice&lt;/th&gt;
+			&lt;th&gt;Nome 1&lt;/th&gt;
+			&lt;th&gt;Nome 2&lt;/th&gt;
+			&lt;th&gt;Data&lt;/th&gt;
+		&lt;/tr&gt;
+		&lt;j:repeat var="v" values="#{oggettoRepeat2.dati}" index="ix" size="n"&gt;
+			&lt;tr&gt;
+				&lt;td&gt;&lt;j:out value="#{ix}" /&gt; di &lt;j:out value="#{n}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:out value="#{v.nome}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:out value="#{oggettoRepeat2.dati.get(ix-1).cognome}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:out value="#{v.nascita}" format="%1$td/%1$tm/%1$ty" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:out value="#{v.data}" /&gt;&lt;/td&gt;
+				&lt;td&gt;&lt;j:out value="#{v.numero}" /&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+		&lt;/j:repeat&gt;
+	&lt;/table&gt;
+	&lt;br /&gt;
+	&lt;a href="../../index.html"&gt;Home&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+				</code>
+			</pre>
+		</div>
+
+		<div id="T2" class="w3-container city w3-animate-opacity tabContent">
+
+			<pre>
+				<code>
+@Named
+@RequestScoped
+public class OggettoRepeat2 {
+	private String nome;
+	private String cognome = "Rossi";
+	private String link = "target.xhtml";
+	private Date oggi = new Date();
+	private int numero = 1999;
+	private double reale = 1.25;
+	private List<DatoRepeat2> dati;
+	public OggettoRepeat2() {
+		this.dati = new ArrayList<DatoRepeat2>();
+		this.dati.add(new DatoRepeat2("Maria", "Sany", new Date()));
+		this.dati.add(new DatoRepeat2("Anna", "Maria", new Date()));
+	}
+	public String addDato(DatoRepeat2 d) {
+		this.dati.add(d);
+		return "target.xhtml";
+	}
+	public String trasmetti(String p) {
+		System.out.println("Metodo trasmetti eseguito.");
+		return p;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
+	}
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String submit(String errpage, String nextpage) {
+		return nextpage;
+	}
+	public String getCognome() {
+		return cognome;
+	}
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
+	}
+	public List<DatoRepeat2> getDati() {
+		return dati;
+	}	
+	public void setDati(List<DatoRepeat2> dati) {
+		this.dati = dati;
+	}
+	public Date getOggi() {
+		return this.oggi;
+	}
+	public void setOggi(Date oggi) {
+		this.oggi = oggi;
+	}
+	public int getNumero() {
+		return this.numero;
+	}
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+	public double getReale() {
+		return this.reale;
+	}
+	public void setReale(double reale) {
+		this.reale = reale;
+	}
+	public String invia(Integer numero, String testo, String nome) {
+		this.numero = numero;
+		return this.link;
+	}
+}
+				</code>
+			</pre>
+		</div>
+		<div id="T3" class="w3-container city w3-animate-opacity tabContent">
+			esempio.xhtml
+			<br/>
+			<img src="repeat_02a.png"/>
+			<br/>
+			target.xhtml
+			<br/>
+			<img src="repeat_02b.png"/>
+		
+		</div>
+	</div>
+</div>
+<hr/>
+</div>
+<script>
+
+// Inizializzazione tab
+	var tab = document.getElementsByClassName("tabMark")[0];
+	tab.click();
+	
+</script>
+
+</body>
+</html>
+

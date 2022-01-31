@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<title>Brioscia</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="/css/w3css/4/w3.css">
+<link rel="stylesheet" href="/css/lib/w3-theme-teal.css">
+<link rel="stylesheet" href="/css/font-awesome.min.css">
+<link rel="stylesheet" href="style.css">
+<script src="/scripts.js"></script> 
+<script src="scripts.js"></script> 
+
+<body>
+
+<!-- Side Navigation -->
+<nav class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+  <h1 class="w3-xlarge w3-text-theme">Mappa</h1>  
+  <a href="index.html" class="w3-bar-item w3-button">Home</a>
+  <a href="https://github.com/epistemediofanto/h2j" class="w3-bar-item w3-button">Source code (GIT)</a>
+  <a href="/autore/autore.html" class="w3-bar-item w3-button">Autore</a>
+  <a href="/why/why.html" class="w3-bar-item w3-button">Why</a>
+  <a href="/configurazione/configurazione.html" class="w3-bar-item w3-button">Configurazione</a>
+  <a href="/esempi/esempi.html" class="w3-bar-item w3-button">Esempi</a>
+  <button class="w3-bar-item w3-button" onclick="w3_close()">Close <i class="fa fa-remove"></i></button>
+</nav>
+
+<!-- Header -->
+<header class="w3-container w3-theme w3-padding" id="myHeader">
+	<i onclick="w3_open()" class="fa fa-bars w3-xlarge w3-button w3-theme"></i> 
+	<div class="w3-center">
+		<h4>Framework open source per lo sviluppo di applicazioni web</h4>
+		<h1 class="w3-xxxlarge w3-animate-bottom">HTML5 + H2J + JAVA</h1>
+		<a class="w3-button w3-circle w3-large w3-card-4" style="font-weight:900;height:60px; padding-top:14px;" href="/index.html">
+			<!-- onclick="document.getElementById('id01').style.display='block'" -->
+			<i class="fa fa-home" style="font-size:24pt"></i></a>
+	</div>
+</header>
+
+	<div class="w3-container" style="padding-left:15%;padding-right:15%;">
+	
+		<hr/>
+		Nota: Le pagine elaborate non sono pagine HTML ma XML per cui è importante che i tag siano correttamente aperti e chiusi.
+		<hr/>
+		 <button class="accordion">1. Includere la Libreria</button>
+		<div class="panel">
+			<p>il progetto web deve includere l'ultima versione libreria scaricabile da: 
+				<a href="https://github.com/epistemediofanto/h2j/tags"> https://github.com/epistemediofanto/h2j/tags</a></p>
+		</div>
+
+		<button class="accordion">2. Configurare il filtro</button>
+		<div class="panel">
+		<ul>
+			<li><p>Cache dei file</p>
+				<p>
+				Per default la cache dei file è abilitata e così deve essere in ambiente di produzione. In sviluppo può far comodo disabilitare la cache per permettere le modifiche a caldo senza ri-deployare l'applicazione. Il parametro che controlla l'abilitazione della cache è h2j.fileCache a seguire l'esempio per disabilitare la cache:
+				</p>
+				<code><pre>
+&lt;context-param&gt;
+	&lt;param-name>h2j.fileCache&lt;/param-name&gt;
+	&lt;param-value>false&lt;/param-value&gt;
+&lt;/context-param&gt;
+				</pre></code>
+			</li>
+			<li><p>Trace proprietà</p>
+				<p>Per aiutare lo sviluppatore è possibile abilitare il tracciamento della valorizzazione delle proprietà in fase di submit, a seguire il parametro da configurare per abilitare il tracciamento.</p>
+				<code><pre>
+&lt;context-param&gt;
+	&lt;param-name>h2j.trace&lt;/param-name&gt;
+	&lt;param-value>true&lt;/param-value&gt;
+&lt;/context-param&gt;
+				</pre></code>
+			</li>
+			<li><p>Tipo di file</p>
+			<p>
+			La configurazione del filtro è preimpostata per intercettare le pagine con estensione xhtml, ma è possibile variarla andando a specificare il valore del parametro h2j.fileTypes nel file descrittore di deployment web.xml, ad esempio:
+			</p>
+			<code><pre>
+&lt;context-param&gt;
+	&lt;param-name&gt;h2j.fileTypes&lt;/param-name&gt;
+	&lt;param-value&gt;xhtml%lt;/param-value&gt;
+&lt;/context-param&gt;
+			</pre></code>
+			<p>Imposta come estensione i file *.xhtml, ATTENZIONE è possibile specificare una sola estensione e questa è case sensitive.</p>
+			</li>			
+		</ul>		
+		</div>
+
+		<button class="accordion">3. Definire in namespace</button>
+		<div class="panel">			
+				<p>L'interpretazione dei tag all'interno della nostra pagina viene attivata se il tag appartiene al namespace "java.h2j.org", è quindi necessario specificare il namaspace, ad esempio:</p>
+				<code>
+&lt;html lang="it" xmlns:j="http://java.h2j.org"&gt;
+				</code>
+				</p>
+		</div> 
+
+		<button class="accordion">4. Tomcat</button>
+		<div class="panel">			
+				<p>Il framework è stato testato in tomcat 9.0.41 con la seguente configurazione</p>
+				<ul>
+					<li>Aggiunto <a href="https://openwebbeans.apache.org/">Apache open web bean</a></li>
+					<li>modificato il file context.xml aggiungendo allowCasualMultipartParsing="true" per supportare l'upload dei file</li>
+				<code>
+...
+&lt;Context allowCasualMultipartParsing="true"%gt;
+...
+				</code>
+				</ul>
+		</div> 
+
+		<button class="accordion">5a. Maven</button>
+		<div class="panel">
+			<br/>
+				<code>
+<dependency>
+    <groupId>org.brioscia.javaz</groupId>
+    <artifactId>h2j</artifactId>
+    <version>1.0.0</version>
+</dependency>
+				</code>
+			<br/>
+		</div> 
+
+		<button class="accordion">5b. Gradle</button>
+		<div class="panel">			
+				<br/>
+				<code>
+implementation group: 'org.brioscia.javaz', name: 'h2j', version: '1.0.0'
+				</code>
+				<br/>
+		</div> 
+
+		<button class="accordion">5c. Buildr</button>
+		<div class="panel">			
+				<br/>
+				<code>
+'org.brioscia.javaz:h2j:jar:1.0.0'
+				</code>
+				<br/>
+		</div> 
+
+	</div>
+
+	<br/>
+	<br/>
+
+
+</body>
+<script>
+
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
+
+
+</html>
+
