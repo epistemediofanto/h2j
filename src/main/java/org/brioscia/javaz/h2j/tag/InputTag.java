@@ -4,6 +4,7 @@ import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.filter.cast.Converter;
 import org.brioscia.javaz.h2j.filter.cast.Shape;
 import org.brioscia.javaz.h2j.mw.HtmlBindName;
+import org.brioscia.javaz.h2j.mw.Store.SetMode;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -14,7 +15,7 @@ public class InputTag extends DefaultH2JTag {
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
 		Node nodeValue;
-		String value;
+		String value, originalValue;
 
 		attributes = node.getAttributes();
 		nodeValue = attributes.getNamedItem("value");
@@ -37,16 +38,26 @@ public class InputTag extends DefaultH2JTag {
 				attributes.removeNamedItem("shape");
 			}
 
-			valueName = value.substring(2, value.length() - 1);
-			valueName = processor.resolveLoopVar(valueName);
+			originalValue = value.substring(2, value.length() - 1);
+			valueName = processor.resolveLoopVar(originalValue);
 			if (converter != null) {
-				nodeValue.setNodeValue(converter.toString(processor.getEnviroments().getObject(valueName)));
+				Object obj = processor.getEnviroments().getObject(valueName);
+				try {			
+					nodeValue.setNodeValue(converter.toString(obj));
+				} catch (ClassCastException e) {
+					throw new H2JFilterException("Cannot cast " + obj + " to " + converter.getName() + " in " + nodeValue, e);
+				}
 			} else {
 				nodeValue.setNodeValue(processor.getEnviroments().eval(value));
 			}
 
 			value = processor.getEnviroments().htmlName(valueName, converter, HtmlBindName.DYNAMIC_CALL);
+
+//			if (processor.getEnviroments().getMode() == SetMode.list) {
+//				((Element) node).setAttribute("name", value + "$");
+//			} else {
 			((Element) node).setAttribute("name", value);
+//			}
 
 		}
 

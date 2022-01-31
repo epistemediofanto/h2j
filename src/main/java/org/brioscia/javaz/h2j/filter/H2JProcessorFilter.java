@@ -63,15 +63,16 @@ public class H2JProcessorFilter implements Filter {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private String getVersion() {
 		Package aPackage = this.getClass().getPackage();
 		String implementationVersion = aPackage.getImplementationVersion();
 		String implementationVendor = aPackage.getImplementationVendor();
-		return implementationVersion;
+		return implementationVersion + " : " + implementationVendor;
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -86,6 +87,7 @@ public class H2JProcessorFilter implements Filter {
 				boolean isJsonResponse;
 				try {
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
+					enviroments.resetMode(); // reimposta la modalità array, previene eventuali bug
 					this.h2jContext.set(this, enviroments, request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
@@ -156,8 +158,8 @@ public class H2JProcessorFilter implements Filter {
 
 	}
 
-	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request, ServletResponse response)
-			throws H2JFilterException {
+	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request,
+			ServletResponse response) throws H2JFilterException {
 		Object object;
 		String jsonString;
 		byte[] byteString;
@@ -178,43 +180,53 @@ public class H2JProcessorFilter implements Filter {
 		}
 	}
 
-	boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response) throws H2JFilterException {
+	boolean processRequest(Enviroments enviroments, HttpServletRequest request, ServletResponse response)
+			throws H2JFilterException {
 
 		Enumeration<String> eList;
 		String pName;
-		String value;
+		String[] values;
 		StoreObject storeObject;
 		Converter converter;
 		boolean jsonResponse = false;
-		Object o;
+		Object[] o;
 
 		eList = request.getParameterNames();
 		while (eList.hasMoreElements()) {
 			pName = eList.nextElement();
-			value = request.getParameter(pName);
+			values = request.getParameterValues(pName);
+			if ((values == null) || (values.length == 0)) {
+				continue;
+			}
 
 			if (JSON_RESPONSE_ID.equals(pName)) {
-				jsonResponse = "true".equals(value);
+				jsonResponse = "true".equals(values[0]);
 			}
 
 			storeObject = enviroments.getObjectFromNameStore(pName);
 			pName = storeObject.name;
 			converter = storeObject.converter;
 
-			if (converter != null) {
-				o = converter.fromString(value);
-			} else {
-				o = value;
+			o = new Object[values.length];
+			for (int i = 0; i < values.length; ++i) {
+				if (converter != null) {
+					o[i] = converter.fromString(values[i]);
+				} else {
+					o[i] = values[i];
+				}
 			}
 			if (Enviroments.trace) {
 				System.out.println("set: " + pName + " = " + o);
 			}
+
 			enviroments.setBean(pName, o);
+
 		}
 		return jsonResponse;
 	}
 
-	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response) throws H2JFilterException {
+	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
+			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		InputStream is;
 

@@ -65,6 +65,12 @@ public abstract class BaseTag implements TagMap {
 			throw new H2JFilterException(msg);
 		}
 	}
+	
+	protected void assertNotTrue(boolean bExp, String msg) throws H2JFilterException {
+		if (bExp) {
+			throw new H2JFilterException(msg);
+		}
+	}
 
 	protected String evaluation(Enviroments enviroments, String exp) throws H2JFilterException {
 		String value = exp;

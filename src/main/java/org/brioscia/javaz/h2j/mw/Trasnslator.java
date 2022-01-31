@@ -17,6 +17,7 @@ import org.brioscia.javaz.h2j.tag.OptionsTag;
 import org.brioscia.javaz.h2j.tag.OutTag;
 import org.brioscia.javaz.h2j.tag.RepeatTag;
 import org.brioscia.javaz.h2j.tag.SelectTag;
+import org.brioscia.javaz.h2j.tag.SwitchTag;
 import org.brioscia.javaz.h2j.tag.TagMap;
 import org.brioscia.javaz.h2j.tag.TextAreaTag;
 
@@ -79,6 +80,9 @@ public class Trasnslator {
 
 		tagMap = new SelectTag();
 		this.registerTag("select", tagMap);
+
+		tagMap = new SwitchTag();
+		this.registerTag("switch", tagMap);
 
 		tagMap = new TextAreaTag();
 		this.registerTag("textarea", tagMap);

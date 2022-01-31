@@ -7,6 +7,7 @@ import java.util.List;
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.mw.Enviroments;
 import org.brioscia.javaz.h2j.mw.LoopVar;
+import org.brioscia.javaz.h2j.mw.Store.SetMode;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -14,20 +15,18 @@ import org.w3c.dom.NodeList;
 
 public class RepeatTag extends BaseTag {
 
+	public static final String REPEAT_MODE = "repeat$mode";
+	public static final String REPEAT_LIST_MODE = "list";
+	public static final String REPEAT_INDEX_MODE = "index";
+
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
-		Node nodeValues;
-		Node nodeVar;
-		Node indexVar;
-		Node sizeVar;
-		Node rowVar;
-		String nameVar;
-		String nameIndex;
-		String nameSize;
-		String nameRow;
+		Node nodeValues, nodeVar, indexVar, sizeVar, rowVar, nodeMode;
+		String nameVar, nameIndex, nameSize, nameRow;
 		Node parent;
 		String nameValues;
 		Enviroments enviroments;
+		SetMode mode;
 
 		enviroments = processor.getEnviroments();
 
@@ -53,6 +52,10 @@ public class RepeatTag extends BaseTag {
 		rowVar = attributes.getNamedItem("row");
 		nameRow = rowVar != null ? rowVar.getNodeValue() : null;
 
+		nodeMode = attributes.getNamedItem("mode");
+		mode = nodeMode != null ? REPEAT_INDEX_MODE.equals(nodeMode.getNodeValue()) ? SetMode.index : SetMode.list
+				: SetMode.list;
+
 		if (isEL(nameValues)) {
 			MultiData items;
 			Object oList;
@@ -72,17 +75,29 @@ public class RepeatTag extends BaseTag {
 					if (nameIndex != null) {
 						enviroments.push(nameSize, items.size());
 					}
+
+					enviroments.pushSetMode(mode);
+
 					for (int ix = 0; ix < items.size(); ++ix) {
 						item = items.get(ix);
-						LoopVar var = new LoopVar(nameVar, nameValues + ".get(" + j + ")", item);
+
+						LoopVar var;
+						if (processor.getEnviroments().getMode() == SetMode.list) {
+							var = new LoopVar(nameVar, nameValues, item);
+						} else {
+							var = new LoopVar(nameVar, nameValues + ".get(" + j + ")", item);
+						}
 						enviroments.push(nameVar, var);
-						if (nameRow != null) {
+
+						if (nameRow != null) { // aggiungo all'enviroment il legame nome = numero riga (base 0)
 							enviroments.push(nameRow, j);
 						}
+
 						++j;
-						if (nameIndex != null) {
+						if (nameIndex != null) { // aggiungo all'enviroment il legame nome = numero riga (base 1)
 							enviroments.push(nameIndex, j);
 						}
+
 						try {
 
 							// Ciclo REPEAT
@@ -100,8 +115,10 @@ public class RepeatTag extends BaseTag {
 						if (nameIndex != null) {
 							enviroments.pop(nameIndex);
 						}
+
 					}
 				} finally {
+					enviroments.pop(REPEAT_MODE);
 					enviroments.remove(nameVar);
 					if (nameIndex != null) {
 						enviroments.remove(nameIndex);

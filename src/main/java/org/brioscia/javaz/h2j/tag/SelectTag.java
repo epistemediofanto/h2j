@@ -8,7 +8,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-@Deprecated
 public class SelectTag extends DefaultH2JTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
@@ -27,25 +26,41 @@ public class SelectTag extends DefaultH2JTag {
 		}
 
 		super.processNode(processor, node);
-
+		
 		nodeValue = attributes.getNamedItem("value");
 		if (nodeValue != null) {
 			NodeList nodeList;
-			Node child;
+			Node child, nodeMultiple;
 			Node optionValue;
 			String value;
-
+			String[] values;
+			
 			value = nodeValue.getNodeValue();
-			nodeList = node.getChildNodes();
+			nodeMultiple = attributes.getNamedItem("multiple");
+			if ("true".equals(nodeMultiple.getNodeValue())) {
+				values = value.split(",");
+			} else {
+				values = new String[1];
+				values[0] = value;
+			}
+						
+			nodeList = node.getChildNodes();				
 			for (int i = 0; i < nodeList.getLength(); ++i) {
 				child = nodeList.item(i);
 				if ("option".equals(child.getNodeName())) {
 					optionValue = child.getAttributes().getNamedItem("value");
-					if ((optionValue != null) && value.equals(optionValue.getNodeValue())) {
+					if ((optionValue != null) && in(values, optionValue.getNodeValue())) {
 						((Element) child).setAttribute("selected", "selected");
 					}
 				}
 			}
 		}
+	}
+	
+	private boolean in (String[] set, String el) {
+		for (String s: set) {
+			if ((s!=null) && (s.equals(el)))return true;
+		}
+		return false;
 	}
 }

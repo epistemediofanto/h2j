@@ -34,7 +34,7 @@ public class LexicalParser {
 		String s;
 		NodeToken nt;
 
-		s = "'ciao' + ' '";
+		s = "a.b.c$.d";
 		nt = LexicalParser.process(s);
 		System.out.println(nt);
 	}
@@ -56,7 +56,7 @@ public class LexicalParser {
 
 		this.tokensList = new ArrayList<NodeToken>();
 		pos = 0;
-		stringTokenizer = new StringTokenizer(this.source, ".,:;#@[]{}!'$%&|/()=<>?^/*-+ ", true);
+		stringTokenizer = new StringTokenizer(this.source, ".,:;#@[]{}!'%&|/()=<>?^/*-+ ", true);
 		while (stringTokenizer.hasMoreTokens()) {
 			value = stringTokenizer.nextToken();
 //			if (!" ".equals(value)) {
@@ -342,12 +342,14 @@ public class LexicalParser {
 
 	private void assertName(NodeToken token) throws SyntaxError {
 		String value = token.getValue();
+		int n;
 		if ((value.length() == 0) || !isAlpha(value.charAt(0))) {
 			throw new SyntaxError(null, "invalid name");
 		}
-		for (int i = 1; i < token.getValue().length(); ++i) {
+		n = token.getValue().length();
+		for (int i = 1; i < n; ++i) {
 			char c = value.charAt(i);
-			if (isAlpha(c) || isNumeric(c)) {
+			if (isAlpha(c) || isNumeric(c) || isEnd(c, i == n - 1)) {
 				continue;
 			}
 			throw new SyntaxError(token, "invalid name");
@@ -428,5 +430,9 @@ public class LexicalParser {
 
 	private static boolean isAlpha(char c) {
 		return ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || (c == '_');
+	}
+
+	private static boolean isEnd(char c, boolean end) {
+		return end && (c == '$');
 	}
 }

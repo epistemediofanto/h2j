@@ -26,7 +26,7 @@ public class Enviroments extends Store {
 	private static String contextRoot;
 	private static VirtualFileSystem fileSystem;
 	private static boolean enableCacheFile = true;
-	public static boolean trace = false;
+	public static boolean trace = false;	
 	
 	public static void init(ServletContext context) throws H2JFilterException {
 		Enviroments.servletContext = context;
@@ -66,7 +66,7 @@ public class Enviroments extends Store {
 		}
 	}
 
-	public Object setBean(String fullName, Object value) throws H2JFilterException {
+	public Object setBean(String fullName, Object[] value) throws H2JFilterException {
 		NodeToken node;
 		try {
 			node = LexicalParser.process(fullName);

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.brioscia.javaz</groupId>
 	<artifactId>h2j</artifactId>
-	<version>0.0.10-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<name>H2J</name>
 	<description>very tiny front-end framework</description>
@@ -133,21 +133,10 @@
 			</plugin>
 
 			<!-- 6. Signature -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>${maven-gpg-plugin-version}</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
+				<version>${maven-gpg-plugin-version}</version> <executions> <execution> <id>sign-artifacts</id> 
+				<phase>verify</phase> <goals> <goal>sign</goal> </goals> </execution> </executions> 
+				</plugin> -->
 			<!-- 7. nexus -->
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
@@ -181,18 +170,21 @@
 			<groupId>jakarta.enterprise</groupId>
 			<artifactId>jakarta.enterprise.cdi-api</artifactId>
 			<version>${jakarta.enterprise.cdi-api}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
 			<version>${jakarta.servlet-api}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson-databind}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

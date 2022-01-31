@@ -24,35 +24,52 @@ public class ComponentCast {
 	public void reset() {
 		this.castAdapter = new HashMap<String, ObjectCastModel>();
 
-		this.castAdapter.put("int", (String value) -> {
+		this.castAdapter.put("int", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return (value != null) && (value.length() > 0) ? Integer.parseInt(value) : 0;
 		});
 
-		this.castAdapter.put("java.lang.Integer", (String value) -> {
+		this.castAdapter.put("java.lang.Integer", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return (value != null) && (value.length() > 0) ? Integer.parseInt(value) : null;
 		});
 
-		this.castAdapter.put("long", (String value) -> {
+		this.castAdapter.put("long", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return (value != null) && (value.length() > 0) ? Long.parseLong(value) : 0;
 		});
 
-		this.castAdapter.put("java.lang.Long", (String value) -> {
+		this.castAdapter.put("java.lang.Long", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return (value != null) && (value.length() > 0) ? Long.parseLong(value) : null;
 		});
 
-		this.castAdapter.put("boolean", (String value) -> {
+		this.castAdapter.put("boolean", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return (value != null) && (value.length() > 0) ? Boolean.parseBoolean(value) : false;
 		});
 
-		this.castAdapter.put("java.lang.Boolean", (String value) -> {
+		this.castAdapter.put("java.lang.Boolean", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return (value != null) && (value.length() > 0) ? Boolean.parseBoolean(value) : null;
 		});
 
-		this.castAdapter.put("java.lang.String", (String value) -> {
+		this.castAdapter.put("java.lang.String", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			return value;
 		});
 
-		this.castAdapter.put("java.util.Calendar", (String value) -> {
+		this.castAdapter.put("java.lang.String[]", (Object[] value) -> {
+			int len = value.length;
+			String[] newValue = new String[len];
+			for (int i=0; i<len; ++i) {
+				newValue[i] = value[i].toString();
+			}
+			return newValue;
+		});
+
+		this.castAdapter.put("java.util.Calendar", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			GregorianCalendar gc = null;
 			if ((value != null) && (value.length() > 0)) {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -67,14 +84,15 @@ public class ComponentCast {
 			return gc;
 		});
 
-		this.castAdapter.put("java.util.Date", (String value) -> {
+		this.castAdapter.put("java.util.Date", (Object[] avalue) -> {
+			String value = avalue[0].toString();
 			Date date = null;
 			if ((value != null) && (value.length() > 0)) {
 				SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
 				try {
 					date = sdf.parse(value);
 				} catch (ParseException e) {
-					throw new SyntaxError(null, value);
+					throw new SyntaxError(null, "invalid date format " + value + " valid format are " + Shape.ISO_8601);
 				}
 			}
 			return date;

@@ -18,15 +18,21 @@ import org.brioscia.javaz.h2j.filter.DialogueBoost;
 
 public class Store extends HtmlBindName implements EnvContext {
 
+	public enum SetMode {
+		index, list
+	};
+
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, List<Object>> storeSpace;
 	private boolean searchInCDI = true;
+	private List<SetMode> setMode = new ArrayList<Store.SetMode>();
 
 	@Inject
 	private DialogueBoost dialogueBoost;
 
 	protected Store() {
 		this.storeSpace = new HashMap<String, List<Object>>();
+		this.resetMode();		
 	}
 
 	/**
@@ -34,7 +40,7 @@ public class Store extends HtmlBindName implements EnvContext {
 	 * insert element into the stack
 	 * 
 	 * @param element nome dell'elemento da inserire in testa allo stack
-	 * @param value valore dell'elemento
+	 * @param value   valore dell'elemento
 	 */
 	public void push(String element, Object value) {
 		List<Object> list;
@@ -70,7 +76,7 @@ public class Store extends HtmlBindName implements EnvContext {
 	 * 
 	 * remove the element from the stack
 	 * 
-	 * @param element elemento da rimuovere dalla testa dello stack 
+	 * @param element elemento da rimuovere dalla testa dello stack
 	 * @return elemento rimosso dalla testa dello stack
 	 */
 	public Object pop(String element) {
@@ -106,7 +112,6 @@ public class Store extends HtmlBindName implements EnvContext {
 		}
 		return (LoopVar) value;
 	}
-
 
 	/**
 	 * disallocates the space for the element
@@ -163,7 +168,7 @@ public class Store extends HtmlBindName implements EnvContext {
 		}
 		return object;
 	}
-	
+
 	public void enableCDIContext() {
 		this.searchInCDI = true;
 	}
@@ -172,4 +177,22 @@ public class Store extends HtmlBindName implements EnvContext {
 		this.searchInCDI = false;
 	}
 
+	public SetMode getMode() {
+		return this.setMode.get(0);
+	}
+
+	public void pushSetMode(SetMode setMode) {
+		this.setMode.add(0, setMode);
+	}
+
+	public SetMode popSetMode() {
+		SetMode setMode = this.setMode.get(0);
+		this.setMode.remove(0);
+		return setMode;
+	}
+	
+	public void resetMode() {
+		this.setMode.clear();
+		this.setMode.add(SetMode.index);
+	}
 }
