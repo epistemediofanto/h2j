@@ -9,17 +9,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * &lt;switch value='expression' &gt;
+ * &lt;if value='expression' &gt;
  * 
- * &lt;case value='value'&gt; ... &lt;/case&gt; &lt;case value='value'&gt; ...
- * &lt;/case&gt;
+ * &lt;then'&gt; ... &lt;/then&gt;
  * 
- * &lt;/switch&gt;
+ * [ &lt;else&gt;... &lt;/else&gt; ] &lt;
+ * 
+ * /if%gt;
  * 
  * @author Zaleuco
  *
  */
-public class SwitchTag extends BaseTag {
+public class IfTag extends BaseTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
@@ -30,7 +31,7 @@ public class SwitchTag extends BaseTag {
 
 		attributes = node.getAttributes();
 		nodeValue = attributes.getNamedItem("value");
-		assertNotNull(nodeValue, "missing 'value' attribute in 'switch' tag");
+		assertNotNull(nodeValue, "missing 'value' attribute in 'if' tag");
 
 		value = nodeValue.getNodeValue();
 		assertNotEmpty(value, "empty 'value' attribute in 'switch' tag");
@@ -49,41 +50,29 @@ public class SwitchTag extends BaseTag {
 		NodeList childs;
 		Node child;
 		String name;
-		String caseValue;
-		Enviroments enviroments;
 
-		enviroments = processor.getEnviroments();
 		childs = node.getChildNodes();
 		for (int i = 0; i < childs.getLength(); ++i) {
 			child = childs.item(i);
 			name = child.getLocalName();
-			if ("case".equals(name)) {
-				NamedNodeMap attributes;
-				Node caseNodeValue;
-
-				attributes = child.getAttributes();
-				caseNodeValue = attributes.getNamedItem("value");
-				assertNotNull(caseNodeValue, "missing value in case");
-				caseValue = caseNodeValue.getNodeValue();
-				assertNotNull(caseValue, "empty value in case");
-				caseValue = enviroments.eval(caseValue);
-				if (value.equals(caseValue)) {
-					this.processNode(processor, parent, child);
-					break;
-				}
-			} else if ("default".equals(name)) {
+			if ("then".equals(name) && "true".equals(value)) {
 				this.processNode(processor, parent, child);
-				break;
+			}
+			if ("else".equals(name) && "false".equals(value)) {
+				this.processNode(processor, parent, child);
 			}
 		}
 	}
 
 	private void processNode(XmlProcessor processor, Node parent, Node node) throws H2JFilterException {
 		NodeList childs;
-
+		Node child;
+		
 		childs = node.getChildNodes();
 		for (int i = 0; i < childs.getLength(); ++i) {
-			parent.appendChild(childs.item(i));
+			child = childs.item(i).cloneNode(true);
+			parent.appendChild(child);
+			//processor.processNode(child);
 		}
 	}
 }

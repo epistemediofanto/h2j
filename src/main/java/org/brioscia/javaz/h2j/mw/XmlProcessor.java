@@ -38,15 +38,16 @@ public class XmlProcessor {
 		this.trasnslator = Trasnslator.getInstance();
 	}
 
-	public Document load(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+	public static Document load(InputStream is) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory dbFactory;
 		DocumentBuilder dBuilder;
 
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dbFactory.setNamespaceAware(true);
 		dBuilder = dbFactory.newDocumentBuilder();
+//		dBuilder.setEntityResolver(new StandardEntityResolver());
 
-		return dBuilder.parse(is);
+		return dBuilder.parse(is, "UTF-8");
 	}
 
 	public void process(InputStream is, OutputStream os) throws H2JFilterException {

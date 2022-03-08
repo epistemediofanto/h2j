@@ -25,7 +25,7 @@ public class Enviroments extends Store {
 	private static ServletContext servletContext;
 	private static String contextRoot;
 	private static VirtualFileSystem fileSystem;
-	private static boolean enableCacheFile = true;
+	public static boolean enableCacheFile = true;
 	public static boolean trace = false;	
 	
 	public static void init(ServletContext context) throws H2JFilterException {
@@ -130,9 +130,12 @@ public class Enviroments extends Store {
 					exp = elname.substring(posStart + 2, posEnd);
 
 					try {
+						Object object;
 						node = LexicalParser.process(exp);
 						this.disableCDIContext();
-						value = Executor.get(node, this).toString();
+						object= Executor.get(node, this);
+						assertNotNull(object, "object " + node.getValue() + " is null");
+						value = object.toString();
 					} catch (SyntaxError | InvokerException e) {
 						throw new H2JFilterException(elname, e);
 					} finally {

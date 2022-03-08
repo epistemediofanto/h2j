@@ -32,7 +32,7 @@ public class Store extends HtmlBindName implements EnvContext {
 
 	protected Store() {
 		this.storeSpace = new HashMap<String, List<Object>>();
-		this.resetMode();		
+		this.resetMode();
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class Store extends HtmlBindName implements EnvContext {
 		Object value = null;
 		List<Object> list;
 		list = this.storeSpace.get(element);
-		if (list != null) {
+		if ((list != null) && (list.size() > 0)) {
 			value = list.get(0);
 			if (value instanceof LoopVar) {
 				value = ((LoopVar) value).getObject();
@@ -83,11 +83,13 @@ public class Store extends HtmlBindName implements EnvContext {
 		Object value = null;
 		List<Object> list;
 		list = this.storeSpace.get(element);
-		if (list != null) {
+		if ((list != null) && (list.size() > 0)) {
 			value = list.remove(0);
 			if (value instanceof LoopVar) {
 				value = ((LoopVar) value).getObject();
 			}
+		} else {
+			System.out.println("warning h2j error invalid pop element " + element);
 		}
 		return value;
 	}
@@ -190,7 +192,7 @@ public class Store extends HtmlBindName implements EnvContext {
 		this.setMode.remove(0);
 		return setMode;
 	}
-	
+
 	public void resetMode() {
 		this.setMode.clear();
 		this.setMode.add(SetMode.index);

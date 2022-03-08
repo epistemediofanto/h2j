@@ -2,14 +2,18 @@ package org.brioscia.javaz.expression;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.brioscia.javaz.h2j.filter.cast.Shape;
 
 public class ComponentCast {
 
+	private Logger Log = Logger.getLogger(ComponentCast.class.getName());
 	private HashMap<String, ObjectCastModel> castAdapter;
 
 	public ComponentCast() {
@@ -25,77 +29,192 @@ public class ComponentCast {
 		this.castAdapter = new HashMap<String, ObjectCastModel>();
 
 		this.castAdapter.put("int", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return (value != null) && (value.length() > 0) ? Integer.parseInt(value) : 0;
+			Integer ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				ret = (value.length() > 0) ? Integer.parseInt(value) : 0;
+			}
+			return ret;
+		});
+
+		this.castAdapter.put("int[]", (Object[] value) -> {
+			int[] newValue = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new int[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = Integer.parseInt(value[i].toString());
+				}
+			}
+			return newValue;
 		});
 
 		this.castAdapter.put("java.lang.Integer", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return (value != null) && (value.length() > 0) ? Integer.parseInt(value) : null;
+			Integer ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				ret = (value.length() > 0) ? Integer.parseInt(value) : null;
+			}
+			return ret;
+		});
+
+		this.castAdapter.put("java.lang.Integer[]", (Object[] value) -> {
+			Integer newValue[] = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new Integer[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = Integer.parseInt(value[i].toString());
+				}
+			}
+			return newValue;
 		});
 
 		this.castAdapter.put("long", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return (value != null) && (value.length() > 0) ? Long.parseLong(value) : 0;
+			Long ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				ret = (value.length() > 0) ? Long.parseLong(value) : 0;
+			}
+			return ret;
+		});
+
+		this.castAdapter.put("long[]", (Object[] value) -> {
+			long[] newValue = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new long[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = Long.parseLong(value[i].toString());
+				}
+			}
+			return newValue;
 		});
 
 		this.castAdapter.put("java.lang.Long", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return (value != null) && (value.length() > 0) ? Long.parseLong(value) : null;
+			Long ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				ret = (value.length() > 0) ? Long.parseLong(value) : null;
+			}
+			return ret;
+		});
+
+		this.castAdapter.put("java.lang.Long[]", (Object[] value) -> {
+			Long[] newValue = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new Long[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = Long.parseLong(value[i].toString());
+				}
+			}
+			return newValue;
 		});
 
 		this.castAdapter.put("boolean", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return (value != null) && (value.length() > 0) ? Boolean.parseBoolean(value) : false;
+			Boolean ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				ret = (value.length() > 0) ? Boolean.parseBoolean(value) : false;
+			}
+			return ret;
+		});
+
+		this.castAdapter.put("boolean[]", (Object[] value) -> {
+			Boolean[] newValue = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new Boolean[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = Boolean.parseBoolean(value[i].toString());
+				}
+			}
+			return newValue;
 		});
 
 		this.castAdapter.put("java.lang.Boolean", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return (value != null) && (value.length() > 0) ? Boolean.parseBoolean(value) : null;
+			Boolean ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				ret = (value.length() > 0) ? Boolean.parseBoolean(value) : null;
+			}
+			return ret;
+		});
+
+		this.castAdapter.put("java.lang.Boolean[]", (Object[] value) -> {
+			Boolean[] newValue = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new Boolean[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = Boolean.parseBoolean( value[i].toString());
+				}
+			}
+			return newValue;
 		});
 
 		this.castAdapter.put("java.lang.String", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			return value;
+			String ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				ret = avalue[0].toString();
+			}
+			return ret;
 		});
 
 		this.castAdapter.put("java.lang.String[]", (Object[] value) -> {
-			int len = value.length;
-			String[] newValue = new String[len];
-			for (int i=0; i<len; ++i) {
-				newValue[i] = value[i].toString();
+			String[] newValue = null;
+			if (value != null) {
+				int len = value.length;
+				newValue = new String[len];
+				for (int i = 0; i < len; ++i) {
+					newValue[i] = (String) value[i];
+				}
 			}
 			return newValue;
 		});
 
 		this.castAdapter.put("java.util.Calendar", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			GregorianCalendar gc = null;
-			if ((value != null) && (value.length() > 0)) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			Calendar ret = null;
+			if ((avalue != null) && (avalue[0] != null)) {
+				String value = avalue[0].toString();
+				GregorianCalendar gc = null;
+				if ((value != null) && (value.length() > 0)) {
+					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-				gc = new GregorianCalendar();
-				try {
-					gc.setTime(sdf.parse(value));
-				} catch (ParseException e) {
-					gc.setTimeInMillis(0);
+					gc = new GregorianCalendar();
+					try {
+						gc.setTime(sdf.parse(value));
+					} catch (ParseException e) {
+						gc.setTimeInMillis(0);
+					}
 				}
+				ret = gc;
 			}
-			return gc;
+			return ret;
 		});
 
 		this.castAdapter.put("java.util.Date", (Object[] avalue) -> {
-			String value = avalue[0].toString();
-			Date date = null;
-			if ((value != null) && (value.length() > 0)) {
-				SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
-				try {
-					date = sdf.parse(value);
-				} catch (ParseException e) {
-					throw new SyntaxError(null, "invalid date format " + value + " valid format are " + Shape.ISO_8601);
+			Date ret = null;
+
+			if ((avalue != null) && (avalue[0] != null)) {
+				if (avalue[0] instanceof Date) {
+					ret = (Date) avalue[0];
+				} else {
+					String value = avalue[0].toString();
+					if ((value != null) && (value.length() > 0)) {
+						SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
+						try {
+							ret = sdf.parse(value);
+						} catch (ParseException e) {
+							Log.log(Level.SEVERE, e.getMessage(), e);
+							throw new SyntaxError(null,
+									"invalid date format " + value + " valid format is " + Shape.ISO_8601);
+						}
+					}
 				}
 			}
-			return date;
+			return ret;
 		});
 	}
 

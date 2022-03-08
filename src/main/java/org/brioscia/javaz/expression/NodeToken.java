@@ -87,7 +87,7 @@ public class NodeToken {
 			break;
 		case lt:
 			out = this.getChilds().get(0) + " < " + this.getChilds().get(1);
-			break;
+			break;		
 		case mul:
 			out = this.getChilds().get(0) + " * " + this.getChilds().get(1);
 			break;

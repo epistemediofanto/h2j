@@ -14,19 +14,30 @@ public class ATag extends DefaultH2JTag {
 		NamedNodeMap attributes;
 		Node nodeAction;
 		String value;
+		String remoteValue;
+		boolean remote;
 		Converter converter = null;
 
 		attributes = node.getAttributes();
+
+		nodeAction = attributes.getNamedItem("remote");
+		remoteValue = nodeAction != null ? nodeAction.getNodeValue() : "true";
+		remote = (remoteValue == null) || (!"false".equals(remoteValue));
+
 		nodeAction = attributes.getNamedItem("href");
 		assertNotNull(nodeAction, "missing href attribute in a tag");
 
 		value = nodeAction.getNodeValue();
 		assertNotEmpty(value, "found empty value in attribute href in a tag");
-
+		
 		if (isEL(value)) {
 			value = processor.getEnviroments().evalForHTMLCall(value);
-			value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
-			nodeAction.setNodeValue(value + H2JProcessorFilter.CALL_STRING_EXT);
+			if (remote) {
+				value = processor.getEnviroments().htmlName(value, converter, HtmlBindName.DYNAMIC_CALL);
+				nodeAction.setNodeValue(value + H2JProcessorFilter.CALL_STRING_EXT);
+			} else {
+				nodeAction.setNodeValue(value);
+			}
 		}
 
 		super.processNode(processor, node);

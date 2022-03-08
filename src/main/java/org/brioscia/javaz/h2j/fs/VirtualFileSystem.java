@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 
+import org.brioscia.javaz.h2j.mw.Enviroments;
+
 public class VirtualFileSystem {
 
 	private HashMap<String, byte[]> fileCache;
@@ -17,20 +19,21 @@ public class VirtualFileSystem {
 
 	public VirtualFileSystem(ServletContext context) {
 		this.fileCache = new HashMap<String, byte[]>();
-		this.context=context;
+		this.context = context;
 	}
 
 	public InputStream load(String filename) throws FileNotFoundException, IOException {
 		byte[] stream;
-				
+
 		stream = this.fileCache.get(filename);
+		System.out.println("read file: " + filename);
 		if (stream == null) {
-			stream = this.store(filename);
+			stream = this.store(filename, Enviroments.enableCacheFile);
 		}
 		return new ByteArrayInputStream(stream);
 	}
 
-	private byte[] store(String filename) throws FileNotFoundException, IOException {
+	private byte[] store(String filename, boolean cacheOn) throws FileNotFoundException, IOException {
 		FileInputStream fis;
 		byte[] buffer;
 		File file;
@@ -52,7 +55,9 @@ public class VirtualFileSystem {
 			fis.close();
 		}
 
-		this.fileCache.put(filename, buffer);
+		if (cacheOn) {
+			this.fileCache.put(filename, buffer);
+		}
 		return buffer;
 	}
 

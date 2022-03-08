@@ -4,7 +4,6 @@ import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.filter.cast.Converter;
 import org.brioscia.javaz.h2j.filter.cast.Shape;
 import org.brioscia.javaz.h2j.mw.HtmlBindName;
-import org.brioscia.javaz.h2j.mw.Store.SetMode;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -40,6 +39,8 @@ public class InputTag extends DefaultH2JTag {
 
 			originalValue = value.substring(2, value.length() - 1);
 			valueName = processor.resolveLoopVar(originalValue);
+			// patch del 22/02/2022 errore input in td 
+			valueName = originalValue;
 			if (converter != null) {
 				Object obj = processor.getEnviroments().getObject(valueName);
 				try {			

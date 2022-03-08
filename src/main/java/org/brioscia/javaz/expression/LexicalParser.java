@@ -263,6 +263,9 @@ public class LexicalParser {
 
 			assertName(token);
 			token.setType(Type.name);
+			if (eq(token, "null")) {
+				token.setType(Type.nil);
+			}
 
 			nToken = this.peekToken();
 			if (eq(nToken, "(")) {

@@ -216,7 +216,7 @@ public class H2JProcessorFilter implements Filter {
 				}
 			}
 			if (Enviroments.trace) {
-				System.out.println("set: " + pName + " = " + o);
+				System.out.println("set: " + pName + " = " + toString(o));
 			}
 
 			enviroments.setBean(pName, o);
@@ -228,21 +228,23 @@ public class H2JProcessorFilter implements Filter {
 	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
 			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
-		InputStream is;
+		InputStream isPage;
 
 		if (!this.h2jContext.isDirectResponse()) {
 
-			is = Enviroments.getServletContext().getResourceAsStream(page);
-			if (is == null) {
-				throw new H2JFilterException("page not found: " + page);
-			}
+			// TODO sostituire con VirtualFileSystem per mettere in cache le pagine
+//			isPage = Enviroments.getServletContext().getResourceAsStream(page);
+//			if (isPage == null) {
+//				throw new H2JFilterException("page not found: " + page);
+//			}
 			try {
+				isPage = Enviroments.getFileSystem().load(page);
 
 				response.setContentType("text/html");
 
 				if (page.endsWith(EXT)) {
 					xmlProcessor = new XmlProcessor(enviroments, page);
-					xmlProcessor.process(is, response.getOutputStream());
+					xmlProcessor.process(isPage, response.getOutputStream());
 				} else {
 					byte[] buffer;
 					int size = 4096;
@@ -250,13 +252,13 @@ public class H2JProcessorFilter implements Filter {
 					int offset = 0;
 
 					buffer = new byte[size];
-					while ((read = is.read(buffer, 0, size)) != -1) {
+					while ((read = isPage.read(buffer, 0, size)) != -1) {
 						response.getOutputStream().write(buffer, offset, read);
 						offset += read;
 					}
 				}
 
-				is.close();
+				isPage.close();
 
 			} catch (IOException e) {
 				throw new H2JFilterException(e);
@@ -265,4 +267,18 @@ public class H2JProcessorFilter implements Filter {
 		this.dialogueBoost.cancel();
 	}
 
+	private static String toString(Object o) {
+		if (o == null)
+			return "null";
+		if (o instanceof Object[]) {
+			Object[] a = (Object[]) o;
+			String out = "[";
+			for (Object oj : a) {
+				out += (oj != null ? oj : "null") + ",";
+			}
+			out += "]";
+			return out;
+		}
+		return o.toString();
+	}
 }

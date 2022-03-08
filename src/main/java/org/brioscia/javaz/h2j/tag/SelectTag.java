@@ -37,7 +37,7 @@ public class SelectTag extends DefaultH2JTag {
 			
 			value = nodeValue.getNodeValue();
 			nodeMultiple = attributes.getNamedItem("multiple");
-			if ("true".equals(nodeMultiple.getNodeValue())) {
+			if ((nodeMultiple!=null) && ("true".equals(nodeMultiple.getNodeValue()))) {
 				values = value.split(",");
 			} else {
 				values = new String[1];

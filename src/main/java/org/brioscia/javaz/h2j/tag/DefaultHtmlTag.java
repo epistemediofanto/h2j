@@ -4,7 +4,6 @@ import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class DefaultHtmlTag extends BaseTag {
 
@@ -23,19 +22,7 @@ public class DefaultHtmlTag extends BaseTag {
 		this.processNodes(processor, node.getChildNodes());
 	}
 
-	protected void processNodes(XmlProcessor processor, NodeList nodeList) throws H2JFilterException {
-		if (nodeList != null) {
-			Node n;
-			short s;
-			for (int i = 0; i < nodeList.getLength(); ++i) {
-				n = nodeList.item(i);
-				s = n.getNodeType();
-				if (s == Node.ELEMENT_NODE) {
-					processor.processNode(nodeList.item(i));
-				}
-			}
-		}
-	}
+
 
 	protected void processAttributes(XmlProcessor processor, NamedNodeMap attributes) throws H2JFilterException {
 		if (attributes != null) {

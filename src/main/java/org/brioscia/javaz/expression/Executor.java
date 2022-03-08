@@ -6,6 +6,7 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 
 import org.brioscia.javaz.expression.NodeToken.Type;
+import org.brioscia.javaz.h2j.mw.Enviroments;
 
 public class Executor {
 
@@ -91,7 +92,8 @@ public class Executor {
 			break;
 
 		case nil:
-			throw new SyntaxError(node, "unsupported operation");
+			o = null;
+			break;
 
 		case not:
 			o = this.not(node);
@@ -400,7 +402,13 @@ public class Executor {
 			node = node.getChilds().get(0);
 			assertTrue(node.getType() == Type.dot, node, "unsupported operation");
 			assertTrue(node.getChilds().size() == 1, node, "unsupported operation");
-			node = node.getChilds().get(0);
+			node = node.getChilds().get(0);	
+			if ((object instanceof String) && (Enviroments.isELName((String) object))){
+				String str = (String) object;
+				str = str.substring(2);
+				str = str.substring(0, str.length()-1);
+				object = this.context.get(str);
+			}
 			object = this.invoke(object, node);
 		} else if (this.value != null) {
 			throw new SyntaxError(node, "the operation cannot be performed, invalid setter call");
@@ -507,7 +515,7 @@ public class Executor {
 				try {
 					for (int j = 0; j < numParams; ++j) {
 						value = this.eval(nodeParams.getChilds().get(j));
-						paramValue[j] = value != null ? this.cast(parameters[j], new Object[] {value}) : null;
+						paramValue[j] = value != null ? this.cast(parameters[j], new Object[] { value }) : null;
 					}
 					object = method.invoke(object, paramValue);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

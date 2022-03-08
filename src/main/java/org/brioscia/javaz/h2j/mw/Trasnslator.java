@@ -4,11 +4,13 @@ import java.util.HashMap;
 
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.tag.ATag;
+import org.brioscia.javaz.h2j.tag.AliasTag;
 import org.brioscia.javaz.h2j.tag.ButtonTag;
 import org.brioscia.javaz.h2j.tag.DeclareTag;
 import org.brioscia.javaz.h2j.tag.DefaultH2JTag;
 import org.brioscia.javaz.h2j.tag.DefaultHtmlTag;
 import org.brioscia.javaz.h2j.tag.FormTag;
+import org.brioscia.javaz.h2j.tag.IfTag;
 import org.brioscia.javaz.h2j.tag.IncludeIfTag;
 import org.brioscia.javaz.h2j.tag.IncludeTag;
 import org.brioscia.javaz.h2j.tag.InputTag;
@@ -48,6 +50,9 @@ public class Trasnslator {
 		tagMap = new ATag();
 		this.registerTag("a", tagMap);
 
+		tagMap = new AliasTag();
+		this.registerTag("alias", tagMap);
+
 		tagMap = new ButtonTag();
 		this.registerTag("button", tagMap);
 
@@ -56,6 +61,9 @@ public class Trasnslator {
 
 		tagMap = new FormTag();
 		this.registerTag("form", tagMap);
+
+		tagMap = new IfTag();
+		this.registerTag("if", tagMap);
 
 		tagMap = new IncludeTag();
 		this.registerTag("include", tagMap);

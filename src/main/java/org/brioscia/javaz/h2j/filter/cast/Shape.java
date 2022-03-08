@@ -18,7 +18,8 @@ public class Shape {
 		add("mdyDate", new DateConverter("MM/dd/yyyy"));
 		add(boolean.class.getCanonicalName(), new BooleanConverter());
 		add(Boolean.class.getCanonicalName(), new BooleanConverter());
-
+		add(String[].class.getCanonicalName(), new ArrayStringConverter());
+		add(Integer[].class.getCanonicalName(), new ArrayIntegerConverter());
 	}
 
 	public static void add(String className, Converter converter) {

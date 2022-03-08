@@ -45,12 +45,16 @@ public class IncludeTag extends BaseTag {
 		file = processor.getPath() + this.evaluation(processor.getEnviroments(), attributeFileNode.getNodeValue());
 
 		try {
+			this.processNodes(processor, node.getChildNodes());
+			
 			is = Enviroments.getFileSystem().load(file);
 			doc = processor.load(is);
 			is.close();
 			is = null;
+			
 			includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
 			parent.replaceChild(includeNode, node);
+			
 			try {
 				if (attributeNameNode != null) {
 					String value = attributeValueNode.getNodeValue();
@@ -69,6 +73,7 @@ public class IncludeTag extends BaseTag {
 				}
 			}
 			node = null;
+			
 		} catch (IOException | ParserConfigurationException | SAXException e) {
 			throw new H2JFilterException(file, e);
 		} finally {
