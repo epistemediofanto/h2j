@@ -1,7 +1,6 @@
 package org.brioscia.javaz.h2j.filter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -17,6 +16,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.brioscia.javaz.expression.InvokerException;
 import org.brioscia.javaz.h2j.filter.cast.Converter;
@@ -25,6 +25,8 @@ import org.brioscia.javaz.h2j.mw.Enviroments;
 import org.brioscia.javaz.h2j.mw.HtmlBindName.StoreObject;
 import org.brioscia.javaz.h2j.mw.Trasnslator;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +38,10 @@ public class H2JProcessorFilter implements Filter {
 	public static String RMI = ".rmi";
 	public static String CALL_STRING_EXT = RMI + EXT;
 	public static String JSON_RESPONSE_ID = "_json";
+	public static String REQUEST_ECODE = "UTF-8";
+	public static String XHTML_ECODE = "UTF-8";
+	public static String XHTML_INDENT = "no";
+	public static String DATE_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"; // formato per DateConverter
 
 	@Inject
 	private DialogueBoost dialogueBoost;
@@ -73,6 +79,7 @@ public class H2JProcessorFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+		boolean doChain = true;
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
@@ -81,13 +88,12 @@ public class H2JProcessorFilter implements Filter {
 			servletRequest = (HttpServletRequest) request;
 
 			String page = servletRequest.getRequestURI();
-
-			if (page.endsWith(EXT)) {
+			doChain = !page.endsWith(EXT);
+			if (!doChain) {
 				String contextRoot;
 				boolean isJsonResponse;
 				try {
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
-					enviroments.resetMode(); // reimposta la modalità array, previene eventuali bug
 					this.h2jContext.set(this, enviroments, request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
@@ -99,7 +105,7 @@ public class H2JProcessorFilter implements Filter {
 						throw new H2JFilterException("On request: " + page, e);
 					}
 
-					page = URLDecoder.decode(page, "utf-8");
+					page = URLDecoder.decode(page, REQUEST_ECODE);
 
 					int n;
 					char c;
@@ -140,7 +146,11 @@ public class H2JProcessorFilter implements Filter {
 							this.h2jContext.setRefresh(false);
 						}
 						try {
-							this.processResponse(enviroments, page, servletRequest, response);
+							if (!this.h2jContext.isDirectResponse()) {
+								this.processResponse(enviroments, page, servletRequest, response);
+							} else {
+								doChain = true;
+							}
 						} catch (H2JFilterException e) {
 							throw new H2JFilterException("On response: " + page, e);
 						}
@@ -154,8 +164,9 @@ public class H2JProcessorFilter implements Filter {
 			}
 		}
 
-		chain.doFilter(request, response);
-
+		if (doChain) {
+			chain.doFilter(request, response);
+		}
 	}
 
 	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request,
@@ -228,42 +239,20 @@ public class H2JProcessorFilter implements Filter {
 	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
 			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
-		InputStream isPage;
+		Document docXHTML;
 
-		if (!this.h2jContext.isDirectResponse()) {
+		try {
+			docXHTML = Enviroments.getFileSystem().loadDocument(page);
 
-			// TODO sostituire con VirtualFileSystem per mettere in cache le pagine
-//			isPage = Enviroments.getServletContext().getResourceAsStream(page);
-//			if (isPage == null) {
-//				throw new H2JFilterException("page not found: " + page);
-//			}
-			try {
-				isPage = Enviroments.getFileSystem().load(page);
+			response.setContentType("text/html");
 
-				response.setContentType("text/html");
+			xmlProcessor = new XmlProcessor(enviroments, page);
+			xmlProcessor.process(docXHTML, response.getOutputStream());
 
-				if (page.endsWith(EXT)) {
-					xmlProcessor = new XmlProcessor(enviroments, page);
-					xmlProcessor.process(isPage, response.getOutputStream());
-				} else {
-					byte[] buffer;
-					int size = 4096;
-					int read;
-					int offset = 0;
-
-					buffer = new byte[size];
-					while ((read = isPage.read(buffer, 0, size)) != -1) {
-						response.getOutputStream().write(buffer, offset, read);
-						offset += read;
-					}
-				}
-
-				isPage.close();
-
-			} catch (IOException e) {
-				throw new H2JFilterException(e);
-			}
+		} catch (IOException | ParserConfigurationException | SAXException e) {
+			throw new H2JFilterException(e);
 		}
+
 		this.dialogueBoost.cancel();
 	}
 

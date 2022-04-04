@@ -27,6 +27,7 @@ public class InputTag extends DefaultH2JTag {
 			Node converterNode;
 			Converter converter = null;
 			String valueName;
+			Element name;
 
 			converterNode = attributes.getNamedItem("shape");
 			if (converterNode != null) {
@@ -39,14 +40,13 @@ public class InputTag extends DefaultH2JTag {
 
 			originalValue = value.substring(2, value.length() - 1);
 			valueName = processor.resolveLoopVar(originalValue);
-			// patch del 22/02/2022 errore input in td 
-			valueName = originalValue;
 			if (converter != null) {
 				Object obj = processor.getEnviroments().getObject(valueName);
-				try {			
+				try {
 					nodeValue.setNodeValue(converter.toString(obj));
 				} catch (ClassCastException e) {
-					throw new H2JFilterException("Cannot cast " + obj + " to " + converter.getName() + " in " + nodeValue, e);
+					throw new H2JFilterException(
+							"Cannot cast " + obj + " to " + converter.getName() + " in " + nodeValue, e);
 				}
 			} else {
 				nodeValue.setNodeValue(processor.getEnviroments().eval(value));
@@ -54,11 +54,10 @@ public class InputTag extends DefaultH2JTag {
 
 			value = processor.getEnviroments().htmlName(valueName, converter, HtmlBindName.DYNAMIC_CALL);
 
-//			if (processor.getEnviroments().getMode() == SetMode.list) {
-//				((Element) node).setAttribute("name", value + "$");
-//			} else {
-			((Element) node).setAttribute("name", value);
-//			}
+			name = (Element) node;
+			if (name.getAttribute("name").length()== 0) {
+				name.setAttribute("name", value);
+			}
 
 		}
 

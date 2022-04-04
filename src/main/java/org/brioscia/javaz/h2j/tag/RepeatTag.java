@@ -146,7 +146,7 @@ public class RepeatTag extends BaseTag {
 					this.isList = false;
 					this.array = o;
 				} else {
-					String type = "Found class " + o.getClass().getName() + " expected array or list in " + str;
+					String type = "Found class " + o.getClass().getName() + " expected array or list in " + str + " or object not declared in scope";
 					throw new H2JFilterException(type);
 				}
 			} else {

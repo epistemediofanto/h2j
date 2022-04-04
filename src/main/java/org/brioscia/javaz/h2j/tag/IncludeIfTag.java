@@ -22,7 +22,7 @@ public class IncludeIfTag extends BaseTag {
 		Node parent;
 		String expValue;
 		String thenValue;
-//		String elName;
+
 		String value;
 		String file = null;
 
@@ -38,14 +38,8 @@ public class IncludeIfTag extends BaseTag {
 		assertNotNull(expNode, "element then is missing");
 		thenValue = thenNode.getNodeValue();
 
-//		elName = this.trasforlELname(expValue);
-//		if (elName != null) {
-//			value = processor.getEnviroments().getStringValue(elName);
-//		} else {
-//			value = expValue;
-//		}
 		value = processor.getEnviroments().eval(expValue);
-		
+
 		if ("true".equals(value)) {
 			file = thenValue;
 		} else {
@@ -65,26 +59,13 @@ public class IncludeIfTag extends BaseTag {
 			file = processor.getPath() + file;
 
 			try {
-//				is = Enviroments.getServletContext().getResourceAsStream(file);
-				is = Enviroments.getFileSystem().load(file);
-				assertNotNull(is, "file not found: " + file);
-				doc = processor.load(is);
-				is.close();
-				is = null;
+				doc = Enviroments.getFileSystem().loadDocument(file);
 				includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
 				parent.replaceChild(includeNode, node);
 				processor.processNode(includeNode);
 				node = null;
 			} catch (IOException | ParserConfigurationException | SAXException e) {
 				throw new H2JFilterException(e);
-			} finally {
-				try {
-					if (is != null) {
-						is.close();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 		}
 

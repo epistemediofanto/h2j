@@ -24,10 +24,10 @@ public class AliasTag extends BaseTag {
 		attributeNameNode = attributes.getNamedItem("name");
 		attributeValueNode = attributes.getNamedItem("value");
 
-		assertNotNull(attributeNameNode, "missing attribute name");
-		assertNotNull(attributeNameNode.getNodeValue(), "missing contents for attribute name");
-		assertNotNull(attributeValueNode, "missing attribute value");
-		assertNotNull(attributeValueNode.getNodeValue(), "missing contents for attribute value");
+		assertNotNull(attributeNameNode, "missing attribute name in tag " + node.getNodeName());
+		assertNotNull(attributeNameNode.getNodeValue(), "missing contents for attribute name in tag " + node.getNodeName());
+		assertNotNull(attributeValueNode, "missing attribute value in tag " + node.getNodeName());
+		assertNotNull(attributeValueNode.getNodeValue(), "missing contents for attribute value in tag " + node.getNodeName());
 
 		value = attributeValueNode.getNodeValue();
 		if (isEL(value)) {

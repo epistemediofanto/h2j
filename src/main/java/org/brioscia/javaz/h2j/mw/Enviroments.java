@@ -21,13 +21,14 @@ public class Enviroments extends Store {
 	private static final String CACHE_FILE = "h2j.fileCache";
 	private static final String DEVELOPMENT_DOME = "h2j.developmentMode";
 	private static final String TRACE = "h2j.trace";
-
+	
 	private static ServletContext servletContext;
 	private static String contextRoot;
 	private static VirtualFileSystem fileSystem;
 	public static boolean enableCacheFile = true;
 	public static boolean trace = false;	
 	
+	// non è l'init del bean è invocato durante l'inizializzazione del filtro
 	public static void init(ServletContext context) throws H2JFilterException {
 		Enviroments.servletContext = context;
 		Enviroments.contextRoot = Enviroments.servletContext.getContextPath();
@@ -47,6 +48,10 @@ public class Enviroments extends Store {
 			System.out.println("\nH2J: *** WARNING: cache is disabled ***\n");
 		}
 
+	}
+	
+	public Enviroments() {
+		this.push("ROOT", Enviroments.contextRoot);
 	}
 
 	public String getStringValue(String fullname) throws H2JFilterException {

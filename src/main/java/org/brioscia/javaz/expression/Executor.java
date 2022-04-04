@@ -1,5 +1,6 @@
 package org.brioscia.javaz.expression;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -7,6 +8,7 @@ import java.util.List;
 
 import org.brioscia.javaz.expression.NodeToken.Type;
 import org.brioscia.javaz.h2j.mw.Enviroments;
+import org.brioscia.javaz.h2j.tag.ListType;
 
 public class Executor {
 
@@ -402,11 +404,11 @@ public class Executor {
 			node = node.getChilds().get(0);
 			assertTrue(node.getType() == Type.dot, node, "unsupported operation");
 			assertTrue(node.getChilds().size() == 1, node, "unsupported operation");
-			node = node.getChilds().get(0);	
-			if ((object instanceof String) && (Enviroments.isELName((String) object))){
+			node = node.getChilds().get(0);
+			if ((object instanceof String) && (Enviroments.isELName((String) object))) {
 				String str = (String) object;
 				str = str.substring(2);
-				str = str.substring(0, str.length()-1);
+				str = str.substring(0, str.length() - 1);
 				object = this.context.get(str);
 			}
 			object = this.invoke(object, node);
@@ -425,6 +427,7 @@ public class Executor {
 		String propertyName;
 		List<NodeToken> childs;
 		NodeToken nodeParams = null;
+		Object newObject = object;
 
 		assertTrue(object != null, node, "class method not found or object is null");
 
@@ -437,27 +440,14 @@ public class Executor {
 		if ((childs.size() > childPos) && (childs.get(childPos).getType() == Type.function)) {
 			// chiamata a funzione es: fun(i, j)
 			++childPos;
-			object = this.invokeFunction(node, object, nodeValue);
+			newObject = this.invokeFunction(object, node, nodeValue);
 		} else if (isSetter) {
-
-			if (object instanceof List) {
-				System.out.println();
-			}
-
-			if (nodeValue.endsWith("$")) {
-				// modalità di scrittura lista, vedi repeat
-				nodeValue = nodeValue.substring(0, nodeValue.length() - 1);
-				object = this.invokeListSetter(node, object);
-			} else {
-				// siamo in un setter correggo il nome
-				propertyName = adjustName("set", nodeValue);
-				numParams = 1;
-				object = this.invokeSetter(node, object, propertyName);
-			}
-
+			propertyName = adjustName("set", nodeValue);
+			numParams = 1;
+			newObject = this.invokeSetter(object, node, propertyName);
 		} else {
 			propertyName = adjustName("get", nodeValue);
-			object = this.invokeGetter(node, object, propertyName);
+			newObject = this.invokeGetter(object, node, propertyName);
 		}
 
 		while ((childs.size() > childPos) && (childs.get(childPos).getType() == Type.arrayIndex)) {
@@ -466,7 +456,7 @@ public class Executor {
 			numParams = nodeParams.getChilds().size();
 			for (int i = 0; i < numParams; ++i) {
 				Integer ix = (Integer) this.eval(nodeParams.getChilds().get(i));
-				object = this.getIndex(node, object, ix);
+				newObject = this.getIndex(node, newObject, ix);
 			}
 			++childPos;
 		}
@@ -475,20 +465,16 @@ public class Executor {
 			// xxx.yyy vado in ricorsione su yyy
 			nodeParams = childs.get(childPos);
 			assertTrue(nodeParams.getChilds().size() == 1, nodeParams, "unsupported operation");
-			object = this.invoke(object, nodeParams.getChilds().get(0));
+			newObject = this.invoke(newObject, nodeParams.getChilds().get(0));
 			++childPos;
 		}
 
 		assertTrue(childs.size() == childPos, node, "invalid operation");
 
-		return object;
+		return newObject;
 	}
 
-	private Object invokeListSetter(NodeToken node, Object object) {
-		return null;
-	}
-
-	private Object invokeFunction(NodeToken node, Object object, String methodName)
+	private Object invokeFunction(Object object, NodeToken node, String methodName)
 			throws SyntaxError, InvokerException {
 		Method method;
 		Method[] classMethods;
@@ -528,7 +514,7 @@ public class Executor {
 		throw new InvokerException(node, "Missing method: " + methodName);
 	}
 
-	private Object invokeGetter(NodeToken node, Object object, String methodName) throws InvokerException {
+	private Object invokeGetter(Object object, NodeToken node, String methodName) throws InvokerException {
 		Method[] classMethods;
 		Method method;
 
@@ -551,7 +537,65 @@ public class Executor {
 		throw new InvokerException(node, "Missing getter: " + methodName);
 	}
 
-	private Object invokeSetter(NodeToken node, Object object, String methodName) throws InvokerException, SyntaxError {
+	private Object invokeSetter(Object object, NodeToken node, String methodName) throws InvokerException, SyntaxError {
+		if (object instanceof List) {
+			try {
+				Object item;
+				List<?> objectList = (List<?>) object;
+				if (this.value instanceof Object[]) {
+					Object[] arrValue = (Object[]) this.value;
+					Object[] value;
+					String type = null;
+					value = new Object[1];
+					for (int i = 0; i < arrValue.length; ++i) {
+						value[0] = arrValue[i];
+						if (i == objectList.size()) {
+							if (type == null) {
+								type = this.getListType(objectList, methodName);
+							}
+							item = this.newInstance(node, type, objectList);
+							Method add = List.class.getDeclaredMethod("add", Object.class);
+							add.invoke(objectList, item);
+						} else {
+							item = objectList.get(i);
+						}
+						this.set(node, item, value, methodName);
+					}
+					return object;
+				} else {
+					if (1 < objectList.size()) {
+						item = this.newInstance(node, this.getListType(objectList, methodName), objectList);
+						Method add = List.class.getDeclaredMethod("add", Object.class);
+						add.invoke(objectList, item);
+					} else {
+						item = objectList.get(0);
+					}
+					this.set(node, item, this.value, methodName);
+					return object;
+				}
+			} catch (Exception e) {
+				throw new InvokerException(node, e);
+			}
+		} else {
+			return this.set(node, object, this.value, methodName);
+		}
+	}
+
+	private String getListType(Object parent, String fieldName) throws NoSuchFieldException, SecurityException {
+		Class<?> clazz = parent.getClass();
+		ListType listType = clazz.getAnnotation(ListType.class);
+		String type = listType.type();
+		return type;
+	}
+
+	private Object newInstance(NodeToken nodeToken, String className, Object object)
+			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		return Class.forName(className).getDeclaredConstructor().newInstance();
+	}
+
+	private Object set(NodeToken node, Object object, Object[] value, String methodName)
+			throws InvokerException, SyntaxError {
 		Method[] classMethods;
 		Method method;
 
@@ -565,7 +609,7 @@ public class Executor {
 				parameters = method.getParameters();
 				paramValue = new Object[1];
 				try {
-					paramValue[0] = this.cast(parameters[0], this.value);
+					paramValue[0] = this.cast(parameters[0], value);
 					object = method.invoke(object, paramValue);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					throw new InvokerException(node, e);
@@ -573,76 +617,8 @@ public class Executor {
 				return object;
 			}
 		}
-
 		throw new InvokerException(node, "Missing setter " + methodName);
 	}
-
-//	public void a(Object object, String methodName) {
-//		Method method;
-//		boolean found = false;
-//		Method[] classMethods;
-//
-//		String propertyName = methodName;
-//
-//		classMethods = object.getClass().getMethods();
-//		for (int i = 0; i < classMethods.length; ++i) {
-//			method = classMethods[i];
-//			if ((method.getName().equals(propertyName) && (method.getParameterCount() == numParams))
-//					|| (isGetter && this.isBooleanGetter(method, propertyName))) {
-//				Object[] paramValue;
-//				Parameter[] parameters;
-//				Object value;
-//
-//				parameters = method.getParameters();
-//				paramValue = new Object[numParams];
-//				if (isSetter) {
-//					paramValue[0] = this.cast(parameters[0], this.value);
-//				} else {
-//					for (int j = 0; j < numParams; ++j) {
-//						value = this.eval(nodeParams.getChilds().get(j));
-//						paramValue[j] = value != null ? this.cast(parameters[j], value) : null;
-//					}
-//				}
-//
-//				try {
-//					old = object;
-//					object = method.invoke(old, paramValue);
-//				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//					throw new InvokerException(node, e);
-//				}
-//				found = true;
-//				break;
-//			}
-//		}
-//
-//		if (!found) {
-//			// il metodo non è stato trovato
-//			throw new InvokerException(node, "Missing property or function: " + nodeValue);
-//		}
-//MANCA QUESTA PARTE IN GET E SET
-//		while ((childs.size() > childPos) && (childs.get(childPos).getType() == Type.arrayIndex)) {
-//			// siamo in un array, identifichiamo l'indice
-//			nodeParams = childs.get(childPos);
-//			numParams = nodeParams.getChilds().size();
-//			for (int i = 0; i < numParams; ++i) {
-//				Integer ix = (Integer) this.eval(nodeParams.getChilds().get(i));
-//				object = this.getIndex(node, object, ix);
-//			}
-//			++childPos;
-//		}
-//
-//		if ((childs.size() > childPos) && (childs.get(childPos).getType() == Type.dot)) {
-//			// xxx.yyy vado in ricorsione su yyy
-//			nodeParams = childs.get(childPos);
-//			assertTrue(nodeParams.getChilds().size() == 1, nodeParams, "unsupported operation");
-//			object = this.invoke(object, nodeParams.getChilds().get(0));
-//			++childPos;
-//		}
-//
-//		assertTrue(childs.size() == childPos, node, "invalid operation");
-//
-//		return object;
-//	}
 
 	private boolean isGetter(Method method, String propertyName) {
 		boolean is = false;

@@ -22,11 +22,13 @@ public class SelectTag extends DefaultH2JTag {
 			value = value.substring(2, value.length() - 1);
 			value = processor.resolveLoopVar(value);
 			value = processor.getEnviroments().htmlName(value, null, HtmlBindName.OBJECT);
-			((Element) node).setAttribute("name", value);
+			if (((Element) node).getAttribute("name").length() == 0) {
+				((Element) node).setAttribute("name", value);
+			}
 		}
 
 		super.processNode(processor, node);
-		
+
 		nodeValue = attributes.getNamedItem("value");
 		if (nodeValue != null) {
 			NodeList nodeList;
@@ -34,17 +36,17 @@ public class SelectTag extends DefaultH2JTag {
 			Node optionValue;
 			String value;
 			String[] values;
-			
+
 			value = nodeValue.getNodeValue();
 			nodeMultiple = attributes.getNamedItem("multiple");
-			if ((nodeMultiple!=null) && ("true".equals(nodeMultiple.getNodeValue()))) {
+			if ((nodeMultiple != null) && ("true".equals(nodeMultiple.getNodeValue()))) {
 				values = value.split(",");
 			} else {
 				values = new String[1];
 				values[0] = value;
 			}
-						
-			nodeList = node.getChildNodes();				
+
+			nodeList = node.getChildNodes();
 			for (int i = 0; i < nodeList.getLength(); ++i) {
 				child = nodeList.item(i);
 				if ("option".equals(child.getNodeName())) {
@@ -56,10 +58,11 @@ public class SelectTag extends DefaultH2JTag {
 			}
 		}
 	}
-	
-	private boolean in (String[] set, String el) {
-		for (String s: set) {
-			if ((s!=null) && (s.equals(el)))return true;
+
+	private boolean in(String[] set, String el) {
+		for (String s : set) {
+			if ((s != null) && (s.equals(el)))
+				return true;
 		}
 		return false;
 	}

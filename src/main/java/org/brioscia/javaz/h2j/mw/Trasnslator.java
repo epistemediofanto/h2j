@@ -14,10 +14,12 @@ import org.brioscia.javaz.h2j.tag.IfTag;
 import org.brioscia.javaz.h2j.tag.IncludeIfTag;
 import org.brioscia.javaz.h2j.tag.IncludeTag;
 import org.brioscia.javaz.h2j.tag.InputTag;
+import org.brioscia.javaz.h2j.tag.InvokeTag;
 import org.brioscia.javaz.h2j.tag.JsonDataTag;
 import org.brioscia.javaz.h2j.tag.OptionsTag;
 import org.brioscia.javaz.h2j.tag.OutTag;
 import org.brioscia.javaz.h2j.tag.RepeatTag;
+import org.brioscia.javaz.h2j.tag.ResetTag;
 import org.brioscia.javaz.h2j.tag.SelectTag;
 import org.brioscia.javaz.h2j.tag.SwitchTag;
 import org.brioscia.javaz.h2j.tag.TagMap;
@@ -74,6 +76,9 @@ public class Trasnslator {
 		tagMap = new InputTag();
 		this.registerTag("input", tagMap);
 
+		tagMap = new InvokeTag();
+		this.registerTag("invoke", tagMap);
+		
 		tagMap = new JsonDataTag();
 		this.registerTag("jsondata", tagMap);
 
@@ -85,6 +90,9 @@ public class Trasnslator {
 
 		tagMap = new RepeatTag();
 		this.registerTag("repeat", tagMap);
+
+		tagMap = new ResetTag();
+		this.registerTag("reset", tagMap);
 
 		tagMap = new SelectTag();
 		this.registerTag("select", tagMap);

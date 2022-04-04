@@ -1,7 +1,6 @@
 package org.brioscia.javaz.h2j.tag;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -38,7 +37,6 @@ public class IncludeTag extends BaseTag {
 		}
 
 		String file;
-		InputStream is = null;
 		Document doc;
 		Node includeNode;
 
@@ -46,21 +44,18 @@ public class IncludeTag extends BaseTag {
 
 		try {
 			this.processNodes(processor, node.getChildNodes());
-			
-			is = Enviroments.getFileSystem().load(file);
-			doc = processor.load(is);
-			is.close();
-			is = null;
-			
+			doc = Enviroments.getFileSystem().loadDocument(file);
+
 			includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
 			parent.replaceChild(includeNode, node);
-			
+
 			try {
 				if (attributeNameNode != null) {
 					String value = attributeValueNode.getNodeValue();
 					if (isEL(value)) {
 						value = value.substring(2, value.length() - 1);
-						processor.getEnviroments().push(attributeNameNode.getNodeValue(), processor.getEnviroments().getObject(value));
+						processor.getEnviroments().push(attributeNameNode.getNodeValue(),
+								processor.getEnviroments().getObject(value));
 					} else {
 						processor.getEnviroments().push(attributeNameNode.getNodeName(), value);
 					}
@@ -73,17 +68,9 @@ public class IncludeTag extends BaseTag {
 				}
 			}
 			node = null;
-			
+
 		} catch (IOException | ParserConfigurationException | SAXException e) {
 			throw new H2JFilterException(file, e);
-		} finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 

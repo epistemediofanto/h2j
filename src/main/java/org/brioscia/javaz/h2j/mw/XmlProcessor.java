@@ -18,6 +18,7 @@ import org.brioscia.javaz.expression.LexicalParser;
 import org.brioscia.javaz.expression.NodeToken;
 import org.brioscia.javaz.expression.SyntaxError;
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
+import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
 import org.brioscia.javaz.h2j.tag.TagMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -38,26 +39,12 @@ public class XmlProcessor {
 		this.trasnslator = Trasnslator.getInstance();
 	}
 
-	public static Document load(InputStream is) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory dbFactory;
-		DocumentBuilder dBuilder;
-
-		dbFactory = DocumentBuilderFactory.newInstance();
-		dbFactory.setNamespaceAware(true);
-		dBuilder = dbFactory.newDocumentBuilder();
-//		dBuilder.setEntityResolver(new StandardEntityResolver());
-
-		return dBuilder.parse(is, "UTF-8");
-	}
-
-	public void process(InputStream is, OutputStream os) throws H2JFilterException {
-		Document doc;
+	public void process(Document doc, OutputStream os) throws H2JFilterException {
 		TransformerFactory transformerFactory;
 		Transformer transformer;
 		DOMSource source;
 
 		try {
-			doc = load(is);
 
 			this.processNode(doc.getDocumentElement());
 
@@ -68,12 +55,12 @@ public class XmlProcessor {
 
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
 			transformer.setOutputProperty(OutputKeys.METHOD, "html");
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.INDENT, H2JProcessorFilter.XHTML_INDENT);
+			transformer.setOutputProperty(OutputKeys.ENCODING, H2JProcessorFilter.XHTML_ECODE);
 
 			transformer.transform(source, new StreamResult(os));
 
-		} catch (IOException | TransformerException | ParserConfigurationException | SAXException e) {
+		} catch (TransformerException e) {
 			throw new H2JFilterException(e);
 		}
 

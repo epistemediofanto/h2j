@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.brioscia.javaz.h2j.filter.cast.Shape;
+import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
 
 public class ComponentCast {
 
@@ -148,7 +148,7 @@ public class ComponentCast {
 				int len = value.length;
 				newValue = new Boolean[len];
 				for (int i = 0; i < len; ++i) {
-					newValue[i] = Boolean.parseBoolean( value[i].toString());
+					newValue[i] = Boolean.parseBoolean(value[i].toString());
 				}
 			}
 			return newValue;
@@ -203,13 +203,13 @@ public class ComponentCast {
 				} else {
 					String value = avalue[0].toString();
 					if ((value != null) && (value.length() > 0)) {
-						SimpleDateFormat sdf = new SimpleDateFormat(Shape.ISO_8601);
+						SimpleDateFormat sdf = new SimpleDateFormat(H2JProcessorFilter.DATE_ISO_8601);
 						try {
 							ret = sdf.parse(value);
 						} catch (ParseException e) {
 							Log.log(Level.SEVERE, e.getMessage(), e);
-							throw new SyntaxError(null,
-									"invalid date format " + value + " valid format is " + Shape.ISO_8601);
+							throw new SyntaxError(null, "invalid date format " + value + " valid format is "
+									+ H2JProcessorFilter.DATE_ISO_8601);
 						}
 					}
 				}

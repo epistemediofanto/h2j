@@ -14,8 +14,6 @@ public class FormTag extends DefaultH2JTag {
 		NamedNodeMap attributes;
 		Node nodeAction;
 		String valueAction;
-//		Node nodeJson;
-//		String valueJson;
 		Converter converter = null;
 
 		attributes = node.getAttributes();
@@ -24,9 +22,6 @@ public class FormTag extends DefaultH2JTag {
 		assertNotNull(nodeAction, "missing 'action' attribute in 'form' tag");
 		valueAction = nodeAction.getNodeValue();
 		assertNotNull(valueAction, "found empty value in attribute 'action' in 'from' tag");
-		
-//		nodeJson = attributes.getNamedItem("json");
-//		valueJson = nodeJson != null ? nodeJson.getNodeValue() : null;
 		
 		if (isEL(valueAction)) {
 			valueAction = valueAction.substring(2, valueAction.length() - 1);

@@ -6,9 +6,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
+
 public class DateConverter implements Converter {
 
 	private String format;
+	
+	public DateConverter() {
+		this(H2JProcessorFilter.DATE_ISO_8601);
+	}
 
 	public DateConverter(String format) {
 		this.format = format;

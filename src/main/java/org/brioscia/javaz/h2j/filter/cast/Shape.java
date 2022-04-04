@@ -5,14 +5,13 @@ import java.util.HashMap;
 
 public class Shape {
 
-	public static final String ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	private static HashMap<String, Converter> adapters = new HashMap<String, Converter>();
 
 	public static void initCommonConverter() {
 
 		add(int.class.getCanonicalName(), new IntegerConverter());
 		add(Integer.class.getCanonicalName(), new IntegerConverter());
-		add(Date.class.getCanonicalName(), new DateConverter(ISO_8601));
+		add(Date.class.getCanonicalName(), new DateConverter());		
 		add("dmyDate", new DateConverter("dd/MM/yyyy"));
 		add("ymdDate", new DateConverter("yyyy/MM/dd"));
 		add("mdyDate", new DateConverter("MM/dd/yyyy"));
