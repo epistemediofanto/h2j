@@ -1,10 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.brioscia.javaz</groupId>
 	<artifactId>h2j</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.2.2</version>
 
 	<name>H2J</name>
 	<description>very tiny front-end framework</description>
@@ -33,7 +31,7 @@
 		<connection>scm:git:git://epistemediofanto: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@github.com/epistemediofanto/h2j.git</connection>
 		<developerConnection>scm:git:https://github.com/epistemediofanto/h2j.git</developerConnection>
 		<url>https://github.com/epistemediofanto/h2j.git</url>
-		<tag>HEAD</tag>
+		<tag>h2j-1.2.2</tag>
 	</scm>
 
 	<properties>
