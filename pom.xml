@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.brioscia.javaz</groupId>
 	<artifactId>h2j</artifactId>
-	<version>1.2.7-SNAPSHOT</version>
+	<version>1.2.4-SNAPSHOT</version>
 
 	<name>H2J</name>
 	<description>very tiny front-end framework</description>
@@ -52,8 +52,7 @@
 		<mvn-surefire-plugin-version>3.0.0-M5</mvn-surefire-plugin-version>
 		<maven-source-plugin-version>3.2.1</maven-source-plugin-version>
 		<maven-javadoc-plugin-version>2.9.1</maven-javadoc-plugin-version>
-		<!--  <maven-gpg-plugin-version>1.5</maven-gpg-plugin-version> -->
-		<maven-gpg-plugin-version>3.0.1</maven-gpg-plugin-version>
+		<maven-gpg-plugin-version>1.5</maven-gpg-plugin-version>
 		<nexus-staging-maven-plugin-version>1.6.7</nexus-staging-maven-plugin-version>
 
 	</properties>
