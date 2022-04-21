@@ -1,5 +1,6 @@
 package org.brioscia.javaz.h2j.tag;
 
+import org.brioscia.javaz.expression.InvokerException;
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.mw.Enviroments;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
@@ -99,4 +100,21 @@ public abstract class BaseTag implements TagMap {
 		return value;
 	}
 
+	protected static boolean checkRoot(String el) {
+		return ((el!=null) && (el.startsWith(Enviroments.ROOT_VAR)));
+	}
+	
+	public String valueRoot(XmlProcessor processor, String el) throws H2JFilterException {
+		String value = el;
+		if (checkRoot(el)) {
+			Object oValue;
+			try {
+				oValue = processor.getEnviroments().get(Enviroments.ROOT_VAR);
+				value = el.substring(Enviroments.ROOT_VAR.length()) + (oValue != null ? oValue.toString() : "");
+			} catch (InvokerException e) {
+				throw new H2JFilterException(e);
+			}			
+		} 
+		return value;		
+	}
 }

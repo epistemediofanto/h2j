@@ -51,12 +51,13 @@ public class IncludeIfTag extends BaseTag {
 			}
 		}
 
-		if ((file != null) && (file.length() > 0)) {
-			InputStream is = null;
+		if ((file != null) && (file.length() > 0)) {			
 			Document doc;
 			Node includeNode;
 
-			file = processor.getPath() + file;
+			file = this.valueRoot(processor, file);			
+			file = this.evaluation(processor.getEnviroments(), file);			
+			file = (file.startsWith("/") ? "" : processor.getPath()) + file;
 
 			try {
 				doc = Enviroments.getFileSystem().loadDocument(file);

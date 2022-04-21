@@ -27,6 +27,7 @@ public class Enviroments extends Store {
 	private static VirtualFileSystem fileSystem;
 	public static boolean enableCacheFile = true;
 	public static boolean trace = false;	
+	public static String ROOT_VAR = "#{ROOT}";
 	
 	// non è l'init del bean è invocato durante l'inizializzazione del filtro
 	public static void init(ServletContext context) throws H2JFilterException {

@@ -332,4 +332,14 @@ class Semantica {
 		o = Executor.get(nodeToken, this.context);
 		assertEquals("bbb.fun(1, bbb.fun('ciao', 7))", o.toString());
 	}
+	
+	@Test
+	void oggetto_206() throws SyntaxError, InvokerException {
+		NodeToken nodeToken;
+		Object o;
+
+		nodeToken = LexicalParser.process("bbb.fun(ooo.uno, bbb.cc)");
+		o = Executor.get(nodeToken, this.context);
+		assertEquals("bbb.fun(1, bbb.cc)", o.toString());
+	}
 }

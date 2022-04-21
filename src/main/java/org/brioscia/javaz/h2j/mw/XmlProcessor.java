@@ -1,12 +1,7 @@
 package org.brioscia.javaz.h2j.mw;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -22,7 +17,6 @@ import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
 import org.brioscia.javaz.h2j.tag.TagMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 public class XmlProcessor {
 

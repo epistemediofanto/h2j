@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.HashMap;
 
 import javax.print.Doc;
@@ -17,6 +18,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
 import org.brioscia.javaz.h2j.mw.Enviroments;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class VirtualFileSystem {
@@ -52,6 +55,18 @@ public class VirtualFileSystem {
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dbFactory.setNamespaceAware(true);
 		dBuilder = dbFactory.newDocumentBuilder();
+		
+		dBuilder.setEntityResolver(new EntityResolver() {
+			  public InputSource resolveEntity(String arg0, String arg1)
+			        throws SAXException, IOException {
+			    if(arg0.contains("Hibernate")) {
+			        return new InputSource(new StringReader(""));
+			    } else {
+			        // TODO Auto-generated method stub
+			        return null;
+			    }
+			  }
+			});
 
 		return dBuilder.parse(is, H2JProcessorFilter.XHTML_ECODE);
 	}

@@ -39,8 +39,10 @@ public class IncludeTag extends BaseTag {
 		String file;
 		Document doc;
 		Node includeNode;
-
-		file = processor.getPath() + this.evaluation(processor.getEnviroments(), attributeFileNode.getNodeValue());
+		
+		file = this.valueRoot(processor, attributeFileNode.getNodeValue());
+		file =  this.evaluation(processor.getEnviroments(), file);
+		file = (file.startsWith("/") ? "" : processor.getPath()) + file;
 
 		try {
 			this.processNodes(processor, node.getChildNodes());

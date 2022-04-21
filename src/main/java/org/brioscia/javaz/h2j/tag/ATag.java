@@ -30,6 +30,7 @@ public class ATag extends DefaultH2JTag {
 		value = nodeAction.getNodeValue();
 		assertNotEmpty(value, "found empty value in attribute href in a tag");
 		
+		value = this.valueRoot(processor, value);
 		if (isEL(value)) {
 			value = processor.getEnviroments().evalForHTMLCall(value);
 			if (remote) {
