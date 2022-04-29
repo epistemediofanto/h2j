@@ -9,6 +9,7 @@ import org.brioscia.javaz.h2j.tag.ButtonTag;
 import org.brioscia.javaz.h2j.tag.DeclareTag;
 import org.brioscia.javaz.h2j.tag.DefaultH2JTag;
 import org.brioscia.javaz.h2j.tag.DefaultHtmlTag;
+import org.brioscia.javaz.h2j.tag.DefineTag;
 import org.brioscia.javaz.h2j.tag.FormTag;
 import org.brioscia.javaz.h2j.tag.IfTag;
 import org.brioscia.javaz.h2j.tag.IncludeIfTag;
@@ -61,6 +62,9 @@ public class Trasnslator {
 		tagMap = new DeclareTag();
 		this.registerTag("declare", tagMap);
 
+		tagMap = new DefineTag();
+		this.registerTag("define", tagMap);
+
 		tagMap = new FormTag();
 		this.registerTag("form", tagMap);
 
@@ -78,7 +82,7 @@ public class Trasnslator {
 
 		tagMap = new InvokeTag();
 		this.registerTag("invoke", tagMap);
-		
+
 		tagMap = new JsonDataTag();
 		this.registerTag("jsondata", tagMap);
 

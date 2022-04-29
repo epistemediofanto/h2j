@@ -39,11 +39,22 @@ public class IncludeTag extends BaseTag {
 		String file;
 		Document doc;
 		Node includeNode;
+		String path;
+		String currentPath;
+		
+		currentPath = processor.getPath();
 		
 		file = this.valueRoot(processor, attributeFileNode.getNodeValue());
 		file =  this.evaluation(processor.getEnviroments(), file);
-		file = (file.startsWith("/") ? "" : processor.getPath()) + file;
-
+				
+		if (file.startsWith("/")) {
+			path = XmlProcessor.extractPath(file);
+		} else {
+			path = currentPath + XmlProcessor.extractPath(file);
+			file =  path + XmlProcessor.extractFileName(file);
+		}	
+		processor.setPath(path);
+		
 		try {
 			this.processNodes(processor, node.getChildNodes());
 			doc = Enviroments.getFileSystem().loadDocument(file);
@@ -73,6 +84,8 @@ public class IncludeTag extends BaseTag {
 
 		} catch (IOException | ParserConfigurationException | SAXException e) {
 			throw new H2JFilterException(file, e);
+		} finally {
+			processor.setPath(currentPath);
 		}
 	}
 

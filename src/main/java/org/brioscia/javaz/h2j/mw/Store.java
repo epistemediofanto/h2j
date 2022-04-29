@@ -26,6 +26,7 @@ public class Store extends HtmlBindName implements EnvContext {
 	private HashMap<String, List<Object>> storeSpace;
 	private boolean searchInCDI = true;
 	private List<SetMode> setMode = new ArrayList<Store.SetMode>();
+	private List<String> pageElements = new ArrayList<String>();
 
 	@Inject
 	private DialogueBoost dialogueBoost;
@@ -50,6 +51,29 @@ public class Store extends HtmlBindName implements EnvContext {
 			this.storeSpace.put(element, list);
 		}
 		list.add(0, value);
+	}
+	
+	/**
+	 * insert the element into the stack and mark it to be removed at the end of the page construction
+	 * 
+	 * @param element
+	 * @param value
+	 */
+	public void pushPage(String element, Object value) {
+		this.push(element, value);
+		this.pageElements.add(element);
+	}
+	
+	
+	/**
+	 * remove all page element, called at end of the page construction
+	 * 
+	 */
+	public void freePage() {
+		for (String element: this.pageElements) {
+			this.peek(element);
+		}
+		this.pageElements.clear();
 	}
 
 	/**

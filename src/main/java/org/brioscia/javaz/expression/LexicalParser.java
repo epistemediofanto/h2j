@@ -11,9 +11,10 @@ import org.brioscia.javaz.expression.NodeToken.Type;
  * Grammar: G ::= #{ ADD } | ADD
  * ADD ::= MUL + ADD | MUL - ADD | MUL
  * MUL ::= POW * MUL | POW / MUL | POW
- * POW ::= CMP ^ POW | CMP
- * CMP ::= CMP &lt;= LGC | CMP &lt; LGC | CMP &gt;= LGC | CMP &gt;LGC | CMP &lt;&gt; LGC | LGC
- * LGC ::= LGC &amp; FUN | LGC '|' FUN | FUN
+ * POW ::= EIF ^ POW | EIF
+ * EIF ::= CMP ? ADD : ADD  | CMP
+ * CMP ::= LGC &lt;= CMO | LGC &lt; CMP | LGC &gt;= CMP | LGC &gt;CMP | LGC &lt;&gt; CMP | LGC == CMP | CMP ? ADD : ADD | LGC
+ * LGC ::= FUN &amp; LGC | LGC '|' FUN | FUN
  * FUN ::= NAME [( PARVAL ) ] ['[' PARVAL ']'] [. FUN ] | !FUN | -FUN | (ADD)
  * PARVAL ::= ADD [, ADD]*
  * NAME ::= (alfa [num])* | NUM | 'stringa'
@@ -134,7 +135,7 @@ public class LexicalParser {
 	private NodeToken prodPOW() throws SyntaxError {
 		NodeToken token;
 
-		token = this.prodCMP();
+		token = this.prodEIF();
 		if (token != null) {
 			NodeToken nToken;
 			nToken = this.peekToken();
@@ -144,6 +145,29 @@ public class LexicalParser {
 				nToken.add(token);
 				nToken.add(this.prodPOW());
 				token = nToken;
+			}
+		}
+
+		return token;
+
+	}
+
+	private NodeToken prodEIF() throws SyntaxError {
+		NodeToken token;
+
+		token = this.prodCMP();
+		if (token != null) {
+			NodeToken nToken;
+			nToken = this.peekToken();
+			if (eq(nToken, "?")) {
+				nToken = this.nextToken();
+				nToken.setType(Type.eif);
+				nToken.add(token);
+				nToken.add(this.prodADD());
+				token = nToken;
+
+				assertEq(this.nextToken(), ":");
+				nToken.add(this.prodADD());
 			}
 		}
 

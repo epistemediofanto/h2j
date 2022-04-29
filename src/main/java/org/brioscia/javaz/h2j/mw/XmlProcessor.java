@@ -28,7 +28,7 @@ public class XmlProcessor {
 
 	public XmlProcessor(Enviroments enviroments, String page) {
 		this.page = page;
-		this.path = this.getPath(page);
+		this.path = extractPath(page);
 		this.enviroments = enviroments;
 		this.trasnslator = Trasnslator.getInstance();
 	}
@@ -56,6 +56,8 @@ public class XmlProcessor {
 
 		} catch (TransformerException e) {
 			throw new H2JFilterException(e);
+		} finally {
+			this.enviroments.freePage();
 		}
 
 	}
@@ -123,18 +125,29 @@ public class XmlProcessor {
 		return page;
 	}
 
-	private String getPath(String page) {
+	public static String extractPath(String page) {
 		int pos;
 
 		pos = page.lastIndexOf('/');
 		if (pos != -1) {
 			page = page.substring(0, pos + 1);
+		} else {
+			page = "";
 		}
 		return page;
+	}
+	
+	public static String extractFileName(String file) {
+		int pos = file.indexOf('/');
+		return pos != -1 ? file.substring(pos+1, file.length()) : file;
 	}
 
 	public String getPath() {
 		return path;
+	}
+	
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public Enviroments getEnviroments() {

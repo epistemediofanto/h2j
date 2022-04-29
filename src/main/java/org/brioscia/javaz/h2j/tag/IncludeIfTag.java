@@ -1,7 +1,6 @@
 package org.brioscia.javaz.h2j.tag;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -51,14 +50,21 @@ public class IncludeIfTag extends BaseTag {
 			}
 		}
 
-		if ((file != null) && (file.length() > 0)) {			
+		if ((file != null) && (file.length() > 0)) {
 			Document doc;
 			Node includeNode;
+			String path;
+			String currentPath = processor.getPath();
 
-			file = this.valueRoot(processor, file);			
-			file = this.evaluation(processor.getEnviroments(), file);			
-			file = (file.startsWith("/") ? "" : processor.getPath()) + file;
-
+			file = this.valueRoot(processor, file);
+			file = this.evaluation(processor.getEnviroments(), file);
+			
+			path = currentPath + XmlProcessor.extractPath(file);
+			if (!file.startsWith("/")) {
+				file =  path + XmlProcessor.extractFileName(file);
+			}	
+			processor.setPath(path);				
+			
 			try {
 				doc = Enviroments.getFileSystem().loadDocument(file);
 				includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
@@ -67,6 +73,8 @@ public class IncludeIfTag extends BaseTag {
 				node = null;
 			} catch (IOException | ParserConfigurationException | SAXException e) {
 				throw new H2JFilterException(e);
+			} finally {
+				processor.setPath(currentPath);
 			}
 		}
 
