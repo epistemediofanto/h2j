@@ -10,8 +10,6 @@ public class HtmlBindName extends Assertion {
 	private static final long serialVersionUID = 1L;
 	private static long generator = (int) (100 * Math.random());
 
-	protected static boolean developmentMode = false;
-
 	private HashMap<String, StoreObject> envName = new HashMap<String, StoreObject>();
 
 	public String htmlName(String name, Converter converter, int type) {

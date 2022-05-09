@@ -20,16 +20,14 @@ public class Enviroments extends Store {
 	private static final long serialVersionUID = 1L;
 	private static final String CACHE_FILE = "h2j.fileCache";
 	private static final String DEVELOPMENT_DOME = "h2j.developmentMode";
-	private static final String TRACE = "h2j.trace";
-	
+
 	private static ServletContext servletContext;
 	private static String contextRoot;
 	private static VirtualFileSystem fileSystem;
 	public static boolean enableCacheFile = true;
-	public static boolean trace = false;	
 	public static String ROOT_VAR = "#{ROOT}";
-	public static OnResponseErrorCallback errorCallback;
-	
+	private OnResponseErrorCallback errorCallback;
+
 	// non è l'init del bean è invocato durante l'inizializzazione del filtro
 	public static void init(ServletContext context) throws H2JFilterException {
 		Enviroments.servletContext = context;
@@ -51,7 +49,7 @@ public class Enviroments extends Store {
 		}
 
 	}
-	
+
 	public Enviroments() {
 		this.push("ROOT", Enviroments.contextRoot);
 	}
@@ -117,7 +115,8 @@ public class Enviroments extends Store {
 	 * 
 	 * @param elname stringa da valutare
 	 * @return stringa html
-	 * @throws H2JFilterException sollevata se la stringa è malformata o non è possibile valutarla
+	 * @throws H2JFilterException sollevata se la stringa è malformata o non è
+	 *                            possibile valutarla
 	 */
 	public String evalForHTMLCall(String elname) throws H2JFilterException {
 		int posStart;
@@ -140,7 +139,7 @@ public class Enviroments extends Store {
 						Object object;
 						node = LexicalParser.process(exp);
 						this.disableCDIContext();
-						object= Executor.get(node, this);
+						object = Executor.get(node, this);
 						assertNotNull(object, "object " + node.getValue() + " is null");
 						value = object.toString();
 					} catch (SyntaxError | InvokerException e) {
@@ -184,7 +183,7 @@ public class Enviroments extends Store {
 		}
 		return def;
 	}
-	
+
 	/**
 	 * verifica se trattasi di una espressione da valutare
 	 * 
@@ -192,6 +191,14 @@ public class Enviroments extends Store {
 	 * @return true se è una espressione
 	 */
 	public static boolean isELName(String elname) {
-		return (elname!=null) && (elname.startsWith("#{")) && (elname.endsWith("}"));
+		return (elname != null) && (elname.startsWith("#{")) && (elname.endsWith("}"));
+	}
+
+	public OnResponseErrorCallback getErrorCallback() {
+		return errorCallback;
+	}
+
+	public void setErrorCallback(OnResponseErrorCallback errorCallback) {
+		this.errorCallback = errorCallback;
 	}
 }

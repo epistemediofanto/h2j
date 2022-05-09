@@ -1,10 +1,8 @@
 package org.brioscia.javaz.h2j.mw;
 
-import java.io.Serializable;
-
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 
-public class Assertion implements Serializable {
+public class Assertion extends H2JLog {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,7 +18,7 @@ public class Assertion implements Serializable {
 		}
 	}
 
-	protected void assertTrue(boolean exp, String format, Object...args) throws H2JFilterException {
+	protected void assertTrue(boolean exp, String format, Object... args) throws H2JFilterException {
 		if (!exp) {
 			throw new H2JFilterException(String.format(format, args));
 		}

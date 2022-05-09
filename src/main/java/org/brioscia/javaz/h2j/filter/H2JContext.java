@@ -75,6 +75,10 @@ public class H2JContext implements Serializable {
 	public void setRefresh(boolean refresh) {
 		this.refresh = refresh;
 	}
+	
+	public Enviroments getEnviroments() {
+		return this.enviroments;
+	}
 
 	// /**
 //	 * Forwards a request from a current resource to another resource 

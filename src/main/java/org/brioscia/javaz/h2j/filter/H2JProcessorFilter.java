@@ -22,6 +22,7 @@ import org.brioscia.javaz.expression.InvokerException;
 import org.brioscia.javaz.h2j.filter.cast.Converter;
 import org.brioscia.javaz.h2j.filter.cast.Shape;
 import org.brioscia.javaz.h2j.mw.Enviroments;
+import org.brioscia.javaz.h2j.mw.H2JLog;
 import org.brioscia.javaz.h2j.mw.HtmlBindName.StoreObject;
 import org.brioscia.javaz.h2j.mw.Trasnslator;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
@@ -152,16 +153,19 @@ public class H2JProcessorFilter implements Filter {
 								doChain = true;
 							}
 						} catch (H2JFilterException e) {
-							throw new H2JFilterException("On response: " + page, e);
+
+							if (enviroments.getErrorCallback() != null) {
+								H2JLog.debug("Go to error page %s, exception %s", page, e);								
+								enviroments.getErrorCallback().onResponseError(this, request, response, e);
+							} else {
+								throw new H2JFilterException("On response: " + page, e);
+							}
 						}
 					}
 
 				} catch (InvokerException | H2JFilterException e) {
 					Logger.getGlobal().log(Level.SEVERE, "on response:" + page + ": " + e.getMessage(), e);
 					e.printStackTrace();
-					if (Enviroments.errorCallback!=null) {
-						Enviroments.errorCallback.onResponseError(this, request, response, e);
-					}
 				}
 				return;
 			}
@@ -229,9 +233,8 @@ public class H2JProcessorFilter implements Filter {
 					o[i] = values[i];
 				}
 			}
-			if (Enviroments.trace) {
-				System.out.println("set: " + pName + " = " + toString(o));
-			}
+			
+			H2JLog.trace("set: %s = %s", pName, o);
 
 			enviroments.setBean(pName, o);
 
@@ -239,8 +242,19 @@ public class H2JProcessorFilter implements Filter {
 		return jsonResponse;
 	}
 
-	public void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
+	public void processResponse(String page, HttpServletRequest request, ServletResponse response)
 			throws H2JFilterException {
+		Enviroments enviroments;
+		try {
+			enviroments = (Enviroments) Enviroments.getCDIObject("env");
+			this.processResponse(enviroments, page, request, response);
+		} catch (InvokerException e) {
+			throw new H2JFilterException(e);
+		}
+	}
+
+	protected void processResponse(Enviroments enviroments, String page, HttpServletRequest request,
+			ServletResponse response) throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		Document docXHTML;
 
