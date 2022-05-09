@@ -160,7 +160,7 @@ public class H2JProcessorFilter implements Filter {
 					Logger.getGlobal().log(Level.SEVERE, "on response:" + page + ": " + e.getMessage(), e);
 					e.printStackTrace();
 					if (Enviroments.errorCallback!=null) {
-						Enviroments.errorCallback.onResponseError(e);
+						Enviroments.errorCallback.onResponseError(this, request, response, e);
 					}
 				}
 				return;
@@ -239,7 +239,7 @@ public class H2JProcessorFilter implements Filter {
 		return jsonResponse;
 	}
 
-	void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
+	public void processResponse(Enviroments enviroments, String page, HttpServletRequest request, ServletResponse response)
 			throws H2JFilterException {
 		XmlProcessor xmlProcessor;
 		Document docXHTML;
