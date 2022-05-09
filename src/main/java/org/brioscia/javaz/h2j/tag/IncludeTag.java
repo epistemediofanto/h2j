@@ -41,20 +41,25 @@ public class IncludeTag extends BaseTag {
 		Node includeNode;
 		String path;
 		String currentPath;
-		
+
 		currentPath = processor.getPath();
-		
+
 		file = this.valueRoot(processor, attributeFileNode.getNodeValue());
-		file =  this.evaluation(processor.getEnviroments(), file);
-				
+		file = this.evaluation(processor.getEnviroments(), file);
+
 		if (file.startsWith("/")) {
 			path = XmlProcessor.extractPath(file);
 		} else {
-			path = currentPath + XmlProcessor.extractPath(file);
-			file =  path + XmlProcessor.extractFileName(file);
-		}	
+			path = currentPath;
+			while (file.startsWith("../")) {
+				file = file.substring(3);
+				path = this.removeLastDir(currentPath);
+			}
+			path += XmlProcessor.extractPath(file);
+			file = path + XmlProcessor.extractFileName(file);
+		}
 		processor.setPath(path);
-		
+
 		try {
 			this.processNodes(processor, node.getChildNodes());
 			doc = Enviroments.getFileSystem().loadDocument(file);
@@ -87,6 +92,24 @@ public class IncludeTag extends BaseTag {
 		} finally {
 			processor.setPath(currentPath);
 		}
+	}
+
+	private String removeLastDir(String path) {
+		int pos = path.lastIndexOf('/');
+		if ((pos != -1) && (pos > 0)) {
+			int len = path.length();
+			if (pos == len-1) {
+				path = this.removeLastDir(path.substring(0, len-1)) + "/";
+			} else {
+				path = path.substring(0, pos);
+			}
+		} else {
+			path = "/";
+		}
+		if (path.startsWith("//")) {
+			path = path.substring(1);
+		}
+		return path;
 	}
 
 }

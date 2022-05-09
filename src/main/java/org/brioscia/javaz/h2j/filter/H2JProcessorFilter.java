@@ -159,6 +159,9 @@ public class H2JProcessorFilter implements Filter {
 				} catch (InvokerException | H2JFilterException e) {
 					Logger.getGlobal().log(Level.SEVERE, "on response:" + page + ": " + e.getMessage(), e);
 					e.printStackTrace();
+					if (Enviroments.errorCallback!=null) {
+						Enviroments.errorCallback.onResponseError(e);
+					}
 				}
 				return;
 			}
