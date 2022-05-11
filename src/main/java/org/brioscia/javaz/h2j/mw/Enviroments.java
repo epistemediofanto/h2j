@@ -19,7 +19,7 @@ public class Enviroments extends Store {
 
 	private static final long serialVersionUID = 1L;
 	private static final String CACHE_FILE = "h2j.fileCache";
-	private static final String DEVELOPMENT_DOME = "h2j.developmentMode";
+	private static final String DEVELOPMENT_MODE = "h2j.developmentMode";
 
 	private static ServletContext servletContext;
 	private static String contextRoot;
@@ -35,17 +35,21 @@ public class Enviroments extends Store {
 		Enviroments.fileSystem = new VirtualFileSystem(context);
 
 		Enviroments.enableCacheFile = booleanValue(CACHE_FILE, context.getInitParameter(CACHE_FILE), enableCacheFile);
-		Enviroments.developmentMode = booleanValue(DEVELOPMENT_DOME, context.getInitParameter(DEVELOPMENT_DOME),
+		Enviroments.developmentMode = booleanValue(DEVELOPMENT_MODE, context.getInitParameter(DEVELOPMENT_MODE),
 				developmentMode);
 		Enviroments.trace = booleanValue(TRACE, context.getInitParameter(TRACE), trace);
+		Enviroments.info = booleanValue(INFO, context.getInitParameter(INFO), info);
+		Enviroments.error = booleanValue(ERROR, context.getInitParameter(ERROR), error);
 
 		if (Enviroments.developmentMode) {
-			System.out.println("\nH2J: *** WARNING: system is in development mode ***\n");
-			Enviroments.enableCacheFile = false;
+			info("\nH2J: *** WARNING: system is in development mode ***\n");
+			if (Enviroments.enableCacheFile) {
+				info("\nH2J: *** WARNING: system is in developer mode but the cache is enabled ***\n");
+			}
 		}
 
 		if (!Enviroments.enableCacheFile) {
-			System.out.println("\nH2J: *** WARNING: cache is disabled ***\n");
+			info("\nH2J: *** WARNING: cache is disabled ***\n");
 		}
 
 	}
@@ -179,7 +183,7 @@ public class Enviroments extends Store {
 			return Boolean.parseBoolean(str);
 		}
 		if (str != null) {
-			System.out.println("Invalid setting: " + name + "=" + str + ", use: " + def);
+			info("Invalid setting: %s = %s, use: %s", name,  str, def);
 		}
 		return def;
 	}

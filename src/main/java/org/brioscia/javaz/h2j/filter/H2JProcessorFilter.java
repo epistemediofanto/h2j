@@ -50,6 +50,8 @@ public class H2JProcessorFilter implements Filter {
 	@Inject
 	private H2JContext h2jContext;
 
+	private boolean disableErrorHandler = false;
+
 	public void init(FilterConfig fConfig) throws ServletException {
 		String ext;
 		try {
@@ -84,7 +86,7 @@ public class H2JProcessorFilter implements Filter {
 
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest;
-			Enviroments enviroments;
+			Enviroments enviroments = null;
 
 			servletRequest = (HttpServletRequest) request;
 
@@ -95,6 +97,11 @@ public class H2JProcessorFilter implements Filter {
 				boolean isJsonResponse;
 				try {
 					enviroments = (Enviroments) Enviroments.getCDIObject("env");
+				} catch (InvokerException e) {
+					H2JLog.error(e, "critical error in get CDI enviroments: %s", e.getMessage());
+					return;
+				}
+				try {
 					this.h2jContext.set(this, enviroments, request, response);
 
 					contextRoot = Enviroments.getServletContext().getContextPath();
@@ -146,26 +153,16 @@ public class H2JProcessorFilter implements Filter {
 							enviroments.clearBindName();
 							this.h2jContext.setRefresh(false);
 						}
-						try {
-							if (!this.h2jContext.isDirectResponse()) {
-								this.processResponse(enviroments, page, servletRequest, response);
-							} else {
-								doChain = true;
-							}
-						} catch (H2JFilterException e) {
 
-							if (enviroments.getErrorCallback() != null) {
-								H2JLog.debug("Go to error page %s, exception %s", page, e);								
-								enviroments.getErrorCallback().onResponseError(this, request, response, e);
-							} else {
-								throw new H2JFilterException("On response: " + page, e);
-							}
+						if (!this.h2jContext.isDirectResponse()) {
+							this.processResponse(enviroments, page, servletRequest, response);
+						} else {
+							doChain = true;
 						}
 					}
 
-				} catch (InvokerException | H2JFilterException e) {
-					Logger.getGlobal().log(Level.SEVERE, "on response:" + page + ": " + e.getMessage(), e);
-					e.printStackTrace();
+				} catch (H2JFilterException e) {
+					this.handleErrorPage(enviroments, request, response, page, e);
 				}
 				return;
 			}
@@ -174,6 +171,22 @@ public class H2JProcessorFilter implements Filter {
 		if (doChain) {
 			chain.doFilter(request, response);
 		}
+	}
+
+	private void handleErrorPage(Enviroments enviroments, ServletRequest request, ServletResponse response, String page,
+			Exception e) {
+		if (enviroments.getErrorCallback() != null) {
+			H2JLog.error(e, "error in page %s, exception %s", page, e.getMessage());
+			if (this.disableErrorHandler) {
+				H2JLog.error(e, "critical error, loop in page error callback, on page %s - %s", page, e.getMessage());	
+			} else {
+				this.disableErrorHandler = true;
+				enviroments.getErrorCallback().onResponseError(this, request, response, e);
+			}
+		} else {
+			H2JLog.error(e, "error on response page %s - %s ", page, e.getMessage());
+		}
+		this.disableErrorHandler = false;
 	}
 
 	private void processJSonResponse(Enviroments enviroments, String path, String name, HttpServletRequest request,
@@ -233,7 +246,7 @@ public class H2JProcessorFilter implements Filter {
 					o[i] = values[i];
 				}
 			}
-			
+
 			H2JLog.trace("set: %s = %s", pName, o);
 
 			enviroments.setBean(pName, o);
@@ -273,18 +286,18 @@ public class H2JProcessorFilter implements Filter {
 		this.dialogueBoost.cancel();
 	}
 
-	private static String toString(Object o) {
-		if (o == null)
-			return "null";
-		if (o instanceof Object[]) {
-			Object[] a = (Object[]) o;
-			String out = "[";
-			for (Object oj : a) {
-				out += (oj != null ? oj : "null") + ",";
-			}
-			out += "]";
-			return out;
-		}
-		return o.toString();
-	}
+//	private static String toString(Object o) {
+//		if (o == null)
+//			return "null";
+//		if (o instanceof Object[]) {
+//			Object[] a = (Object[]) o;
+//			String out = "[";
+//			for (Object oj : a) {
+//				out += (oj != null ? oj : "null") + ",";
+//			}
+//			out += "]";
+//			return out;
+//		}
+//		return o.toString();
+//	}
 }
