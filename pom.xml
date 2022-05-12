@@ -144,9 +144,7 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
+
 			</plugin>
 			<!-- 7. nexus -->
 			<plugin>
