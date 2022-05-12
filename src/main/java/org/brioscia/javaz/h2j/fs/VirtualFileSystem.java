@@ -1,12 +1,8 @@
 package org.brioscia.javaz.h2j.fs;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.util.HashMap;
 
@@ -14,19 +10,15 @@ import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
 import org.brioscia.javaz.h2j.mw.Enviroments;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -105,19 +97,19 @@ public class VirtualFileSystem {
 		return dBuilder.parse(is, H2JProcessorFilter.XHTML_ECODE);
 	}
 
-	private static void printDocument(Document doc) {
-		try {
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer transformer = tf.newTransformer();
-			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-			transformer.transform(new DOMSource(doc), new StreamResult(System.err));
-		} catch (Exception e) {
-			Enviroments.trace(e, "dump documento fail %s", e.getMessage());
-		}
-	}
+//	private static void printDocument(Document doc) {
+//		try {
+//			TransformerFactory tf = TransformerFactory.newInstance();
+//			Transformer transformer = tf.newTransformer();
+//			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+//			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+//			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+//			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+//
+//			transformer.transform(new DOMSource(doc), new StreamResult(System.err));
+//		} catch (Exception e) {
+//			Enviroments.trace(e, "dump documento fail %s", e.getMessage());
+//		}
+//	}
 }
