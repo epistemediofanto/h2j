@@ -1,6 +1,7 @@
 package org.brioscia.javaz.h2j.filter;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -32,8 +33,9 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebFilter(urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "xhtml"))
-public class H2JProcessorFilter implements Filter {
+public class H2JProcessorFilter implements Filter, Serializable{
 
+	private static final long serialVersionUID = 1L;
 	public static final String LOGNAME = "h2j";
 	public static String EXT = ".xhtml";
 	public static String RMI = ".rmi";

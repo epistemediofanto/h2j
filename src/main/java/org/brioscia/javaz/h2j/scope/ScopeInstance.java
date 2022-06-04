@@ -7,4 +7,5 @@ class ScopeInstance<T> {
 	Bean<T> bean;
 	CreationalContext<T> ctx;
 	T originalBean;
+
 }
