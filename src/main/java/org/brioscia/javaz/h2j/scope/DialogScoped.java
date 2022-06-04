@@ -12,4 +12,5 @@ import javax.inject.Scope;
 @Target({ ElementType.TYPE, ElementType.FIELD})
 public @interface DialogScoped {
 
+	public String name();
 }

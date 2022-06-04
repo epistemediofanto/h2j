@@ -143,6 +143,9 @@ public class H2JProcessorFilter implements Filter, Serializable{
 					StoreObject storeObject = enviroments.getObjectFromNameStore(name);
 					if (isJsonResponse) {
 						try {
+							if (storeObject.type == Enviroments.DYNAMIC_CALL) {
+								name = storeObject.name;
+							}
 							this.processJSonResponse(enviroments, path, name, servletRequest, response);
 						} catch (H2JFilterException e) {
 							throw new H2JFilterException("On json response: " + page, e);

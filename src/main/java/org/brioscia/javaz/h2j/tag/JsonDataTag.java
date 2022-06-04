@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonDataTag extends BaseTag {
-
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
 		Node parent;

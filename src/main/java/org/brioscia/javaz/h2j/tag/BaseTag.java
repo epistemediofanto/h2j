@@ -11,6 +11,13 @@ import org.w3c.dom.NodeList;
 
 public abstract class BaseTag implements TagMap {
 
+	/**
+	 * verifica se si tratta di una espressione da valutare, ovvero se la stringa è
+	 * racchiusa tra #{ }
+	 * 
+	 * @param mapName
+	 * @return
+	 */
 	protected static boolean isEL(String mapName) {
 		return (mapName != null) && mapName.startsWith("#{") && mapName.endsWith("}");
 	}
@@ -23,7 +30,7 @@ public abstract class BaseTag implements TagMap {
 		}
 		return value;
 	}
-	
+
 	protected void processNodes(XmlProcessor processor, NodeList nodeList) throws H2JFilterException {
 		if (nodeList != null) {
 			Node n;
@@ -83,7 +90,7 @@ public abstract class BaseTag implements TagMap {
 			throw new H2JFilterException(msg);
 		}
 	}
-	
+
 	protected void assertNotTrue(boolean bExp, String msg) throws H2JFilterException {
 		if (bExp) {
 			throw new H2JFilterException(msg);
@@ -101,20 +108,32 @@ public abstract class BaseTag implements TagMap {
 	}
 
 	protected static boolean checkRoot(String el) {
-		return ((el!=null) && (el.startsWith(Enviroments.ROOT_VAR)));
+		return ((el != null) && (el.startsWith(Enviroments.ROOT_VAR)));
 	}
-	
-	public String valueRoot(XmlProcessor processor, String el) throws H2JFilterException {
-		String value = el;
-		if (checkRoot(el)) {
+
+	/**
+	 * se la string inizia con ROOT viene sostituito il suo valore, es ROOT/path e
+	 * ROOT=inizio, restituisce inizio/path
+	 * 
+	 * @deprecated sostituire con #{ ROOT + exp }
+	 * 
+	 * @param processor
+	 * @param value     stringa da valutare
+	 * @return
+	 * @throws H2JFilterException
+	 */
+	@Deprecated
+	public String valueRoot(XmlProcessor processor, String value) throws H2JFilterException {
+		String out = value;
+		if (checkRoot(value)) {
 			Object oValue;
 			try {
 				oValue = processor.getEnviroments().get(Enviroments.ROOT_VAR);
-				value = el.substring(Enviroments.ROOT_VAR.length()) + (oValue != null ? oValue.toString() : "");
+				out = value.substring(Enviroments.ROOT_VAR.length()) + (oValue != null ? oValue.toString() : "");
 			} catch (InvokerException e) {
 				throw new H2JFilterException(e);
-			}			
-		} 
-		return value;		
+			}
+		}
+		return out;
 	}
 }

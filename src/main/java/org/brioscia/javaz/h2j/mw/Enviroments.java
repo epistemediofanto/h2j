@@ -115,7 +115,8 @@ public class Enviroments extends Store {
 	/**
 	 * 
 	 * prepara l'espressione da chiamare alla submit da html valuta solo gli
-	 * elementi dell'ambiente locale
+	 * elementi dell'ambiente locale, espressioni del tipo
+	 * ciao#{obj.value}mondo#{obj.value}punto sono valide}
 	 * 
 	 * @param elname stringa da valutare
 	 * @return stringa html
@@ -183,7 +184,7 @@ public class Enviroments extends Store {
 			return Boolean.parseBoolean(str);
 		}
 		if (str != null) {
-			info("Invalid setting: %s = %s, use: %s", name,  str, def);
+			info("Invalid setting: %s = %s, use: %s", name, str, def);
 		}
 		return def;
 	}

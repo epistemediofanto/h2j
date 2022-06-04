@@ -28,14 +28,31 @@ public class DialogContext implements Serializable {
 		return this.getBeans().get(beanClass.getName());
 	}
 
+	public ScopeInstance<?> getBean(String name) {
+		return this.getBeans().get(name);
+	}
+
 	public void putBean(ScopeInstance<?> scopeInstance) {
-		this.getBeans().put(scopeInstance.originalBean.getClass().getName(), scopeInstance);
+		String name = this.getBeanName(scopeInstance.originalBean);
+		this.getBeans().put(name, scopeInstance);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void destroyBean(ScopeInstance scopeInstance) {
-		this.getBeans().remove(scopeInstance.bean.getBeanClass().getName());
+		String name = this.getBeanName(scopeInstance.originalBean);
+		this.getBeans().remove(name);
 		scopeInstance.bean.destroy(scopeInstance.originalBean, scopeInstance.ctx);
+	}
+
+	private String getBeanName(Object o) {
+		String name;
+		Class<?> cls = o.getClass();
+		DialogScoped dialogScoped = cls.getAnnotation(DialogScoped.class);
+		name = dialogScoped.name();
+		if (name == null) {
+			name = o.getClass().getName();
+		}
+		return name;
 	}
 
 	/**
@@ -47,7 +64,8 @@ public class DialogContext implements Serializable {
 		Set<Entry<String, ScopeInstance<?>>> set = this.beans.entrySet();
 		set.forEach(e -> {
 			if (e.getValue().originalBean != objectBean) {
-				this.beans.remove(e.getKey());
+//				this.beans.remove(e.getKey());
+				this.destroyBean(e.getValue());
 				return;
 			}
 		});

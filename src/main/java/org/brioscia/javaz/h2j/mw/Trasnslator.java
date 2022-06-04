@@ -17,6 +17,7 @@ import org.brioscia.javaz.h2j.tag.IncludeTag;
 import org.brioscia.javaz.h2j.tag.InputTag;
 import org.brioscia.javaz.h2j.tag.InvokeTag;
 import org.brioscia.javaz.h2j.tag.JsonDataTag;
+import org.brioscia.javaz.h2j.tag.JsonDefTag;
 import org.brioscia.javaz.h2j.tag.OptionsTag;
 import org.brioscia.javaz.h2j.tag.OutTag;
 import org.brioscia.javaz.h2j.tag.RepeatTag;
@@ -85,6 +86,9 @@ public class Trasnslator {
 
 		tagMap = new JsonDataTag();
 		this.registerTag("jsondata", tagMap);
+
+		tagMap = new JsonDefTag();
+		this.registerTag("jsondef", tagMap);
 
 		tagMap = new OptionsTag();
 		this.registerTag("options", tagMap);
