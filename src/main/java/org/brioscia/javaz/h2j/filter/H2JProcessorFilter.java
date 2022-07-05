@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebFilter(urlPatterns = "/*", initParams = @WebInitParam(name = "fileTypes", value = "xhtml"))
-public class H2JProcessorFilter implements Filter, Serializable{
+public class H2JProcessorFilter implements Filter, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String LOGNAME = "h2j";
@@ -183,7 +183,7 @@ public class H2JProcessorFilter implements Filter, Serializable{
 		if (enviroments.getErrorCallback() != null) {
 			H2JLog.error(e, "error in page %s, exception %s", page, e.getMessage());
 			if (this.disableErrorHandler) {
-				H2JLog.error(e, "critical error, loop in page error callback, on page %s - %s", page, e.getMessage());	
+				H2JLog.error(e, "critical error, loop in page error callback, on page %s - %s", page, e.getMessage());
 			} else {
 				this.disableErrorHandler = true;
 				enviroments.getErrorCallback().onResponseError(this, request, response, e);
@@ -252,10 +252,10 @@ public class H2JProcessorFilter implements Filter, Serializable{
 				}
 			}
 
-			H2JLog.trace("set: %s = %s", pName, o);
-
-			enviroments.setBean(pName, o);
-
+			if (pName.indexOf('.') != -1) {
+				H2JLog.trace("set: %s = %s", pName, o);
+				enviroments.setBean(pName, o);
+			}
 		}
 		return jsonResponse;
 	}
