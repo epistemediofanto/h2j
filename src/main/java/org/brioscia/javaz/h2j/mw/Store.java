@@ -56,8 +56,8 @@ public class Store extends HtmlBindName implements EnvContext {
 	/**
 	 * insert the element into the stack and mark it to be removed at the end of the page construction
 	 * 
-	 * @param element
-	 * @param value
+	 * @param element nome elemento da inserire nello store
+	 * @param value valore dell'elemento
 	 */
 	public void pushPage(String element, Object value) {
 		this.push(element, value);
