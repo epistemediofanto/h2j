@@ -35,7 +35,7 @@ public class AliasTag extends BaseTag {
 			processor.getEnviroments().push(attributeNameNode.getNodeValue(),
 					processor.getEnviroments().getObject(value));
 		} else {
-			processor.getEnviroments().push(attributeNameNode.getNodeName(), value);
+			processor.getEnviroments().push(attributeNameNode.getNodeValue(), value);
 		}
 
 		parent = node.getParentNode();
