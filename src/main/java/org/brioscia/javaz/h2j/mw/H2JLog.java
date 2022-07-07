@@ -18,56 +18,56 @@ public class H2JLog implements Serializable {
 	public static void trace(String expFormat, Object... objects) {
 		if (trace) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().info(s);
+			Logger.getGlobal().info(s);
 		}
 	}
 
 	public static void debug(String expFormat, Object... objects) {
 		if (developmentMode) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().info(s);
+			Logger.getGlobal().info(s);
 		}
 	}
 
 	public static void info(String expFormat, Object... objects) {
 		if (info) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().info(s);
+			Logger.getGlobal().info(s);
 		}
 	}
 
 	public static void error(String expFormat, Object... objects) {
 		if (error) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().info(s);
+			Logger.getGlobal().info(s);
 		}
 	}
 
 	public static void trace(Throwable throwable, String expFormat, Object... objects) {
 		if (trace) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().log(Level.INFO, s, throwable);
+			Logger.getGlobal().log(Level.INFO, s, throwable);
 		}
 	}
 
 	public static void debug(Throwable throwable, String expFormat, Object... objects) {
 		if (developmentMode) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().log(Level.INFO, s, throwable);
+			Logger.getGlobal().log(Level.INFO, s, throwable);
 		}
 	}
 
 	public static void info(Throwable throwable, String expFormat, Object... objects) {
 		if (info) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().log(Level.INFO, s, throwable);
+			Logger.getGlobal().log(Level.INFO, s, throwable);
 		}
 	}
 
 	public static void error(Throwable throwable, String expFormat, Object... objects) {
 		if (error) {
 			String s = String.format(expFormat, objects);
-			Logger.getAnonymousLogger().log(Level.INFO, s, throwable);
+			Logger.getGlobal().log(Level.SEVERE, s, throwable);
 		}
 	}
 }

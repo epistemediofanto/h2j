@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 public class VirtualFileSystem {
 
+	public static boolean validating = true;
 	private HashMap<String, Document> cache;
 	private ServletContext context;
 
@@ -45,7 +46,7 @@ public class VirtualFileSystem {
 					Enviroments.trace("%s: stored file in cache", filename);
 				} catch (TransformerException e) {
 					Enviroments.error(e, "critical error cannot cache document: %s", e.getMessage());
-					this.cache.put(filename, null);					
+					this.cache.put(filename, null);
 				}
 			} else {
 				Enviroments.debug("%s: file not in cache", filename);
@@ -80,19 +81,16 @@ public class VirtualFileSystem {
 		DocumentBuilder dBuilder;
 
 		dbFactory = DocumentBuilderFactory.newInstance();
+		dbFactory.setValidating(validating);
 		dbFactory.setNamespaceAware(true);
 		dBuilder = dbFactory.newDocumentBuilder();
-
-		dBuilder.setEntityResolver(new EntityResolver() {
-			public InputSource resolveEntity(String arg0, String arg1) throws SAXException, IOException {
-				if (arg0.contains("Hibernate")) {
+		if (!validating) {
+			dBuilder.setEntityResolver(new EntityResolver() {
+				public InputSource resolveEntity(String arg0, String arg1) throws SAXException, IOException {
 					return new InputSource(new StringReader(""));
-				} else {
-					// TODO Auto-generated method stub
-					return null;
 				}
-			}
-		});
+			});
+		}
 
 		return dBuilder.parse(is, H2JProcessorFilter.XHTML_ECODE);
 	}

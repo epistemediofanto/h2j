@@ -20,6 +20,7 @@ public class Enviroments extends Store {
 	private static final long serialVersionUID = 1L;
 	private static final String CACHE_FILE = "h2j.fileCache";
 	private static final String DEVELOPMENT_MODE = "h2j.developmentMode";
+	private static final String FILE_VALIDATING = "h2j.file.validate";
 
 	private static ServletContext servletContext;
 	private static String contextRoot;
@@ -40,6 +41,8 @@ public class Enviroments extends Store {
 		Enviroments.trace = booleanValue(TRACE, context.getInitParameter(TRACE), trace);
 		Enviroments.info = booleanValue(INFO, context.getInitParameter(INFO), info);
 		Enviroments.error = booleanValue(ERROR, context.getInitParameter(ERROR), error);
+		
+		VirtualFileSystem.validating = booleanValue(FILE_VALIDATING, context.getInitParameter(FILE_VALIDATING), VirtualFileSystem.validating);
 
 		if (Enviroments.developmentMode) {
 			info("\nH2J: *** WARNING: system is in development mode ***\n");

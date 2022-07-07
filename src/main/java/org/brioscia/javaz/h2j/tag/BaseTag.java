@@ -15,8 +15,8 @@ public abstract class BaseTag implements TagMap {
 	 * verifica se si tratta di una espressione da valutare, ovvero se la stringa è
 	 * racchiusa tra #{ }
 	 * 
-	 * @param mapName
-	 * @return
+	 * @param mapName parametro sul quale valutare se si tratta o meno di una espressione 
+	 * @return restituisce true se mapName è una espressione da valutare in forma #{stringa}
 	 */
 	protected static boolean isEL(String mapName) {
 		return (mapName != null) && mapName.startsWith("#{") && mapName.endsWith("}");
@@ -117,10 +117,10 @@ public abstract class BaseTag implements TagMap {
 	 * 
 	 * @deprecated sostituire con #{ ROOT + exp }
 	 * 
-	 * @param processor
+	 * @param processor processatore dell'espressione value
 	 * @param value     stringa da valutare
-	 * @return
-	 * @throws H2JFilterException
+	 * @return restituisce la valutazione del parametro value
+	 * @throws H2JFilterException viene sollevata se non è stato possibile valutare il parametro value
 	 */
 	@Deprecated
 	public String valueRoot(XmlProcessor processor, String value) throws H2JFilterException {
