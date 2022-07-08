@@ -74,7 +74,7 @@ public class Enviroments extends Store {
 			node = LexicalParser.process(fullname);
 			return Executor.get(node, this);
 		} catch (SyntaxError | InvokerException e) {
-			throw new H2JFilterException(fullname, e);
+			throw new H2JFilterException(fullname + " (" + e.getMessage() + ")", e);
 		}
 	}
 
