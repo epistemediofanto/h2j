@@ -45,6 +45,7 @@ public class H2JProcessorFilter implements Filter, Serializable {
 	public static String XHTML_ECODE = "UTF-8";
 	public static String XHTML_INDENT = "no";
 	public static String DATE_ISO_8601 = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"; // formato per DateConverter
+	private static final String CONTENT_TYPE="text/html";//"application/xhtml+xml"; // text/html
 
 	@Inject
 	private DialogueBoost dialogueBoost;
@@ -279,8 +280,10 @@ public class H2JProcessorFilter implements Filter, Serializable {
 		try {
 			docXHTML = Enviroments.getFileSystem().loadDocument(page);
 
-			response.setContentType("text/html");
+			response.setContentType(CONTENT_TYPE);
 
+			response.getOutputStream().write("<!DOCTYPE html>".getBytes());
+			
 			xmlProcessor = new XmlProcessor(enviroments, page);
 			xmlProcessor.process(docXHTML, response.getOutputStream());
 
