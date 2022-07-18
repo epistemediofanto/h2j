@@ -41,7 +41,7 @@ public class DeclareTag extends BaseTag {
 
 				Class<?> clz;
 				Constructor<?> constructor;
-				
+
 				clz = Class.forName(valueBean);
 				constructor = clz.getDeclaredConstructor();
 				object = constructor.newInstance();
@@ -49,8 +49,7 @@ public class DeclareTag extends BaseTag {
 			processor.getEnviroments().push(nameVar, object);
 		} catch (NoSuchMethodException e) {
 			throw new H2JFilterException(valueBean + " missing default constructor", e);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new H2JFilterException(node.toString(), e);
 		}
 

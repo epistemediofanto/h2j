@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 
 public class RepeatTag extends BaseTag {
 
-	public static final String REPEAT_MODE = "repeat$mode";
 	public static final String REPEAT_LIST_MODE = "list";
 	public static final String REPEAT_INDEX_MODE = "index";
 
@@ -65,10 +64,10 @@ public class RepeatTag extends BaseTag {
 
 			items = new MultiData(oList, nameValues);
 			if (items != null) {
-				NodeList childs;
-				Node child;
+				NodeList repeatChilds;
+				Node repeatChild;
 
-				childs = node.getChildNodes();
+				repeatChilds = node.getChildNodes();
 				try {
 					int j = 0;
 					Object item;
@@ -101,11 +100,11 @@ public class RepeatTag extends BaseTag {
 						try {
 
 							// Ciclo REPEAT
-							for (int i = 0; i < childs.getLength(); ++i) {
-								child = childs.item(i).cloneNode(true);
-								parent.insertBefore(child, node);
-								processor.processNode(child);
-								child.setUserData("h2j", "skip", null); // marcatore di tag creato dal framework, verra
+							for (int i = 0; i < repeatChilds.getLength(); ++i) {
+								repeatChild = repeatChilds.item(i).cloneNode(true);
+								parent.insertBefore(repeatChild, node);
+								processor.processNode(repeatChild);
+//								repeatChild.setUserData("h2j", "skip", null); // marcatore di tag creato dal framework, verra
 																		// rimosso in valutazione
 							}
 
@@ -117,8 +116,7 @@ public class RepeatTag extends BaseTag {
 						}
 
 					}
-				} finally {
-					enviroments.pop(REPEAT_MODE);
+				} finally {				
 					enviroments.remove(nameVar);
 					if (nameIndex != null) {
 						enviroments.remove(nameIndex);

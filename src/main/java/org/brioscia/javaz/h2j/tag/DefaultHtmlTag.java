@@ -9,10 +9,8 @@ public class DefaultHtmlTag extends BaseTag {
 
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		this.processAttributes(processor, node.getAttributes());
-		this.processNodes(processor, node.getChildNodes());
+		this.processNodes(processor, node);
 	}
-
-
 
 	protected void processAttributes(XmlProcessor processor, NamedNodeMap attributes) throws H2JFilterException {
 		if (attributes != null) {

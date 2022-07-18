@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URLDecoder;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.Filter;
@@ -67,11 +65,11 @@ public class H2JProcessorFilter implements Filter, Serializable {
 				EXT = "." + ext;
 				CALL_STRING_EXT = RMI + EXT;
 			}
-			Logger.getGlobal().log(Level.INFO, "h2j page type: " + EXT);
-			Logger.getGlobal().log(Level.INFO, "H2J: *** h2j processor started. *** " + this.getVersion());
+			H2JLog.info("h2j page type: " + EXT);
+			H2JLog.info("H2J: *** h2j processor started. *** " + this.getVersion());
 
 		} catch (H2JFilterException e) {
-			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			H2JLog.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}

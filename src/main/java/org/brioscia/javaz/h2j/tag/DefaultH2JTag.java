@@ -10,7 +10,7 @@ public class DefaultH2JTag extends BaseTag {
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		node.setPrefix("");
 		this.processAttributes(processor, node.getAttributes());
-		this.processNodes(processor, node.getChildNodes());
+		this.processNodes(processor, node);
 	}
 
 	protected void processAttributes(XmlProcessor processor, NamedNodeMap attributes) throws H2JFilterException {

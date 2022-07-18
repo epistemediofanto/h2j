@@ -275,7 +275,9 @@ public class LexicalParser {
 			token.setType(Type.neg);
 			token.add(this.prodFUN());
 		} else if (eq(token, "(")) {
-			token = this.prodADD();
+			token.setType(Type.subexp);
+			token = this.prodADD();						
+			assertEq(this.nextToken(), ")");
 		} else if (isNumber(token.getValue())) {
 			token.setType(Type.number);
 		} else if (eq(token, "'")) {

@@ -7,7 +7,8 @@ public class NodeToken {
 
 	public enum Type {
 		nil, name, function, number, string, arrayIndex, dot, add, sub, mul, div, pow, eif, not, and, or, lt, let, gt,
-		get, eq, neq, neg, undef;
+		get, eq, neq, neg, undef, subexp;
+		// subexp non è usato, non viene mai creato un nodo di questo tipo
 	}
 
 	private String value;
@@ -121,8 +122,15 @@ public class NodeToken {
 		case sub:
 			out = this.getChilds().get(0) + " - " + this.getChilds().get(1);
 			break;
+		case subexp:
+			out = "(" +  this.getChilds().get(0) + ")";
+			break;
+		case eif:
+			out = this.getChilds().get(0) + " ? " + this.getChilds().get(1) + " : " + this.getChilds().get(2);
+			break;
 		case undef:
-			out = "???";
+		default:
+			out = "??? " + this.value;
 			break;
 		}
 

@@ -41,7 +41,6 @@ public class SwitchTag extends BaseTag {
 		parent = node.getParentNode();
 		this.processCase(processor, parent, node, value);
 
-		parent.removeChild(node);
 	}
 
 	private void processCase(XmlProcessor processor, Node parent, Node node, String value)
@@ -68,22 +67,14 @@ public class SwitchTag extends BaseTag {
 				assertNotNull(caseValue, "empty value in case");
 				caseValue = enviroments.eval(caseValue);
 				if (value.equals(caseValue)) {
-					this.processNode(processor, parent, child);
+					this.processNodes(processor, parent, node, child);
 					break;
 				}
 			} else if ("default".equals(name)) {
-				this.processNode(processor, parent, child);
+				this.processNodes(processor, parent, node, child);
 				break;
 			}
 		}
 	}
 
-	private void processNode(XmlProcessor processor, Node parent, Node node) throws H2JFilterException {
-		NodeList childs;
-
-		childs = node.getChildNodes();
-		for (int i = 0; i < childs.getLength(); ++i) {
-			parent.appendChild(childs.item(i));
-		}
-	}
 }

@@ -41,12 +41,10 @@ public class IfTag extends BaseTag {
 
 		parent = node.getParentNode();
 		this.processCase(processor, parent, node, value);
-
-		parent.removeChild(node);
+	
 	}
 
-	private void processCase(XmlProcessor processor, Node parent, Node node, String value)
-			throws DOMException, H2JFilterException {
+	private void processCase(XmlProcessor processor, Node parent, Node node, String value) throws DOMException, H2JFilterException {
 		NodeList childs;
 		Node child;
 		String name;
@@ -56,23 +54,12 @@ public class IfTag extends BaseTag {
 			child = childs.item(i);
 			name = child.getLocalName();
 			if ("then".equals(name) && "true".equals(value)) {
-				this.processNode(processor, parent, child);
+				this.processNodes(processor, parent, node, child);
 			}
 			if ("else".equals(name) && "false".equals(value)) {
-				this.processNode(processor, parent, child);
+				this.processNodes(processor, parent, node, child);
 			}
 		}
 	}
 
-	private void processNode(XmlProcessor processor, Node parent, Node node) throws H2JFilterException {
-		NodeList childs;
-		Node child;
-		
-		childs = node.getChildNodes();
-		for (int i = 0; i < childs.getLength(); ++i) {
-			child = childs.item(i).cloneNode(true);
-			parent.appendChild(child);
-			//processor.processNode(child);
-		}
-	}
 }

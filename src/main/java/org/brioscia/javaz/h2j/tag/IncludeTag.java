@@ -61,12 +61,12 @@ public class IncludeTag extends BaseTag {
 		processor.setPath(path);
 
 		try {
-			this.processNodes(processor, node.getChildNodes());
+			this.processNodes(processor, node);
 			doc = Enviroments.getFileSystem().loadDocument(file);
 
 			includeNode = node.getOwnerDocument().importNode(doc.getDocumentElement(), true);
-			parent.replaceChild(includeNode, node);
-
+			parent.replaceChild(includeNode, node);		
+			
 			try {
 				if (attributeNameNode != null) {
 					String value = attributeValueNode.getNodeValue();

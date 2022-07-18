@@ -46,16 +46,27 @@ public class SelectTag extends DefaultH2JTag {
 				values[0] = value;
 			}
 
-			nodeList = node.getChildNodes();
-			for (int i = 0; i < nodeList.getLength(); ++i) {
-				child = nodeList.item(i);
+			child = node.getFirstChild();
+			while (child!=null) {
 				if ("option".equals(child.getNodeName())) {
 					optionValue = child.getAttributes().getNamedItem("value");
 					if ((optionValue != null) && in(values, optionValue.getNodeValue())) {
 						((Element) child).setAttribute("selected", "selected");
 					}
 				}
+				child = child.getNextSibling();
 			}
+			
+//			nodeList = node.getChildNodes();
+//			for (int i = 0; i < nodeList.getLength(); ++i) {
+//				child = nodeList.item(i);
+//				if ("option".equals(child.getNodeName())) {
+//					optionValue = child.getAttributes().getNamedItem("value");
+//					if ((optionValue != null) && in(values, optionValue.getNodeValue())) {
+//						((Element) child).setAttribute("selected", "selected");
+//					}
+//				}
+//			}
 		}
 	}
 

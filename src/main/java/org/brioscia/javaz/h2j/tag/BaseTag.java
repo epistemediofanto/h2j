@@ -1,5 +1,8 @@
 package org.brioscia.javaz.h2j.tag;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.brioscia.javaz.expression.InvokerException;
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.mw.Enviroments;
@@ -15,8 +18,10 @@ public abstract class BaseTag implements TagMap {
 	 * verifica se si tratta di una espressione da valutare, ovvero se la stringa è
 	 * racchiusa tra #{ }
 	 * 
-	 * @param mapName parametro sul quale valutare se si tratta o meno di una espressione 
-	 * @return restituisce true se mapName è una espressione da valutare in forma #{stringa}
+	 * @param mapName parametro sul quale valutare se si tratta o meno di una
+	 *                espressione
+	 * @return restituisce true se mapName è una espressione da valutare in forma
+	 *         #{stringa}
 	 */
 	protected static boolean isEL(String mapName) {
 		return (mapName != null) && mapName.startsWith("#{") && mapName.endsWith("}");
@@ -31,22 +36,52 @@ public abstract class BaseTag implements TagMap {
 		return value;
 	}
 
-	protected void processNodes(XmlProcessor processor, NodeList nodeList) throws H2JFilterException {
+	protected void processNodes(XmlProcessor processor, Node node) throws H2JFilterException {
+		List<Node> nodes;
+		NodeList nodeList;
+		Node n;
+
+		nodes = new ArrayList<Node>();
+		nodeList = node.getChildNodes();
+
 		if (nodeList != null) {
-			Node n;
-			short s;
 			for (int i = 0; i < nodeList.getLength(); ++i) {
 				n = nodeList.item(i);
-				s = n.getNodeType();
-				if (s == Node.ELEMENT_NODE) {
-					processor.processNode(nodeList.item(i));
-				}
+				nodes.add(n);
 			}
 		}
+
+		for (int i = 0; i < nodes.size(); ++i) {
+			n = nodes.get(i);
+			processor.processNode(n);
+		}
+
+	}
+	
+	protected void processNodes(XmlProcessor processor, Node parent, Node deleteNode, Node node) throws H2JFilterException {
+		NodeList childs;
+		Node child;
+		List<Node> nodes;
+
+		nodes = new ArrayList<Node>();
+		childs = node.getChildNodes();
+		if (childs != null) {
+			for (int i = 0; i < childs.getLength(); ++i) {
+				child = childs.item(i).cloneNode(true);
+				nodes.add(child);
+			}
+		}
+
+		for (int i = 0; i < nodes.size(); ++i) {
+			child = nodes.get(i);
+			parent.insertBefore(child, deleteNode);
+			processor.processNode(child);
+		}
+		
+		parent.removeChild(deleteNode);	
 	}
 
-	protected void writeAttributes(Enviroments enviroments, Element element, NamedNodeMap attributes, String... ignore)
-			throws H2JFilterException {
+	protected void writeAttributes(Enviroments enviroments, Element element, NamedNodeMap attributes, String... ignore) throws H2JFilterException {
 		String qualifiedName;
 		String value;
 		String name;
@@ -120,7 +155,8 @@ public abstract class BaseTag implements TagMap {
 	 * @param processor processatore dell'espressione value
 	 * @param value     stringa da valutare
 	 * @return restituisce la valutazione del parametro value
-	 * @throws H2JFilterException viene sollevata se non è stato possibile valutare il parametro value
+	 * @throws H2JFilterException viene sollevata se non è stato possibile valutare
+	 *                            il parametro value
 	 */
 	@Deprecated
 	public String valueRoot(XmlProcessor processor, String value) throws H2JFilterException {

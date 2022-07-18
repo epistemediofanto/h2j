@@ -67,20 +67,16 @@ public class XmlProcessor {
 		String namespace;
 		TagMap tagMap;
 
-		if ("skip".equals(node.getUserData("h2j"))) { // i tag creati dal framework non sono da processare
-			node.setUserData("h2j", null, null);
+		localName = node.getLocalName();
+		namespace = node.getNamespaceURI();
+
+		if (NAMESPACE.equals(namespace)) {
+			tagMap = this.trasnslator.getTag(localName);
 		} else {
-
-			localName = node.getLocalName();
-			namespace = node.getNamespaceURI();
-
-			if (NAMESPACE.equals(namespace)) {
-				tagMap = this.trasnslator.getTag(localName);
-			} else {
-				tagMap = this.trasnslator.getDefaultHTML();
-			}
-			tagMap.processNode(this, node);
+			tagMap = this.trasnslator.getDefaultHTML();
 		}
+		tagMap.processNode(this, node);
+
 	}
 
 	public String resolveLoopVar(String element) throws H2JFilterException {
@@ -136,16 +132,16 @@ public class XmlProcessor {
 		}
 		return page;
 	}
-	
+
 	public static String extractFileName(String file) {
 		int pos = file.indexOf('/');
-		return pos != -1 ? file.substring(pos+1, file.length()) : file;
+		return pos != -1 ? file.substring(pos + 1, file.length()) : file;
 	}
 
 	public String getPath() {
 		return path;
 	}
-	
+
 	public void setPath(String path) {
 		this.path = path;
 	}

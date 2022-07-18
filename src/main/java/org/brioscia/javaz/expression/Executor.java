@@ -54,6 +54,15 @@ public class Executor {
 		case dot:
 			throw new SyntaxError(node, "invalid operation");
 
+		case eif:
+			o = this.eval(node.getChilds().get(0));
+			if ((Boolean) o) {
+				o = this.eval(node.getChilds().get(1));
+			} else {
+				o = this.eval(node.getChilds().get(2));
+			}
+			break;
+			
 		case eq:
 			o = this.eq(node);
 			break;
@@ -124,6 +133,8 @@ public class Executor {
 
 		case undef:
 			throw new SyntaxError(node, "undefined type ");
+		default:
+			throw new SyntaxError(node, "unexpected error"); // non si può verificare
 		}
 
 		return o;
