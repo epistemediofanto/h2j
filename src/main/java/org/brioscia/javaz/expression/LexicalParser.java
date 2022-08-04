@@ -35,7 +35,7 @@ public class LexicalParser {
 		String s;
 		NodeToken nt;
 
-		s = "a.b.c$.d";
+		s = "'ciao \\' mondo'";
 		nt = LexicalParser.process(s);
 		System.out.println(nt);
 	}
@@ -57,7 +57,7 @@ public class LexicalParser {
 
 		this.tokensList = new ArrayList<NodeToken>();
 		pos = 0;
-		stringTokenizer = new StringTokenizer(this.source, ".,:;#@[]{}!'%&|/()=<>?^/*-+ ", true);
+		stringTokenizer = new StringTokenizer(this.source, ".,:;#@[]{}!'%&|/()=<>?^/*-+ \\", true);
 		while (stringTokenizer.hasMoreTokens()) {
 			value = stringTokenizer.nextToken();
 //			if (!" ".equals(value)) {
@@ -320,7 +320,7 @@ public class LexicalParser {
 	}
 
 	private NodeToken prodString(NodeToken nodeToken) throws SyntaxError {
-		int a = 1;
+
 		NodeToken token;
 		String value = "";
 
@@ -330,22 +330,16 @@ public class LexicalParser {
 			if (eq(token, "\\")) {
 				token = this.nextToken();
 				if (eq(token, "'")) {
-					++a;
-					value += "'";
+				
 				} else {
 					value += "\\";
 				}
 			} else if (eq(token, "'")) {
-				--a;
-				if (a == 0) {
 					break;
-				}
 			}
 			value += token.getValue();
 		}
-		if (a != 0) {
-			throw new SyntaxError(nodeToken, "invalid string value");
-		}
+
 		nodeToken.setValue(value);
 		return nodeToken;
 	}
