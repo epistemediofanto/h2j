@@ -82,9 +82,9 @@ public class RepeatTag extends BaseTag {
 
 						LoopVar var;
 						if (processor.getEnviroments().getMode() == SetMode.list) {
-							var = new LoopVar(nameVar, nameValues, item);
+							var = new LoopVar(nameVar, nameValues, item, ix);
 						} else {
-							var = new LoopVar(nameVar, nameValues + ".get(" + j + ")", item);
+							var = new LoopVar(nameVar, nameValues + ".get(" + j + ")", item, ix);
 						}
 						enviroments.push(nameVar, var);
 
@@ -116,7 +116,8 @@ public class RepeatTag extends BaseTag {
 						}
 
 					}
-				} finally {				
+				} finally {		
+					enviroments.popSetMode();
 					enviroments.remove(nameVar);
 					if (nameIndex != null) {
 						enviroments.remove(nameIndex);
