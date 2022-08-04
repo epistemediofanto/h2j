@@ -12,11 +12,13 @@ public class LoopVar {
 	@Deprecated
 	private String fullName;
 	private NodeToken node;
+	private int index;
 
-	public LoopVar(String name, String fullName, Object object) throws H2JFilterException {
+	public LoopVar(String name, String fullName, Object object, int ix) throws H2JFilterException {
 		this.name = name;
 		this.fullName = fullName;
 		this.object = object;
+		this.index = ix;
 		try {
 			this.node = LexicalParser.process(fullName);
 		} catch (SyntaxError e) {
@@ -54,6 +56,10 @@ public class LoopVar {
 
 	public void setNode(NodeToken node) {
 		this.node = node;
+	}
+
+	public int getIndex() {
+		return index;
 	}
 
 }
