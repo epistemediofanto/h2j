@@ -14,6 +14,7 @@ import org.brioscia.javaz.expression.NodeToken;
 import org.brioscia.javaz.expression.SyntaxError;
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
 import org.brioscia.javaz.h2j.filter.H2JProcessorFilter;
+import org.brioscia.javaz.h2j.mw.Store.Alias;
 import org.brioscia.javaz.h2j.tag.TagMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -91,13 +92,32 @@ public class XmlProcessor {
 		}
 		return element;
 	}
+	
+	public String resolveAlias(String element) {
+		int pos = element.indexOf('.');
+		String newName = element;
+		if (pos != -1) {
+			newName = element.substring(0, pos);
+			Alias alias = this.enviroments.peekAlias(newName);
+			if (alias !=null ) {
+				newName =alias.getName();
+			}
+			newName += element.substring(pos);
+		} else {
+			Object object = this.enviroments.peek(newName);
+			if (object instanceof Alias) {
+				newName =((Alias) object).getName();
+			}
+		}
+		return newName;
+	}
 
 	private void replaceName(NodeToken node) {
 		LoopVar loopVar;
 
 		loopVar = this.getEnviroments().getLoopVar(node.getValue());
 		if (loopVar != null) {
-			node.setValue(loopVar.getFullName());
+			node.setValue(loopVar.getFullName()+".get(" + loopVar.getIndex() + ")");
 		}
 		while ((node != null) && (node.getChilds().size() > 0)) {
 			node = node.getChilds().get(0);
