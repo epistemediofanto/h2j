@@ -1,8 +1,6 @@
 package org.brioscia.javaz.h2j.mw;
 
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class H2JLog implements Serializable {
 
@@ -18,56 +16,60 @@ public class H2JLog implements Serializable {
 	public static void trace(String expFormat, Object... objects) {
 		if (trace) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().info(s);
+			System.out.println(s);
 		}
 	}
 
 	public static void debug(String expFormat, Object... objects) {
 		if (developmentMode) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().info(s);
+			System.out.println(s);
 		}
 	}
 
 	public static void info(String expFormat, Object... objects) {
 		if (info) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().info(s);
+			System.out.println(s);
 		}
 	}
 
 	public static void error(String expFormat, Object... objects) {
 		if (error) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().info(s);
+			System.out.println(s);
 		}
 	}
 
 	public static void trace(Throwable throwable, String expFormat, Object... objects) {
 		if (trace) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().log(Level.INFO, s, throwable);
+			System.out.println(s);
+			throwable.printStackTrace();
 		}
 	}
 
 	public static void debug(Throwable throwable, String expFormat, Object... objects) {
 		if (developmentMode) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().log(Level.INFO, s, throwable);
+			System.out.println(s);
+			throwable.printStackTrace();
 		}
 	}
 
 	public static void info(Throwable throwable, String expFormat, Object... objects) {
 		if (info) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().log(Level.INFO, s, throwable);
+			System.out.println(s);
+			throwable.printStackTrace();
 		}
 	}
 
 	public static void error(Throwable throwable, String expFormat, Object... objects) {
 		if (error) {
 			String s = String.format(expFormat, objects);
-			Logger.getGlobal().log(Level.SEVERE, s, throwable);
+			System.out.println(s);
+			throwable.printStackTrace();
 		}
 	}
 }
