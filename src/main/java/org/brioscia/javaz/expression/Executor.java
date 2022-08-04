@@ -148,6 +148,10 @@ public class Executor {
 			String sa = (a == null) ? "" : (String) a;
 			String sb = (b == null) ? "" : b.toString();
 			r = sa + sb;
+		} else 	if ((b == null) || (b instanceof String)) {
+			String sa = (a == null) ? "" : a.toString();
+			String sb = (b == null) ? "" : (String) b;
+			r = sa + sb;
 		} else if ((a instanceof Integer) && (b instanceof Integer)) {
 			r = (int) a + (int) b;
 		} else if ((a instanceof Integer) && (b instanceof Double)) {
