@@ -71,7 +71,7 @@ public class IncludeIfTag extends BaseTag {
 				parent.replaceChild(includeNode, node);
 				processor.processNode(includeNode);
 				node = null;
-			} catch (IOException | ParserConfigurationException | SAXException e) {
+			} catch (IOException e) {
 				throw new H2JFilterException(e);
 			} finally {
 				processor.setPath(currentPath);

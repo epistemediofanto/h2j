@@ -285,7 +285,7 @@ public class H2JProcessorFilter implements Filter, Serializable {
 			xmlProcessor = new XmlProcessor(enviroments, page);
 			xmlProcessor.process(docXHTML, response.getOutputStream());
 
-		} catch (IOException | ParserConfigurationException | SAXException e) {
+		} catch (IOException e) {
 			throw new H2JFilterException(e);
 		}
 

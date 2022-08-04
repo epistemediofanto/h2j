@@ -14,13 +14,18 @@ public class HtmlBindName extends Assertion {
 
 	public String htmlName(String name, Converter converter, int type) {
 		String newName = "hj2" + next();
+
 		if (name == null) {
 			name = newName;
 		}
-		if (developmentMode) {
+		
+//		if (developmentMode) {
 			newName = "h2j-" + name.replace("/", "-");
-		}
+			//controllare se funziona con gli alias
+//		}
+		
 		this.envName.put(newName, new StoreObject(name, converter, type));
+		
 		return newName;
 	}
 
