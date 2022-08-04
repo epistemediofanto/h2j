@@ -15,18 +15,22 @@ public class InputTag extends DefaultH2JTag {
 		NamedNodeMap attributes;
 		Node nodeValue;
 		String value, originalValue;
-
+		String valueName;
+		Converter converter = null;
+		
 		attributes = node.getAttributes();
-		nodeValue = attributes.getNamedItem("value");
-		assertNotNull(nodeValue, "missing 'value' attribute in 'input' tag");
 
-		value = nodeValue.getNodeValue();
-		assertNotEmpty(value, "found empty value in attribute 'value' in 'input' tag");
+		nodeValue = attributes.getNamedItem("name");
+		valueName = nodeValue != null ? nodeValue.getNodeValue() : null;
+
+		nodeValue = attributes.getNamedItem("value");
+		assertTrue((nodeValue!= null) || (valueName!=null), "missing 'value' attribute in 'input' tag");
+
+		value = nodeValue != null ? nodeValue.getNodeValue() : null;
+		assertNotEmpty(valueName!=null ? valueName : value, "found empty value in attribute 'value' in 'input' tag");
 
 		if (isEL(value)) {
 			Node converterNode;
-			Converter converter = null;
-			String valueName;
 			Element name;
 
 			converterNode = attributes.getNamedItem("shape");
@@ -38,27 +42,35 @@ public class InputTag extends DefaultH2JTag {
 				attributes.removeNamedItem("shape");
 			}
 
-			originalValue = value.substring(2, value.length() - 1);
-			valueName = processor.resolveLoopVar(originalValue);
+			if (valueName == null) {
+				originalValue = value.substring(2, value.length() - 1);
+				valueName = processor.resolveLoopVar(originalValue);
+			}
+			
 			if (converter != null) {
 				Object obj = processor.getEnviroments().getObject(valueName);
 				try {
 					nodeValue.setNodeValue(converter.toString(obj));
 				} catch (ClassCastException e) {
-					throw new H2JFilterException(
-							"Cannot cast " + obj + " to " + converter.getName() + " in " + nodeValue, e);
+					throw new H2JFilterException("Cannot cast " + obj + " to " + converter.getName() + " in " + nodeValue, e);
 				}
 			} else {
 				nodeValue.setNodeValue(processor.getEnviroments().eval(value));
 			}
+			
+			valueName = processor.resolveAlias(valueName);
 
+		} 
+		
+		if (nodeValue != null) {
+			Element name;
+			
 			value = processor.getEnviroments().htmlName(valueName, converter, HtmlBindName.DYNAMIC_CALL);
 
 			name = (Element) node;
-			if (name.getAttribute("name").length()== 0) {
+			if (name.getAttribute("name").length() == 0) {
 				name.setAttribute("name", value);
 			}
-
 		}
 
 		super.processNode(processor, node);
