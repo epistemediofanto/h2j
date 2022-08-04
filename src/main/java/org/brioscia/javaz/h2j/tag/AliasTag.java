@@ -1,6 +1,8 @@
 package org.brioscia.javaz.h2j.tag;
 
 import org.brioscia.javaz.h2j.filter.H2JFilterException;
+import org.brioscia.javaz.h2j.mw.Store.Alias;
+import org.brioscia.javaz.h2j.mw.Enviroments;
 import org.brioscia.javaz.h2j.mw.XmlProcessor;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -16,6 +18,7 @@ public class AliasTag extends BaseTag {
 	public void processNode(XmlProcessor processor, Node node) throws H2JFilterException {
 		NamedNodeMap attributes;
 		String value;
+		String valueString; 
 		Node parent;
 		Node attributeNameNode;
 		Node attributeValueNode;
@@ -30,12 +33,14 @@ public class AliasTag extends BaseTag {
 			assertNotNull(attributeValueNode, "missing attribute value in tag " + node.getNodeName());
 			assertNotNull(attributeValueNode.getNodeValue(), "missing contents for attribute value in tag " + node.getNodeName());
 
-			value = attributeValueNode.getNodeValue();			
+			valueString = value = attributeValueNode.getNodeValue();			
 			if (isEL(value)) {
-				value = value.substring(2, value.length() - 1);
-				processor.getEnviroments().push(attributeNameNode.getNodeValue(), processor.getEnviroments().getObject(value));
+				valueString = value = value.substring(2, value.length() - 1);
+				valueString = processor.resolveLoopVar(valueString);
+				valueString = processor.resolveAlias(valueString);
+				processor.getEnviroments().push(attributeNameNode.getNodeValue(), new Alias(valueString, processor.getEnviroments().getObject(value)));
 			} else {
-				processor.getEnviroments().push(attributeNameNode.getNodeValue(), value);
+				processor.getEnviroments().push(attributeNameNode.getNodeValue(), new Alias(valueString, value));
 			}
 
 			parent = node.getParentNode();
