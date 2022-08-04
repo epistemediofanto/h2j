@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 
 import javax.servlet.ServletContext;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,11 +35,15 @@ public class VirtualFileSystem {
 		this.context = context;
 	}
 
-	public Document loadDocument(String filename) throws ParserConfigurationException, SAXException, IOException {
+	public Document loadDocument(String filename) throws IOException {
 		Document doc = this.cache.get(filename);
 		if (doc == null) {
 			FileInputStream fis = new FileInputStream(this.context.getRealPath(filename));
-			doc = load(fis);
+			try {
+				doc = load(fis);
+			} catch (ParserConfigurationException | SAXException | IOException ex) {
+				throw new IOException("in file " + filename, ex);
+			}
 			fis.close();
 			if (Enviroments.enableCacheFile) {
 				try {
@@ -81,16 +86,21 @@ public class VirtualFileSystem {
 		DocumentBuilder dBuilder;
 
 		dbFactory = DocumentBuilderFactory.newInstance();
+		
+		String feature = "http://xml.org/sax/features/external-general-entities";
+		dbFactory.setFeature(feature, false);
+		// dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true); errore se html inizia con <!DOCTYPE
 		dbFactory.setValidating(validating);
 		dbFactory.setNamespaceAware(true);
+		dbFactory.setFeature("http://xml.org/sax/features/external-general-entities", true);
 		dBuilder = dbFactory.newDocumentBuilder();
-		if (!validating) {
+//		if (!validating) {
 			dBuilder.setEntityResolver(new EntityResolver() {
 				public InputSource resolveEntity(String arg0, String arg1) throws SAXException, IOException {
 					return new InputSource(new StringReader(""));
 				}
 			});
-		}
+//		}
 
 		return dBuilder.parse(is, H2JProcessorFilter.XHTML_ECODE);
 	}
