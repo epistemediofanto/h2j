@@ -18,6 +18,24 @@ import org.brioscia.javaz.h2j.filter.DialogueBoost;
 
 public class Store extends HtmlBindName implements EnvContext {
 
+	public static class Alias {
+		private Object object;
+		private String name;
+
+		public Alias(String name, Object object) {
+			this.name = name;
+			this.object = object;
+		}
+
+		public Object getObject() {
+			return this.object;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
 	public enum SetMode {
 		index, list
 	};
@@ -52,28 +70,46 @@ public class Store extends HtmlBindName implements EnvContext {
 		}
 		list.add(0, value);
 	}
-	
+
 	/**
-	 * insert the element into the stack and mark it to be removed at the end of the page construction
+	 * insert the element into the stack and mark it to be removed at the end of the
+	 * page construction
 	 * 
 	 * @param element nome elemento da inserire nello store
-	 * @param value valore dell'elemento
+	 * @param value   valore dell'elemento
 	 */
 	public void pushPage(String element, Object value) {
 		this.push(element, value);
 		this.pageElements.add(element);
 	}
-	
-	
+
 	/**
 	 * remove all page element, called at end of the page construction
 	 * 
 	 */
 	public void freePage() {
-		for (String element: this.pageElements) {
+		for (String element : this.pageElements) {
 			this.peek(element);
 		}
 		this.pageElements.clear();
+	}
+
+	/**
+	 * 
+	 * return the first stack element, but don't remove it
+	 * the element is null if it is not an Alias object
+	 * 
+	 * @param element elemento da leggere dalla testa dello stack
+	 * @return elemento letto dalla testa dello stack
+	 */
+	public Alias peekAlias(String element) {
+		Object value = null;
+		List<Object> list;
+		list = this.storeSpace.get(element);
+		if ((list != null) && (list.size() > 0)) {
+			value = list.get(0);
+		}
+		return (value instanceof Alias) ? (Alias) value : null;
 	}
 
 	/**
@@ -93,6 +129,8 @@ public class Store extends HtmlBindName implements EnvContext {
 				value = ((LoopVar) value).getObject();
 			}
 		}
+		if (value instanceof Alias)
+			value = ((Alias) value).getObject();
 		return value;
 	}
 
@@ -113,8 +151,10 @@ public class Store extends HtmlBindName implements EnvContext {
 				value = ((LoopVar) value).getObject();
 			}
 		} else {
-			System.out.println("warning h2j error invalid pop element " + element);
+			H2JLog.trace("warning h2j error invalid pop element " + element);
 		}
+		if (value instanceof Alias)
+			value = ((Alias) value).getObject();
 		return value;
 	}
 
