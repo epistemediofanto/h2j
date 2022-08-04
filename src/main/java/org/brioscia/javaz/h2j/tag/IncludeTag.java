@@ -53,7 +53,7 @@ public class IncludeTag extends BaseTag {
 			path = currentPath;
 			while (file.startsWith("../")) {
 				file = file.substring(3);
-				path = this.removeLastDir(currentPath);
+				path = this.removeLastDir(path);
 			}
 			path += XmlProcessor.extractPath(file);
 			file = path + XmlProcessor.extractFileName(file);
@@ -87,7 +87,7 @@ public class IncludeTag extends BaseTag {
 			}
 			node = null;
 
-		} catch (IOException | ParserConfigurationException | SAXException e) {
+		} catch (IOException e) {
 			throw new H2JFilterException(file, e);
 		} finally {
 			processor.setPath(currentPath);
